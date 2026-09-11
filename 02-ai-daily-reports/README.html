@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 行业日报 · 吴宣澄的项目</title>
+<style>
+:root{--bg:#0a0b0d;--panel:#121317;--line:#26272e;--ink:#e9ebee;--dim:#9aa0ab;--acc:#E17055;--code:#1c1e24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif;line-height:1.85;font-size:16px}
+main{max-width:860px;margin:0 auto;padding:56px 24px 90px}
+a.back{display:inline-flex;align-items:center;gap:6px;color:var(--dim);text-decoration:none;font-size:14px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;transition:.2s}
+a.back:hover{color:var(--acc);border-color:var(--acc)}
+h1{font-size:34px;font-weight:900;margin:26px 0 18px;letter-spacing:-.5px}
+h2{font-size:23px;font-weight:800;margin:44px 0 14px;padding-left:14px;border-left:4px solid var(--acc)}
+h3{font-size:18px;font-weight:700;margin:28px 0 10px}
+p{margin:12px 0;color:#c9cdd4}
+ul,ol{margin:12px 0 12px 22px}li{margin:6px 0;color:#c9cdd4}
+code{font-family:"SF Mono","JetBrains Mono",monospace;font-size:.88em;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:#f0a58e}
+pre{background:var(--code);border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:13.5px;line-height:1.7}
+pre.mermaid{border-color:rgba(119,104,174,.5)}pre.mermaid code{color:#b9aee6}
+pre .cap{display:block;font-size:12px;color:var(--dim);margin-bottom:10px;font-family:Inter,"Noto Sans SC",sans-serif}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+th{background:var(--panel);color:var(--ink);font-weight:700}td{color:#c9cdd4}
+blockquote{margin:16px 0;padding:12px 18px;border-left:3px solid var(--acc3,#7768AE);background:var(--panel);border-radius:0 12px 12px 0;color:var(--dim)}
+hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+img{max-width:100%;vertical-align:middle}
+a{color:var(--acc)}
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">← 返回项目展示</a>
+<h1>AI 行业日报 · 自动化内容流水线</h1>
+<p><img alt="Days" src="https://img.shields.io/badge/持续更新-32期-orange"> <img alt="Format" src="https://img.shields.io/badge/格式-自包含HTML-blue"> <img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></p>
+<p><strong>2026-08-11 → 2026-09-10 连续 32 期</strong> AI 行业日报，每期为自包含 HTML（内嵌样式，双击即读，可离线归档）。 由 AI Agent 流水线自动完成：信息采集 → 摘要提炼 → 排版生成 → 归档，人工仅做终审。</p>
+<h2>✨ 亮点</h2>
+<ul><li><strong>持续性</strong>：一个月整的高频稳定产出，验证了"AI 日常自动化工作流"的可靠性；</li><li><strong>自包含 HTML</strong>：无外部依赖，邮件/微信/网页均可直接分发；</li><li><strong>可复现</strong>：日报格式统一（标题/日期/要闻/点评），可批量回溯检索。</li></ul>
+<h2>📁 内容</h2>
+<ul><li><code>reports/</code> — 全部 32 期日报（<code>AI日报_YYYY-MM-DD.html</code>）；</li><li><code>index.html</code> — 期数目录页（按时间倒序，点击直达当期）。</li></ul>
+<h2>🚀 使用</h2>
+<p>直接双击 <code>index.html</code> 浏览；或将 <code>reports/</code> 部署到任意静态托管。</p>
+<hr>
+<p>作者：吴宣澄 · 2026-08 ~ 2026-09</p>
+<footer><span>吴宣澄 · AI 项目合集 © 2026</span><span><a href="../index.html">index.html</a> · 全部项目</span></footer>
+</main>
+</body>
+</html>

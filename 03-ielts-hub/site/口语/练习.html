@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>口语练习 - 雅思7分知识库</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px 80px;
+    background: #f8f9fa;
+    color: #333;
+    line-height: 1.8;
+}
+h1 {
+    font-size: 28px;
+    color: #1a1a2e;
+    border-bottom: 3px solid #e94560;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    margin-top: 10px;
+}
+h2 {
+    font-size: 22px;
+    color: #16213e;
+    border-left: 5px solid #e94560;
+    padding-left: 12px;
+    margin: 30px 0 15px;
+}
+h3 {
+    font-size: 18px;
+    color: #0f3460;
+    margin: 20px 0 10px;
+}
+.back-home {
+    display: inline-block;
+    margin: 10px 0 20px;
+    padding: 8px 16px;
+    background: #16213e;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    text-decoration: none;
+}
+.back-home:hover { background: #0f3460; }
+
+/* ========== 卡片 ========== */
+.section-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ========== 题库 Tab ========== */
+.tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    background: #f0f2f5;
+    padding: 4px;
+    border-radius: 8px;
+}
+.tab-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.6); color: #333; }
+.tab-btn.active {
+    background: white;
+    color: #e94560;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* 题目列表 */
+.q-list { display: flex; flex-direction: column; gap: 6px; }
+.q-item {
+    padding: 10px 14px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.q-item:hover {
+    border-color: #e94560;
+    background: #fff5f7;
+}
+.q-item.selected {
+    border-color: #e94560;
+    background: #fff0f3;
+    box-shadow: 0 0 0 2px rgba(233,69,96,0.15);
+}
+.q-item .q-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #16213e;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.q-item .q-part2-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.tag-person { background: #fce4e4; color: #c62828; }
+.tag-place { background: #e3f2fd; color: #1565c0; }
+.tag-object { background: #e8f5e9; color: #2e7d32; }
+.tag-experience { background: #fff8e1; color: #f57f17; }
+
+/* ========== 录音区 ========== */
+.recorder-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.recorder-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.rec-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rec-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.rec-btn-start {
+    background: #e94560;
+    color: white;
+}
+.rec-btn-start:hover:not(:disabled) { background: #d63851; }
+.rec-btn-start.recording {
+    background: #c62828;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(198,40,40,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(198,40,40,0); }
+}
+.rec-btn-stop {
+    background: #555;
+    color: white;
+}
+.rec-btn-stop:hover:not(:disabled) { background: #444; }
+.rec-btn-download {
+    background: #16213e;
+    color: white;
+}
+.rec-btn-download:hover:not(:disabled) { background: #0f3460; }
+.rec-timer {
+    font-size: 24px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #16213e;
+    min-width: 80px;
+    text-align: center;
+}
+.rec-status {
+    font-size: 13px;
+    color: #999;
+}
+.rec-status.recording { color: #e94560; }
+
+/* 上传区 */
+.upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.upload-area:hover { border-color: #e94560; background: #fff5f7; }
+.upload-area.dragover { border-color: #e94560; background: #fff0f3; }
+.upload-area .upload-icon { font-size: 36px; margin-bottom: 8px; }
+.upload-area p { font-size: 14px; color: #999; }
+.upload-area input[type="file"] { display: none; }
+
+/* 录音文件列表 */
+.rec-file-list { display: flex; flex-direction: column; gap: 8px; }
+.rec-file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 13px;
+}
+.rec-file-item .file-info { display: flex; align-items: center; gap: 10px; }
+.rec-file-item .file-name { font-weight: 600; color: #333; }
+.rec-file-item .file-size { color: #999; font-size: 12px; }
+.rec-file-item .file-actions { display: flex; gap: 8px; }
+.rec-file-item .file-action-btn {
+    padding: 4px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+.rec-file-item .file-action-btn:hover { background: #f0f2f5; }
+.rec-file-item .file-action-btn.del { color: #e94560; border-color: #fce4e4; }
+.rec-file-item .file-action-btn.del:hover { background: #fce4e4; }
+
+/* ========== 评价区 ========== */
+.eval-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #bbb;
+}
+.eval-empty .eval-icon { font-size: 48px; margin-bottom: 10px; }
+.eval-empty p { font-size: 14px; }
+
+.eval-result { display: none; }
+.eval-result.show { display: block; }
+
+.eval-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.eval-question {
+    font-size: 14px;
+    color: #666;
+    background: #f0f2f5;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+.eval-date { font-size: 12px; color: #999; }
+
+/* 评分雷达 */
+.score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.score-item {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+}
+.score-item .score-label {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 4px;
+}
+.score-item .score-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #16213e;
+}
+.score-item .score-stars {
+    font-size: 16px;
+    margin-top: 2px;
+    letter-spacing: 2px;
+}
+.score-item .score-band {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.eval-section {
+    margin: 16px 0;
+}
+.eval-section h4 {
+    font-size: 14px;
+    color: #16213e;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.eval-section p, .eval-section ul {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+}
+.eval-section ul { padding-left: 20px; }
+.eval-section li { margin: 3px 0; }
+
+.eval-example {
+    background: linear-gradient(135deg, #e8f0fe, #f0f4ff);
+    border-left: 4px solid #4a90d9;
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* ========== 练习记录 ========== */
+.record-empty {
+    text-align: center;
+    padding: 30px;
+    color: #bbb;
+    font-size: 14px;
+}
+.record-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f2f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+.record-item:hover { background: #f8f9fa; }
+.record-item:last-child { border-bottom: none; }
+.record-item .record-left { display: flex; align-items: center; gap: 12px; }
+.record-item .record-date { font-size: 12px; color: #999; min-width: 85px; }
+.record-item .record-topic { font-size: 14px; font-weight: 600; }
+.record-item .record-score {
+    font-size: 20px;
+    font-weight: 800;
+    color: #e94560;
+}
+.record-item .record-detail {
+    margin-top: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+}
+.record-item .record-detail.show { display: block; }
+
+/* ========== 使用说明 ========== */
+.usage-tip {
+    background: linear-gradient(135deg, #fff8e1, #fffde7);
+    border-left: 4px solid #ffb300;
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 13px;
+    line-height: 1.8;
+}
+.usage-tip strong { color: #f57f17; }
+
+/* ========== 底部导航 ========== */
+.nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 1000;
+}
+.nav-bar a {
+    color: #ccc;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.nav-bar a:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-bar a.active { background: #e94560; color: white; }
+
+/* ========== 响应式 ========== */
+@media (max-width: 600px) {
+    .recorder-controls { flex-direction: column; align-items: stretch; }
+    .rec-btn { justify-content: center; }
+    .rec-timer { text-align: center; }
+    .score-grid { grid-template-columns: repeat(2, 1fr); }
+    .record-item { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+</style>
+
+</head>
+<body>
+
+<a href="../index.html" class="back-home">← 返回首页</a>
+<h1>🎙️ 口语练习 · 录音与AI评价</h1>
+
+<div class="usage-tip">
+    <strong>💡 使用流程：</strong>
+    ① 选择下方题目 → ② 录音/上传你的回答 → ③ 把录音文件通过对话发送给我 →
+    ④ 我会按照雅思口语评分标准（流利度·词汇·语法·发音）给出评价和改进建议，
+    评价结果会同步更新到此页面，方便你随时回顾。
+</div>
+
+<!-- ====== 题库区 ====== -->
+<div class="section-card">
+    <h2>🎯 选择题目</h2>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('part1')">Part 1 · 日常问答</button>
+        <button class="tab-btn" onclick="switchTab('part2')">Part 2 · 独立陈述</button>
+        <button class="tab-btn" onclick="switchTab('part3')">Part 3 · 双向讨论</button>
+    </div>
+
+    <!-- Part 1 -->
+    <div id="part1" class="tab-content active">
+        <p style="font-size:13px;color:#999;margin-bottom:12px;">每道题回答 2-3 句，展现自然交流能力</p>
+        <div class="q-list">
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Work or Study — Do you work or are you a student?')">
+                <span class="q-num">1</span>
+                <span>Work or Study — Do you work or are you a student?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Hometown — Where is your hometown? What do you like about it?')">
+                <span class="q-num">2</span>
+                <span>Hometown — Where is your hometown? What do you like about it?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Accommodation — Do you live in a house or an apartment?')">
+                <span class="q-num">3</span>
+                <span>Accommodation — Do you live in a house or an apartment?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Hobbies — What do you do in your free time?')">
+                <span class="q-num">4</span>
+                <span>Hobbies — What do you do in your free time?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Music — Do you like music? What kind of music do you listen to?')">
+                <span class="q-num">5</span>
+                <span>Music — Do you like music? What kind of music do you listen to?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Sports — Do you play any sports? What sports are popular in your country?')">
+                <span class="q-num">6</span>
+                <span>Sports — Do you play any sports? What sports are popular in your country?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Food — What kind of food do you like? Do you like cooking?')">
+                <span class="q-num">7</span>
+                <span>Food — What kind of food do you like? Do you like cooking?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Weather — What kind of weather do you like? Does the weather affect your mood?')">
+                <span class="q-num">8</span>
+                <span>Weather — What kind of weather do you like?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Travel — Do you like traveling? Where have you been recently?')">
+                <span class="q-num">9</span>
+                <span>Travel — Do you like traveling? Where have you been recently?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 1', 'Internet — How often do you use the internet? What do you do online?')">
+                <span class="q-num">10</span>
+                <span>Internet — How often do you use the internet?</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part 2 -->
+    <div id="part2" class="tab-content">
+        <p style="font-size:13px;color:#999;margin-bottom:12px;">准备1分钟，连续说 1-2 分钟，使用下方框架</p>
+        <div class="q-list">
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '人物类 — Describe a person you admire')">
+                <span class="q-num"><span class="q-part2-tag tag-person">人物</span></span>
+                <span>Describe a person you admire (someone you look up to)</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '人物类 — Describe a friend you have known for a long time')">
+                <span class="q-num"><span class="q-part2-tag tag-person">人物</span></span>
+                <span>Describe a friend you have known for a long time</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '人物类 — Describe a teacher who influenced you')">
+                <span class="q-num"><span class="q-part2-tag tag-person">人物</span></span>
+                <span>Describe a teacher who had a positive influence on you</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '地点类 — Describe a place you like to visit')">
+                <span class="q-num"><span class="q-part2-tag tag-place">地点</span></span>
+                <span>Describe a place you like to visit (a city or a natural place)</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '地点类 — Describe your ideal home')">
+                <span class="q-num"><span class="q-part2-tag tag-place">地点</span></span>
+                <span>Describe your ideal home or the house you grew up in</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '物品类 — Describe an important possession')">
+                <span class="q-num"><span class="q-part2-tag tag-object">物品</span></span>
+                <span>Describe an important possession you own (e.g. a gift, a device)</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '物品类 — Describe a book you have read')">
+                <span class="q-num"><span class="q-part2-tag tag-object">物品</span></span>
+                <span>Describe a book you have read that you found interesting</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '经历类 — Describe a memorable event')">
+                <span class="q-num"><span class="q-part2-tag tag-experience">经历</span></span>
+                <span>Describe a memorable event or celebration in your life</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '经历类 — Describe a trip you took')">
+                <span class="q-num"><span class="q-part2-tag tag-experience">经历</span></span>
+                <span>Describe a trip you took that you enjoyed</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 2', '经历类 — Describe a skill you learned')">
+                <span class="q-num"><span class="q-part2-tag tag-experience">经历</span></span>
+                <span>Describe a new skill you learned that was important to you</span>
+            </div>
+        </div>
+        <div style="margin-top:14px;padding:12px 16px;background:#f0f4ff;border-radius:8px;font-size:13px;color:#555;">
+            <strong>🎯 Part 2 万能框架：</strong><br>
+            <strong>1️⃣ 开场</strong> I'd like to talk about...<br>
+            <strong>2️⃣ 背景</strong> It was back in... when...<br>
+            <strong>3️⃣ 细节</strong> What I remember most is...<br>
+            <strong>4️⃣ 感受</strong> It made me feel...<br>
+            <strong>5️⃣ 结尾</strong> Overall, it was... because...
+        </div>
+    </div>
+
+    <!-- Part 3 -->
+    <div id="part3" class="tab-content">
+        <p style="font-size:13px;color:#999;margin-bottom:12px;">每题回答 4-5 句，展现深度思考 — 冲7分的关键</p>
+        <div class="q-list">
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '比较类 — Compare young and old people\'s attitudes towards technology')">
+                <span class="q-num">💡</span>
+                <span>比较类 — Compare young and old people's attitudes towards technology</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '原因类 — Why do people enjoy traveling to new places?')">
+                <span class="q-num">🔍</span>
+                <span>原因类 — Why do people enjoy traveling to new places?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '影响类 — What effects does social media have on personal relationships?')">
+                <span class="q-num">📊</span>
+                <span>影响类 — What effects does social media have on personal relationships?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '未来类 — How will education change in the future?')">
+                <span class="q-num">🔮</span>
+                <span>未来类 — How will education change in the future?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '解决方案 — What can be done to protect the environment?')">
+                <span class="q-num">🎯</span>
+                <span>解决方案 — What can be done to protect the environment?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '比较类 — Compare living in the city vs living in the countryside')">
+                <span class="q-num">💡</span>
+                <span>比较类 — Compare living in the city vs living in the countryside</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '原因类 — Why are some people more successful than others?')">
+                <span class="q-num">🔍</span>
+                <span>原因类 — Why are some people more successful than others?</span>
+            </div>
+            <div class="q-item" onclick="selectQuestion(this, 'Part 3', '影响类 — How does globalization affect local cultures?')">
+                <span class="q-num">📊</span>
+                <span>影响类 — How does globalization affect local cultures?</span>
+            </div>
+        </div>
+        <div style="margin-top:14px;padding:12px 16px;background:#f0f4ff;border-radius:8px;font-size:13px;color:#555;">
+            <strong>🎯 Part 3 高分框架：</strong><br>
+            💡 <strong>引出观点</strong> From my perspective... / I'd say that...<br>
+            🔍 <strong>分析原因</strong> I think this can be attributed to...<br>
+            🆚 <strong>对比不同</strong> Compared to the past, people nowadays...<br>
+            📊 <strong>举例说明</strong> Take... for example...<br>
+            🎯 <strong>总结观点</strong> So overall, I believe that...
+        </div>
+    </div>
+
+    <div style="margin-top:14px;font-size:13px;color:#999;text-align:right;">
+        已选：<span id="selectedQuestion">未选择题目</span>
+    </div>
+</div>
+
+<!-- ====== 录音区 ====== -->
+<div class="section-card">
+    <h2>🎙️ 录音与上传</h2>
+    <div class="recorder-area">
+        <!-- 录音控制 -->
+        <div class="recorder-controls">
+            <button class="rec-btn rec-btn-start" id="startBtn" onclick="startRecording()">🎤 开始录音</button>
+            <button class="rec-btn rec-btn-stop" id="stopBtn" onclick="stopRecording()" disabled>⏹ 停止录音</button>
+            <span class="rec-timer" id="recTimer">00:00</span>
+            <span class="rec-status" id="recStatus">就绪，点击开始录音</span>
+        </div>
+
+        <!-- 上传区域 -->
+        <div class="upload-area" id="uploadArea" onclick="clickUpload()">
+            <div class="upload-icon">📁</div>
+            <p>点击上传录音文件（MP3 / WAV / M4A）</p>
+            <p style="font-size:12px;color:#ccc;">或拖拽文件到此处</p>
+            <input type="file" id="fileInput" accept="audio/*" onchange="handleFileUpload(event)">
+        </div>
+
+        <!-- 录音文件列表 -->
+        <div id="recFileList" class="rec-file-list">
+            <p style="font-size:13px;color:#bbb;text-align:center;padding:10px;">暂无录音文件</p>
+        </div>
+    </div>
+</div>
+
+<!-- ====== AI评价区 ====== -->
+<div class="section-card">
+    <h2>📊 AI评价与反馈</h2>
+    <div id="evalEmpty" class="eval-empty">
+        <div class="eval-icon">🤖</div>
+        <p>还没有练习记录</p>
+        <p style="font-size:12px;color:#ddd;">选一道题 → 录音 → 发给我，我立刻给你评价！</p>
+    </div>
+    <div id="evalResult" class="eval-result">
+        <div class="eval-header">
+            <div>
+                <span id="evalQuestion" class="eval-question"></span>
+            </div>
+            <span id="evalDate" class="eval-date"></span>
+        </div>
+        <div class="score-grid" id="scoreGrid">
+            <!-- 由JS动态生成 -->
+        </div>
+        <div class="eval-section">
+            <h4>📝 综合评价</h4>
+            <p id="evalComment"></p>
+        </div>
+        <div class="eval-section">
+            <h4>✅ 亮点</h4>
+            <ul id="evalStrengths"></ul>
+        </div>
+        <div class="eval-section">
+            <h4>🔧 改进建议</h4>
+            <ul id="evalImprovements"></ul>
+        </div>
+        <div class="eval-section">
+            <h4>🎯 示范回答</h4>
+            <div class="eval-example" id="evalExample"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== 练习记录 ====== -->
+<div class="section-card">
+    <h2>📝 练习记录</h2>
+    <div id="recordList">
+        <div class="record-empty">暂无练习记录，开始你的第一次练习吧！</div>
+    </div>
+</div>
+
+
+<!-- ====== 高分回答范例（新增） ====== -->
+<div class="section-card" style="margin-top: 20px;">
+    <h2 style="border-left: 5px solid #e94560; padding-left: 12px; margin: 0 0 16px 0;">⭐ Part 1 高分回答范例</h2>
+    <blockquote style="margin-bottom: 16px;">
+        <p>📌 以下范例来自你与AI的模拟练习，展示了雅思口语Part 1的"2-3句自然回答"模式</p>
+    </blockquote>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>Do you work or are you a student?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">I'm currently a student at a university. I'm in my second year, so I'm pretty much in the middle of my academic journey right now.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>What subject are you studying?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">I'm majoring in environmental science. It's a broad field that covers everything from ecology to climate change and policy.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>Why did you choose to study this subject?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">Honestly, I've always been curious about how nature works and how we can protect it. Plus, I feel like it's a really meaningful area to study, especially given all the environmental challenges we face today.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>What do you like about your course?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">I really enjoy the practical side of it, like doing fieldwork and lab experiments. It makes the theories feel real and much more engaging than just reading textbooks.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>What would you like to do after you finish your course?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">Ideally, I'd like to get into environmental consulting. I think it would be great to help companies or governments make more sustainable decisions.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>Do you prefer to study in the mornings or in the afternoons?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">Definitely mornings. I feel much more focused and energetic right after breakfast, so I can get through heavy reading or complex problems more easily.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>Do you think you will miss being a student once you finish your studies? Why or why not?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">Yeah, I probably will, to be honest. I think I'll miss the flexibility and the constant learning atmosphere, not to mention the social life with classmates.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>What technology do you use when you study?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">I mainly use my laptop for research, writing essays, and watching online lectures. I also use some data analysis software for my science projects.</p>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div style="background: #f8f9fa; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #e94560; font-size: 14px;">🎤 考官</span>
+                <span style="font-size: 12px; color: #999;">Part 1</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;"><strong>Are you enjoying your studies at this moment? Why or why not?</strong></p>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f0fe, #f0f4ff); border-left: 4px solid #4a90d9; border-radius: 0 10px 10px 0; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 700; color: #4a90d9; font-size: 14px;">🙋 你</span>
+                <span style="font-size: 12px; color: #999;">2-3句 · 自然流畅</span>
+            </div>
+            <p style="font-size: 14px; color: #333; margin: 0;">Yes, I am, actually. I'm finding my current modules really interesting, and I feel like I'm learning things that actually matter in the real world.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ====== 底部导航 ====== -->
+<div class="nav-bar">
+<a href="../index.html">🏠 首页</a>
+<a href="../口语/知识点.html">🗣️ 口语知识</a>
+<a href="../口语/练习.html" class="active">🎙️ 口语练习</a>
+<a href="../口语/自由练习.html">🗂️ 自由练习</a>
+<a href="../口语/错题本.html">📝 口语错题</a>
+<a href="../写作/知识点.html">✍️ 写作</a>
+<a href="../写作/错题本.html">📝 写作错题</a>
+<a href="../听力/知识点.html">🎧 听力</a>
+<a href="../听力/错题本.html">📝 听力错题</a>
+<a href="../阅读/知识点.html">📖 阅读</a>
+<a href="../阅读/错题本.html">📝 阅读错题</a>
+<a href="../单词句型好句/单词.html">📚 单词</a>
+<a href="../单词句型好句/句型.html">🏗️ 句型</a>
+<a href="../单词句型好句/好句.html">⭐ 好句</a>
+<a href="../单词句型好句/错题本.html">📝 单词错题</a>
+<a href="../每日总结/模板.html">📅 每日总结</a>
+<a href="../周报/模板.html">📊 周报</a>
+<a href="../月报/模板.html">📈 月报</a>
+</div>
+
+<script>
+// ========== 全局变量 ==========
+let mediaRecorder = null;
+let audioChunks = [];
+let recordingTimer = null;
+let seconds = 0;
+let isRecording = false;
+let audioFiles = JSON.parse(localStorage.getItem('ieltsSpeakingAudioFiles') || '[]');
+let records = JSON.parse(localStorage.getItem('ieltsSpeakingRecords') || '[]');
+let currentQuestion = '';
+
+// ========== 题库 Tab 切换 ==========
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ========== 选择题目 ==========
+function selectQuestion(el, part, question) {
+    document.querySelectorAll('.q-item').forEach(q => q.classList.remove('selected'));
+    el.classList.add('selected');
+    currentQuestion = part + ' — ' + question;
+    document.getElementById('selectedQuestion').textContent = currentQuestion;
+}
+
+// ========== 录音功能 ==========
+async function startRecording() {
+    if (!currentQuestion) {
+        alert('请先选择一道题目！');
+        return;
+    }
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const now = new Date();
+            const fileName = `${now.toISOString().slice(0,10)}_${currentQuestion.slice(0,20)}.webm`;
+            addAudioFile(fileName, audioBlob);
+            stream.getTracks().forEach(t => t.stop());
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        seconds = 0;
+        startTimer();
+        updateRecorderUI(true);
+    } catch (err) {
+        alert('无法访问麦克风，请确保已授予麦克风权限。\n你也可以直接上传录音文件。');
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    }
+    isRecording = false;
+    stopTimer();
+    updateRecorderUI(false);
+}
+
+function startTimer() {
+    recordingTimer = setInterval(() => {
+        seconds++;
+        document.getElementById('recTimer').textContent = formatTime(seconds);
+        if (seconds >= 120) {
+            stopRecording();
+            alert('录音已到2分钟上限（Part 2 最长时长）');
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    if (recordingTimer) {
+        clearInterval(recordingTimer);
+        recordingTimer = null;
+    }
+}
+
+function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function updateRecorderUI(recording) {
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('recStatus');
+    if (recording) {
+        startBtn.disabled = true;
+        startBtn.classList.add('recording');
+        startBtn.textContent = '🔴 录音中...';
+        stopBtn.disabled = false;
+        status.textContent = '🔴 录音中... 点击停止';
+        status.classList.add('recording');
+    } else {
+        startBtn.disabled = false;
+        startBtn.classList.remove('recording');
+        startBtn.innerHTML = '🎤 开始录音';
+        stopBtn.disabled = true;
+        status.textContent = '录音已停止';
+        status.classList.remove('recording');
+        document.getElementById('recTimer').textContent = '00:00';
+    }
+}
+
+// ========== 点击上传（先检查是否选题） ==========
+function clickUpload() {
+    if (!currentQuestion) {
+        alert('⚠️ 请先在题库中选择一道题目，再上传录音！');
+        return;
+    }
+    document.getElementById('fileInput').click();
+}
+
+// ========== 文件上传 ==========
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (!currentQuestion) {
+        alert('请先选择一道题目再上传录音！');
+        return;
+    }
+    const fileName = `${new Date().toISOString().slice(0,10)}_${currentQuestion.slice(0,20)}.${file.name.split('.').pop()}`;
+    addAudioFile(fileName, file);
+    event.target.value = '';
+}
+
+// 拖拽上传
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('audio/')) {
+        if (!currentQuestion) {
+            alert('请先选择一道题目再上传录音！');
+            return;
+        }
+        const fileName = `${new Date().toISOString().slice(0,10)}_${currentQuestion.slice(0,20)}.${file.name.split('.').pop()}`;
+        addAudioFile(fileName, file);
+    } else {
+        alert('请上传音频文件（MP3 / WAV / M4A）');
+    }
+});
+
+// ========== 录音文件管理 ==========
+function addAudioFile(fileName, blob) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const fileData = {
+            id: Date.now(),
+            name: fileName,
+            data: e.target.result,
+            size: blob.size,
+            date: new Date().toISOString(),
+            question: currentQuestion
+        };
+        audioFiles.push(fileData);
+        localStorage.setItem('ieltsSpeakingAudioFiles', JSON.stringify(audioFiles));
+        renderFileList();
+        showSubmitTip(fileName);
+    };
+    reader.readAsDataURL(blob);
+}
+
+function renderFileList() {
+    const container = document.getElementById('recFileList');
+    if (audioFiles.length === 0) {
+        container.innerHTML = '<p style="font-size:13px;color:#bbb;text-align:center;padding:10px;">暂无录音文件</p>';
+        return;
+    }
+    container.innerHTML = audioFiles.map(f => {
+        const sizeKB = (f.size / 1024).toFixed(1);
+        const date = new Date(f.date).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        return `
+            <div class="rec-file-item">
+                <div class="file-info">
+                    <span>🎵</span>
+                    <span class="file-name">${f.name}</span>
+                    <span class="file-size">${sizeKB}KB</span>
+                    <span style="color:#999;font-size:11px;">${date}</span>
+                </div>
+                <div class="file-actions">
+                    <button class="file-action-btn" onclick="downloadFile(${f.id})">💾 下载</button>
+                    <button class="file-action-btn del" onclick="deleteFile(${f.id})">🗑️ 删除</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function downloadFile(id) {
+    const file = audioFiles.find(f => f.id === id);
+    if (!file) return;
+    const a = document.createElement('a');
+    a.href = file.data;
+    a.download = file.name;
+    a.click();
+}
+
+function deleteFile(id) {
+    if (!confirm('确定删除此录音文件？')) return;
+    audioFiles = audioFiles.filter(f => f.id !== id);
+    localStorage.setItem('ieltsSpeakingAudioFiles', JSON.stringify(audioFiles));
+    renderFileList();
+}
+
+function showSubmitTip(fileName) {
+    alert('📢 录音已保存！\n\n请把录音文件通过对话发给我（上传到项目文件），\n我收到后会立刻给出 AI 评价！\n\n💡 你也可以把说的内容打字发给我，我直接评价。');
+}
+
+// ========== 评价展示 ==========
+function showEvaluation(data) {
+    document.getElementById('evalEmpty').style.display = 'none';
+    const result = document.getElementById('evalResult');
+    result.classList.add('show');
+
+    document.getElementById('evalQuestion').textContent = data.question;
+    document.getElementById('evalDate').textContent = data.date;
+
+    // 评分
+    const scoreGrid = document.getElementById('scoreGrid');
+    const scoreItems = [
+        { label: '流利度与连贯性', value: data.fluency, desc: 'Fluency & Coherence' },
+        { label: '词汇资源', value: data.lexical, desc: 'Lexical Resource' },
+        { label: '语法范围与准确性', value: data.grammar, desc: 'Grammatical Range' },
+        { label: '发音', value: data.pronunciation, desc: 'Pronunciation' }
+    ];
+    scoreGrid.innerHTML = scoreItems.map(item => {
+        const stars = '★'.repeat(Math.floor(item.value)) + '☆'.repeat(5 - Math.floor(item.value));
+        return `
+            <div class="score-item">
+                <div class="score-label">${item.label}</div>
+                <div class="score-value">${item.value.toFixed(1)}</div>
+                <div class="score-stars" style="color:#ffb300;">${stars}</div>
+                <div class="score-band">${item.desc}</div>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('evalComment').textContent = data.comment;
+    document.getElementById('evalStrengths').innerHTML = data.strengths.map(s => `<li>${s}</li>`).join('');
+    document.getElementById('evalImprovements').innerHTML = data.improvements.map(s => `<li>${s}</li>`).join('');
+    document.getElementById('evalExample').innerHTML = data.example.replace(/\n/g, '<br>');
+
+    // 添加到记录
+    addRecord(data);
+}
+
+// ========== 练习记录 ==========
+function addRecord(data) {
+    records.unshift({
+        date: data.date,
+        question: data.question,
+        overall: data.overall || ((data.fluency + data.lexical + data.grammar + data.pronunciation) / 4).toFixed(1),
+        comment: data.comment,
+        strengths: data.strengths,
+        improvements: data.improvements
+    });
+    localStorage.setItem('ieltsSpeakingRecords', JSON.stringify(records));
+    renderRecords();
+}
+
+function renderRecords() {
+    const container = document.getElementById('recordList');
+    if (records.length === 0) {
+        container.innerHTML = '<div class="record-empty">暂无练习记录，开始你的第一次练习吧！</div>';
+        return;
+    }
+    container.innerHTML = records.map((r, idx) => `
+        <div class="record-item" onclick="toggleRecordDetail(${idx})">
+            <div class="record-left">
+                <span class="record-date">${r.date}</span>
+                <span class="record-topic">${r.question}</span>
+            </div>
+            <div class="record-score">${r.overall}</div>
+        </div>
+        <div class="record-detail" id="recordDetail${idx}">
+            <strong>综合评价：</strong>${r.comment}<br>
+            <strong>亮点：</strong><ul>${(r.strengths || []).map(s => `<li>${s}</li>`).join('')}</ul>
+            <strong>改进建议：</strong><ul>${(r.improvements || []).map(s => `<li>${s}</li>`).join('')}</ul>
+        </div>
+    `).join('');
+}
+
+function toggleRecordDetail(idx) {
+    const el = document.getElementById('recordDetail' + idx);
+    el.classList.toggle('show');
+}
+
+// ========== 页面加载时渲染 ==========
+renderFileList();
+renderRecords();
+</script>
+
+</body>
+</html>

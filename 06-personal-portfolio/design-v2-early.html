@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>吴宣澄 · 个人作品集</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Noto+Serif+SC:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  color:#f0ebe3;
+  overflow-x:hidden;
+  background:#0f1923;
+}
+
+/* ===== FIXED BACKGROUND ===== */
+#bg-layer{
+  position:fixed;inset:0;z-index:0;
+  overflow:hidden;pointer-events:none;
+}
+#bg-image{
+  position:absolute;inset:0;
+  background-image:url('https://static.coze.site/2328095969510000_0-data_volume/7656493173425832226-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/IMG_4664_1784893105338_0_zo7r.jpeg?sign=1787399828-1e4d081a48-0-dc1d9ec1515ea3d26b53cc0b7736149bde2587cf1873332b9e649059a1ac8773');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  transform:rotateX(3deg) scale(1.05);
+  transform-origin:center bottom;
+  transition:transform 0.05s linear;
+  filter:brightness(0.7) saturate(1.1);
+}
+#bg-overlay{
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(180deg,
+    rgba(15,25,35,0.3) 0%,
+    rgba(15,25,35,0.1) 25%,
+    rgba(15,25,35,0.08) 50%,
+    rgba(15,25,35,0.15) 70%,
+    rgba(15,25,35,0.5) 100%);
+}
+
+/* ===== BOAT - 固定定位，不随滚轮移动 ===== */
+#boat-fixed{
+  position:fixed;z-index:1;pointer-events:none;
+  top:44%;left:50%;
+  transform:translateX(-50%);
+}
+/* 水面光晕 - 模拟船周围的水面反光，自然遮挡背景树木 */
+.boat-glow{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:200px;height:200px;
+  border-radius:50%;
+  background:radial-gradient(
+    ellipse at 50% 55%,
+    rgba(140,188,175,0.18) 0%,
+    rgba(120,170,155,0.10) 25%,
+    rgba(100,155,140,0.06) 45%,
+    rgba(80,140,125,0.03) 60%,
+    transparent 75%
+  );
+  pointer-events:none;
+  animation:glow-pulse 5s ease-in-out infinite;
+}
+@keyframes glow-pulse{
+  0%,100%{opacity:0.7;transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.08);}
+}
+/* 水面光晕 - 第二层更柔和 */
+.boat-glow-2{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:280px;height:140px;
+  border-radius:50%;
+  background:radial-gradient(
+    ellipse at 50% 60%,
+    rgba(160,200,188,0.08) 0%,
+    rgba(130,175,160,0.04) 30%,
+    transparent 65%
+  );
+  pointer-events:none;
+  animation:glow-pulse-2 7s ease-in-out infinite;
+}
+@keyframes glow-pulse-2{
+  0%,100%{opacity:0.5;transform:translate(-50%,-50%) scaleX(1);}
+  50%{opacity:0.8;transform:translate(-50%,-50%) scaleX(1.12);}
+}
+
+.boat-wrap{
+  position:relative;
+  width:110px;height:170px;
+  animation:boat-bob 4s ease-in-out infinite;
+}
+@keyframes boat-bob{
+  0%,100%{transform:translateY(0) rotate(-0.5deg)}
+  50%{transform:translateY(-3px) rotate(0.5deg)}
+}
+/* 船体阴影 - 水上倒影 */
+.boat-shadow{
+  position:absolute;
+  bottom:-12px;left:50%;transform:translateX(-50%);
+  width:55px;height:18px;
+  background:radial-gradient(ellipse,rgba(0,0,0,0.2) 0%,transparent 70%);
+  border-radius:50%;
+  animation:shadow-pulse 4s ease-in-out infinite;
+}
+@keyframes shadow-pulse{
+  0%,100%{transform:translateX(-50%) scaleX(1);opacity:0.5}
+  50%{transform:translateX(-50%) scaleX(0.7);opacity:0.2}
+}
+/* 船体 - 狭长木船，俯视 */
+.boat-hull{
+  position:absolute;
+  top:5px;left:50%;transform:translateX(-50%);
+  width:30px;height:130px;
+  background:linear-gradient(180deg,
+    #7a5a3a 0%,
+    #8b6b4f 8%,
+    #6a4a3a 35%,
+    #5a3a2a 50%,
+    #6a4a3a 65%,
+    #8b6b4f 92%,
+    #7a5a3a 100%
+  );
+  border-radius:50% 50% 50% 50% / 35% 35% 35% 35%;
+  box-shadow:
+    0 4px 15px rgba(0,0,0,0.35),
+    inset 0 -4px 8px rgba(0,0,0,0.12),
+    inset 0 4px 8px rgba(255,255,255,0.04);
+  border:1px solid rgba(60,38,22,0.35);
+}
+/* 船头(上端) */
+.boat-hull::before{
+  content:'';position:absolute;
+  top:-10px;left:50%;transform:translateX(-50%);
+  width:18px;height:14px;
+  background:linear-gradient(180deg,#8b6b4f,#6a4a3a);
+  border-radius:50% 50% 30% 30%;
+  border:1px solid rgba(60,38,22,0.3);
+}
+/* 船尾(下端) */
+.boat-hull::after{
+  content:'';position:absolute;
+  bottom:-8px;left:50%;transform:translateX(-50%);
+  width:16px;height:12px;
+  background:linear-gradient(180deg,#6a4a3a,#5a3a2a);
+  border-radius:50% 50% 30% 30%;
+  border:1px solid rgba(60,38,22,0.3);
+}
+/* 甲板木纹 */
+.boat-deck{
+  position:absolute;
+  top:20px;left:50%;transform:translateX(-50%);
+  width:24px;height:90px;
+  background:repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 5px,
+    rgba(0,0,0,0.06) 5px,
+    rgba(0,0,0,0.06) 6px
+  );
+  border-radius:40%;
+}
+/* 左舷高光线 */
+.boat-hull-border{
+  position:absolute;
+  top:10px;left:50%;transform:translateX(-50%);
+  width:28px;height:110px;
+  border-radius:50%;
+  border-left:1px solid rgba(255,255,255,0.06);
+  border-right:1px solid rgba(0,0,0,0.15);
+  pointer-events:none;
+}
+/* 船舱 - 乌篷 */
+.boat-cabin{
+  position:absolute;
+  top:45px;left:50%;transform:translateX(-50%);
+  width:20px;height:38px;
+  background:linear-gradient(180deg,#4a2a18,#3d2518);
+  border-radius:8px 8px 3px 3px;
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.3),
+    0 2px 4px rgba(0,0,0,0.15);
+  z-index:2;
+}
+.boat-cabin::before{
+  content:'';position:absolute;
+  top:4px;left:2px;right:2px;height:3px;
+  background:rgba(255,255,255,0.04);
+  border-radius:2px;
+}
+/* 乌篷顶 - 弧形竹编 */
+.boat-roof{
+  position:absolute;
+  top:40px;left:50%;transform:translateX(-50%);
+  width:24px;height:10px;
+  background:linear-gradient(180deg,#3d2518,#4a2a18);
+  border-radius:50%;
+  box-shadow:0 2px 6px rgba(0,0,0,0.25);
+  z-index:3;
+}
+.boat-roof::before{
+  content:'';position:absolute;
+  top:3px;left:3px;right:3px;height:2px;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(255,255,255,0.03) 3px,
+    rgba(255,255,255,0.03) 4px
+  );
+  border-radius:1px;
+}
+/* 船桨 - 紧贴船身两侧 */
+.oar{
+  position:absolute;top:66px;
+  height:4px;
+  background:linear-gradient(90deg,rgba(90,58,42,0.8),#5a3a2a,#8a6a5a,rgba(90,58,42,0.8));
+  border-radius:3px;
+}
+.oar.left{
+  right:50%;width:42px;
+  margin-right:10px;
+  transform-origin:100% 50%;
+  animation:oar-left 1.8s ease-in-out infinite;
+}
+.oar.right{
+  left:50%;width:42px;
+  margin-left:10px;
+  transform-origin:0% 50%;
+  animation:oar-right 1.8s ease-in-out infinite;
+}
+/* 桨柄 - 连接船体的部分（更粗更明显） */
+.oar-handle{
+  position:absolute;top:66px;
+  width:14px;height:8px;
+  background:linear-gradient(180deg,#6a4a3a,#5a3a2a);
+  border-radius:4px;
+  z-index:3;
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
+.oar-handle.left{
+  right:50%;margin-right:10px;
+}
+.oar-handle.right{
+  left:50%;margin-left:10px;
+}
+/* 桨叶 */
+.oar::before{
+  content:'';position:absolute;top:50%;transform:translateY(-50%);
+  width:14px;height:8px;background:#5a3a2a;border-radius:4px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.2),inset 0 -1px 2px rgba(255,255,255,0.05);
+}
+.oar.left::before{left:-2px;}
+.oar.right::before{right:-2px;}
+/* 桨轴 - 连接点（更明显） */
+.oar-pin{
+  position:absolute;top:66px;
+  width:8px;height:8px;
+  background:radial-gradient(circle at 40% 35%,#7a5a3a,#3d2518);
+  border-radius:50%;
+  box-shadow:0 0 4px rgba(0,0,0,0.3),inset 0 1px 1px rgba(255,255,255,0.1);
+  z-index:4;
+}
+.oar-pin.left{
+  right:50%;margin-right:10px;
+  transform:translateX(50%);
+}
+.oar-pin.right{
+  left:50%;margin-left:10px;
+  transform:translateX(-50%);
+}
+@keyframes oar-left{
+  0%{transform:translateY(-50%) rotate(-12deg)}
+  50%{transform:translateY(-50%) rotate(12deg)}
+  100%{transform:translateY(-50%) rotate(-12deg)}
+}
+@keyframes oar-right{
+  0%{transform:translateY(-50%) rotate(12deg)}
+  50%{transform:translateY(-50%) rotate(-12deg)}
+  100%{transform:translateY(-50%) rotate(12deg)}
+}
+/* 水花 */
+.oar-spray{
+  position:absolute;top:56px;
+  width:6px;height:4px;opacity:0;border-radius:50%;
+}
+.oar-spray.left{
+  right:50%;margin-right:18px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.12),transparent);
+  animation:spray 1.8s ease-out infinite;
+}
+.oar-spray.right{
+  left:50%;margin-left:18px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.12),transparent);
+  animation:spray 1.8s ease-out infinite;
+  animation-delay:0.9s;
+}
+@keyframes spray{
+  0%{width:4px;height:2px;opacity:0.25;transform:translateY(0)}
+  50%{width:12px;height:6px;opacity:0.1;transform:translateY(-6px)}
+  100%{width:4px;height:1px;opacity:0;transform:translateY(-10px)}
+}
+/* 水波纹 */
+.boat-ripple{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  width:50px;height:3px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.05);
+  animation:ripple-spread 3s ease-out infinite;
+}
+.boat-ripple:nth-child(2){animation-delay:1s;}
+.boat-ripple:nth-child(3){animation-delay:2s;}
+@keyframes ripple-spread{
+  0%{width:40px;height:3px;opacity:0.15;border-color:rgba(255,255,255,0.08)}
+  100%{width:90px;height:7px;opacity:0;border-color:rgba(255,255,255,0)}
+}
+/* 水痕 */
+.boat-wake{
+  position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);
+  animation:wake-trail 2.5s ease-out infinite;
+}
+@keyframes wake-trail{
+  0%{width:0;opacity:0.1;height:0;border-bottom:1px solid rgba(255,255,255,0.05)}
+  100%{width:36px;opacity:0;height:10px;border-bottom:1px solid rgba(255,255,255,0)}
+}
+
+/* ===== SPLASH SCREEN ===== */
+#splash-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:#0a1118;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:opacity 0.6s ease;
+}
+#splash-screen.hidden{opacity:0;pointer-events:none}
+.splash-text{
+  font-family:'Caveat',cursive;
+  color:#ffffff;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.2em;
+}
+.splash-line{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:1.2em;
+}
+.splash-line .char{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity 0.15s ease,transform 0.15s ease;
+}
+.splash-line .char.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+.splash-line .cursor{
+  display:inline-block;
+  width:3px;
+  height:1em;
+  background:#ffffff;
+  margin-left:2px;
+  animation:blink 0.8s step-end infinite;
+  opacity:0;
+}
+.splash-line .cursor.show{opacity:1;}
+@keyframes blink{50%{opacity:0}}
+.splash-line:first-child .char{font-size:clamp(2.5rem,8vw,5rem);}
+.splash-line:last-child .char{font-size:clamp(2rem,6vw,4rem);}
+.splash-hint{
+  position:absolute;bottom:60px;
+  color:rgba(255,255,255,0.3);
+  font-size:14px;letter-spacing:4px;
+  animation:pulse-hint 2s ease-in-out infinite;
+  font-family:'Noto Serif SC',serif;
+}
+@keyframes pulse-hint{0%,100%{opacity:0.3}50%{opacity:0.8}}
+
+/* ===== NAVIGATION ===== */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:18px 0;transition:all 0.4s ease;
+}
+#navbar.scrolled{
+  background:rgba(15,25,35,0.7);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:12px 0;
+}
+.nav-link{
+  position:relative;padding:6px 0;
+  font-size:14px;letter-spacing:2px;
+  color:rgba(255,255,255,0.7);
+  transition:color 0.3s;cursor:pointer;
+}
+.nav-link::after{
+  content:'';position:absolute;bottom:0;left:50%;
+  width:0;height:2px;background:#e8c4a0;
+  transition:all 0.3s ease;transform:translateX(-50%);
+}
+.nav-link:hover{color:#fff;}
+.nav-link:hover::after{width:100%;}
+
+/* ===== CONTENT ===== */
+#content{position:relative;z-index:2;}
+.section{
+  padding:100px 24px;
+  position:relative;
+  background:rgba(15,25,35,0.35);
+  backdrop-filter:blur(2px);
+}
+.section-title{
+  text-align:center;
+  font-size:clamp(1.8rem,4vw,2.5rem);
+  letter-spacing:6px;margin-bottom:60px;
+  position:relative;
+}
+.section-title::after{
+  content:'';display:block;
+  width:60px;height:2px;background:#e8c4a0;
+  margin:16px auto 0;
+}
+
+/* ===== HERO ===== */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:0 24px;
+  background:transparent;
+}
+.hero-title{
+  font-size:clamp(2.5rem,8vw,5rem);
+  font-weight:700;letter-spacing:8px;
+  text-shadow:0 4px 20px rgba(0,0,0,0.4);
+  margin-bottom:12px;
+  animation:fadeInUp 1.2s ease 0.5s both;
+}
+.hero-subtitle{
+  font-size:clamp(1rem,3vw,1.6rem);
+  letter-spacing:6px;color:rgba(255,255,255,0.8);
+  text-shadow:0 2px 15px rgba(0,0,0,0.3);
+  animation:fadeInUp 1.2s ease 0.8s both;
+}
+.hero-tags{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+  margin-top:16px;
+  animation:fadeInUp 1.2s ease 1s both;
+}
+.hero-tag{
+  display:inline-block;
+  padding:5px 16px;
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;
+  font-size:clamp(0.75rem,1.8vw,1rem);
+  letter-spacing:2px;
+  color:rgba(255,255,255,0.85);
+  text-shadow:0 2px 10px rgba(0,0,0,0.3);
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(4px);
+  transition:all 0.3s;
+}
+.hero-tag:hover{
+  border-color:#e8c4a0;
+  background:rgba(232,196,160,0.12);
+  transform:translateY(-2px);
+}
+.scroll-indicator{
+  position:absolute;bottom:120px;z-index:3;
+  animation:fadeInUp 1.2s ease 1.5s both;
+}
+.scroll-arrow{
+  width:24px;height:40px;
+  border:2px solid rgba(255,255,255,0.4);
+  border-radius:12px;position:relative;margin:0 auto;
+}
+.scroll-arrow::after{
+  content:'';position:absolute;top:8px;left:50%;
+  width:4px;height:8px;
+  background:rgba(255,255,255,0.6);border-radius:2px;
+  transform:translateX(-50%);
+  animation:scrollDown 2s ease-in-out infinite;
+}
+@keyframes scrollDown{
+  0%{transform:translateX(-50%) translateY(0);opacity:1}
+  100%{transform:translateX(-50%) translateY(16px);opacity:0}
+}
+
+/* ===== About ===== */
+#about{background:rgba(15,25,35,0.4);}
+.about-card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;padding:40px;
+  max-width:700px;margin:0 auto;
+  line-height:1.8;color:rgba(255,255,255,0.8);
+  font-size:15px;letter-spacing:1px;
+}
+
+/* ===== 3D Tag Cloud ===== */
+#hobbies{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:rgba(15,25,35,0.35);
+}
+.tagcloud-wrap{
+  position:relative;width:100%;max-width:600px;
+  height:600px;margin:0 auto;
+}
+#tagcloud-canvas{width:100%;height:100%;cursor:pointer;}
+
+/* ===== Skills 3D Carousel ===== */
+#skills{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;background:rgba(15,25,35,0.35);
+}
+.skills-carousel-wrap{
+  position:relative;width:100%;max-width:900px;
+  height:400px;perspective:1200px;
+}
+.skills-carousel{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform 0.8s cubic-bezier(0.23,1,0.32,1);
+}
+.skill-card{
+  position:absolute;width:220px;height:280px;
+  left:50%;top:50%;margin-left:-110px;margin-top:-140px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:30px 20px;
+  text-align:center;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:all 0.5s ease;
+  backface-visibility:hidden;cursor:pointer;
+}
+.skill-card .icon{font-size:48px;margin-bottom:16px;}
+.skill-card .name{font-size:18px;font-weight:600;margin-bottom:8px;letter-spacing:2px;}
+.skill-card .desc{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;}
+.skill-card.active{
+  border-color:#e8c4a0;
+  box-shadow:0 0 30px rgba(232,196,160,0.15);
+  transform:scale(1.05);
+}
+.skill-card:not(.active){
+  filter:blur(2px) brightness(0.6);
+  transform:scale(0.9);
+}
+.carousel-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  z-index:10;width:48px;height:48px;
+  border-radius:50%;background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;font-size:20px;cursor:pointer;
+  transition:all 0.3s;
+  display:flex;align-items:center;justify-content:center;
+}
+.carousel-btn:hover{background:rgba(255,255,255,0.2);transform:translateY(-50%) scale(1.1);}
+.carousel-btn.prev{left:10px;}
+.carousel-btn.next{right:10px;}
+.carousel-dots{
+  display:flex;justify-content:center;gap:8px;margin-top:30px;
+}
+.carousel-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  transition:all 0.3s;cursor:pointer;
+}
+.carousel-dot.active{
+  background:#e8c4a0;width:24px;border-radius:4px;
+}
+
+/* ===== Animations ===== */
+.reveal{
+  opacity:0;transform:translateY(60px);
+  transition:all 0.8s cubic-bezier(0.23,1,0.32,1);
+}
+.reveal.revealed{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+.reveal-delay-4{transition-delay:0.4s;}
+.reveal-delay-5{transition-delay:0.5s;}
+
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(40px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .section{padding:60px 16px;}
+  .section-title{margin-bottom:40px;}
+  .about-card{padding:24px;}
+  .tagcloud-wrap{height:400px;}
+  .skills-carousel-wrap{height:350px;}
+  .skill-card{width:180px;height:240px;margin-left:-90px;margin-top:-120px;}
+  .skill-card .icon{font-size:36px;}
+  .skill-card .name{font-size:15px;}
+  .boat-wrap{width:90px;height:135px;}
+  .boat-hull{width:24px;height:105px;}
+  .boat-cabin{width:16px;height:30px;}
+  .boat-roof{width:20px;height:8px;}
+  .oar{width:34px;height:3.5px;}
+  .oar.left, .oar.right{margin-left:8px;margin-right:8px;}
+  .oar-handle, .oar-pin{display:none;}
+  .carousel-btn{width:36px;height:36px;font-size:16px;}
+  #navbar .nav-link{font-size:12px;}
+  #boat-fixed{top:38%;}
+  .boat-glow{width:140px;height:140px;}
+  .boat-glow-2{width:200px;height:100px;}
+}
+@media(max-width:480px){
+  .hero-title{letter-spacing:4px;}
+  .hero-subtitle{letter-spacing:3px;}
+  .skill-card{width:150px;height:200px;margin-left:-75px;margin-top:-100px;padding:16px;}
+  .skill-card .icon{font-size:28px;margin-bottom:10px;}
+  .skill-card .name{font-size:13px;}
+  .skill-card .desc{font-size:10px;}
+  .boat-wrap{width:70px;height:105px;}
+  .boat-hull{width:20px;height:80px;}
+  .boat-cabin{width:13px;height:24px;}
+  .boat-roof{width:16px;height:6px;}
+  .oar{width:26px;height:3px;}
+  .oar.left, .oar.right{margin-left:6px;margin-right:6px;}
+  .boat-glow{width:110px;height:110px;}
+  .boat-glow-2{width:160px;height:80px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== FIXED BACKGROUND ===== -->
+<div id="bg-layer">
+  <div id="bg-image"></div>
+  <div id="bg-overlay"></div>
+</div>
+
+<!-- ===== BOAT - 固定定位 ===== -->
+<div id="boat-fixed">
+  <div class="boat-wrap">
+    <!-- 水面光晕 - 模拟船周围水面反光，自然遮挡背景树木 -->
+    <div class="boat-glow"></div>
+    <div class="boat-glow-2"></div>
+    <!-- 船体阴影 -->
+    <div class="boat-shadow"></div>
+    <!-- 左桨 -->
+    <div class="oar-handle left"></div>
+    <div class="oar left"></div>
+    <div class="oar-pin left"></div>
+    <div class="oar-spray left"></div>
+    <!-- 右桨 -->
+    <div class="oar-handle right"></div>
+    <div class="oar right"></div>
+    <div class="oar-pin right"></div>
+    <div class="oar-spray right"></div>
+    <!-- 船体 -->
+    <div class="boat-hull">
+      <div class="boat-hull-border"></div>
+    </div>
+    <div class="boat-deck"></div>
+    <div class="boat-roof"></div>
+    <div class="boat-cabin"></div>
+    <!-- 水波纹 -->
+    <div class="boat-ripple"></div>
+    <div class="boat-ripple"></div>
+    <div class="boat-ripple"></div>
+    <div class="boat-wake"></div>
+  </div>
+</div>
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div id="splash-screen">
+  <div class="splash-text" id="splash-text">
+    <div class="splash-line" id="splash-line1"></div>
+    <div class="splash-line" id="splash-line2"></div>
+  </div>
+  <div class="splash-hint">✦ 点击任意处进入 ✦</div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div id="content">
+
+<nav id="navbar">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+    <div class="text-lg font-bold tracking-widest" style="font-family:'Caveat',cursive;color:#e8c4a0;">WXC</div>
+    <div class="flex items-center gap-8">
+      <a href="#hero" class="nav-link">首页</a>
+      <a href="#about" class="nav-link">关于</a>
+      <a href="#hobbies" class="nav-link">爱好</a>
+      <a href="#skills" class="nav-link">技能</a>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <h1 class="hero-title">吴宣澄</h1>
+  <div class="hero-tags">
+    <span class="hero-tag">男</span>
+    <span class="hero-tag">18岁</span>
+    <span class="hero-tag">射手座</span>
+    <span class="hero-tag">大一</span>
+    <span class="hero-tag">中山大学</span>
+    <span class="hero-tag">数字公共治理专业</span>
+  </div>
+  <div class="scroll-indicator"><div class="scroll-arrow"></div></div>
+</section>
+
+<section id="about" class="section">
+  <h2 class="section-title reveal">关于我</h2>
+  <div class="about-card reveal reveal-delay-1">
+    <p>您好，我是吴宣澄，一名热爱生活，喜欢探索的大学生。在我的成长路途中，我不断着积累知识、提升能力，广泛涉猎各学科，向综合性人才目标不断靠拢。</p>
+    <br>
+    <p>课余时间，我积极参加体育锻炼和校内活动。在校运动会1500米长跑中获全年级第六名；在高中全校辩论赛中闯入决赛，思辨与语言表达能力得到良好培养。</p>
+    <br>
+    <p>在校外，我积极参与社会实践。在高中繁忙的学业压力下仍抽空参加志愿活动，以服务社会、提升社会责任感和提升社交能力为宗旨，累计时长数十小时。</p>
+    <br>
+    <p>空闲时，我全面发展兴趣爱好，如唱歌、钢琴、篮球、羽毛球、编程等，并自主学习经济学、博弈论、计算机语言、心理学、历史学、哲学、中医学、高等数学、大学物理等跨学科知识。</p>
+    <br>
+    <p>一直以来，我不断增进对世界的理解，紧跟时事，开拓视野。阅读尤瓦尔·赫拉利教授的《今日简史》《人类简史》《未来简史》让我对世界发展有了深刻洞察；查理·芒格的《穷查理宝典》让我认识到跨学科能力与多元思维模型的重要性。中大出版的潘鸣啸的《失落的一代》让我了解过去的历史，敦促我以史为鉴，正视当前……</p>
+    <br>
+    <p>中山大学校训十字——"博学、审问、慎思、明辨、笃行"，源于《礼记·中庸》，孙中山先生亲笔题写时注入了"振兴中华"的时代内涵。校训强调学、问、思、辨、行五个环节的贯通，最终落脚于"笃行"——知行合一、服务社会。孙中山先生曾勉励中大学子"立志做大事，不可做大官"，将个人所学与国家命运相连。</p>
+    <br>
+    <p>而如今，站在一个新的起点上，我将以校训为指引：博学以广纳各学科知识，审问以探求事物本质，慎思以锤炼批判思维，明辨以确立价值方向，最终以笃行将所学化为实际行动踏实自己的学习；心怀集体，把班级的利益摆在第一位，为整个班级的团结奋进贡献我的一份绵薄之力。面向国家重大战略需求与粤港澳大湾区发展需要，我希望在跨学科融合中不断提升学习力、思想力和行动力，努力成为能够引领未来的创造性人才，在祖国需要的舞台上发光发热。</p>
+  </div>
+</section>
+
+<section id="hobbies" class="section">
+  <h2 class="section-title reveal">兴趣爱好</h2>
+  <div class="tagcloud-wrap reveal reveal-delay-1">
+    <canvas id="tagcloud-canvas"></canvas>
+  </div>
+</section>
+
+<section id="skills" class="section">
+  <h2 class="section-title reveal">技能</h2>
+  <div class="skills-carousel-wrap reveal reveal-delay-1">
+    <div class="skills-carousel" id="skills-carousel">
+      <div class="skill-card active" data-index="0"><div class="icon">📄</div><div class="name">办公软件</div><div class="desc">Word · PPT · Excel</div></div>
+      <div class="skill-card" data-index="1"><div class="icon">🤖</div><div class="name">"AI+" 学习</div><div class="desc">人工智能应用 · 提示工程</div></div>
+      <div class="skill-card" data-index="2"><div class="icon">🐍</div><div class="name">基础 Python</div><div class="desc">编程基础 · 数据处理</div></div>
+      <div class="skill-card" data-index="3"><div class="icon">✍️</div><div class="name">写作</div><div class="desc">文章撰写 · 内容创作</div></div>
+    </div>
+    <button class="carousel-btn prev" id="carousel-prev">‹</button>
+    <button class="carousel-btn next" id="carousel-next">›</button>
+  </div>
+  <div class="carousel-dots reveal reveal-delay-2" id="carousel-dots"></div>
+</section>
+
+
+</div>
+
+<script>
+// ============================================================
+// 1. SPLASH SCREEN
+// ============================================================
+(function(){
+  const splash=document.getElementById('splash-screen');
+  const line1=document.getElementById('splash-line1');
+  const line2=document.getElementById('splash-line2');
+  let canDismiss=false;
+
+  function typeText(container,text,delay,callback){
+    const chars=text.split('');
+    container.innerHTML='';
+    chars.forEach((ch,i)=>{
+      const span=document.createElement('span');
+      span.className='char';
+      span.textContent=ch;
+      container.appendChild(span);
+    });
+    const cursor=document.createElement('span');
+    cursor.className='cursor show';
+    container.appendChild(cursor);
+
+    let idx=0;
+    const timer=setInterval(()=>{
+      if(idx<chars.length){
+        const spans=container.querySelectorAll('.char');
+        if(spans[idx]){
+          spans[idx].classList.add('visible');
+        }
+        idx++;
+      }else{
+        clearInterval(timer);
+        if(callback)callback();
+      }
+    },delay);
+    return timer;
+  }
+
+  document.fonts.ready.then(()=>{
+    typeText(line1,'Hello！',150,()=>{
+      setTimeout(()=>{
+        typeText(line2,'你好！',200,()=>{
+          setTimeout(()=>{
+            document.querySelectorAll('.cursor').forEach(c=>c.classList.remove('show'));
+            canDismiss=true;
+          },500);
+        });
+      },500);
+    });
+  });
+
+  splash.addEventListener('click',()=>{
+    if(canDismiss){
+      splash.classList.add('hidden');
+      document.body.style.overflow='';
+      setTimeout(()=>{splash.style.display='none';},600);
+    }
+  });
+  splash.addEventListener('touchstart',()=>{
+    if(canDismiss){
+      splash.classList.add('hidden');
+      document.body.style.overflow='';
+      setTimeout(()=>{splash.style.display='none';},600);
+    }
+  });
+})();
+
+// ============================================================
+// 2. NAVBAR
+// ============================================================
+(function(){
+  const navbar=document.getElementById('navbar');
+  window.addEventListener('scroll',()=>{
+    navbar.classList.toggle('scrolled',window.scrollY>80);
+  });
+})();
+
+// ============================================================
+// 3. BACKGROUND PARALLAX - 仅背景移动，船不动
+// ============================================================
+(function(){
+  const bgImage=document.getElementById('bg-image');
+  window.addEventListener('scroll',()=>{
+    const scrollY=window.scrollY;
+    const maxScroll=document.documentElement.scrollHeight-window.innerHeight;
+    const progress=Math.min(1,scrollY/maxScroll);
+    const translateY=-progress*20;
+    const rotateX=3-progress*3;
+    bgImage.style.transform='rotateX('+rotateX+'deg) scale(1.05) translateY('+translateY+'%)';
+  });
+})();
+
+// ============================================================
+// 4. 3D TAG CLOUD
+// ============================================================
+(function(){
+  const canvas=document.getElementById('tagcloud-canvas');
+  const ctx=canvas.getContext('2d');
+  const wrap=canvas.parentElement;
+  let w,h,cx,cy;
+  let tags=[];
+  let mouseX=0,mouseY=0,isHovering=false;
+  let rotX=0,rotY=0;
+  const speed=0.004;
+  const tagTexts=['🏃 跑步','💪 健身','🏀 篮球','🏸 羽毛球','✍️ 写作','📖 阅读','🎹 钢琴','🎤 唱歌','🧘 冥想','🏴‍☠️ 海贼王','🤝 社交','🎬 电影','🍵 喝茶','📚 哲学'];
+
+  function resize(){
+    const rect=wrap.getBoundingClientRect();
+    w=canvas.width=rect.width;
+    h=canvas.height=rect.height;
+    cx=w/2;cy=h/2;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  function initTags(){
+    tags=[];
+    const n=tagTexts.length;
+    const goldenAngle=Math.PI*(3-Math.sqrt(5));
+    for(let i=0;i<n;i++){
+      const y=1-(i/(n-1))*2;
+      const r=Math.sqrt(1-y*y);
+      const theta=goldenAngle*i;
+      tags.push({
+        text:tagTexts[i],
+        x:Math.cos(theta)*r,y,z:Math.sin(theta)*r,
+        scale:1,baseSize:14+Math.random()*4,
+        hue:200+Math.random()*60,sat:50+Math.random()*30,light:60+Math.random()*20
+      });
+    }
+  }
+  initTags();
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const R=Math.min(w,h)*0.38;
+    const sorted=[...tags].sort((a,b)=>b.z-a.z);
+
+    sorted.forEach(tag=>{
+      let x=tag.x,y=tag.y,z=tag.z;
+      let cosX=Math.cos(rotX),sinX=Math.sin(rotX);
+      let y1=y*cosX-z*sinX,z1=y*sinX+z*cosX;y=y1;z=z1;
+      let cosY=Math.cos(rotY),sinY=Math.sin(rotY);
+      let x1=x*cosY+z*sinY,z2=-x*sinY+z*cosY;x=x1;z=z2;
+
+      const sx=cx+x*R,sy=cy+y*R;
+      const depth=(z+1)/2;
+      const size=tag.baseSize*(0.5+depth*0.6);
+      const alpha=0.3+depth*0.7;
+
+      let fontSize=size;
+      if(isHovering){
+        const dx=mouseX-sx,dy=mouseY-sy;
+        if(Math.sqrt(dx*dx+dy*dy)<60){
+          fontSize=size*1.5;tag.scale=1.5;
+        }else{tag.scale+=(1-tag.scale)*0.1;fontSize=size*tag.scale;}
+      }else{tag.scale+=(1-tag.scale)*0.1;fontSize=size*tag.scale;}
+
+      ctx.save();
+      ctx.globalAlpha=alpha;
+      ctx.font=Math.round(fontSize)+'px "Noto Serif SC",sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle=`hsl(${tag.hue},${tag.sat}%,${tag.light}%)`;
+      ctx.fillText(tag.text,sx,sy);
+      ctx.restore();
+    });
+
+    if(!isHovering){rotY+=speed;rotX+=speed*0.3;}
+    requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    mouseX=e.clientX-rect.left;mouseY=e.clientY-rect.top;isHovering=true;
+  });
+  canvas.addEventListener('mouseleave',()=>{isHovering=false;});
+
+  let tx=0,ty=0;
+  canvas.addEventListener('touchstart',e=>{
+    const t=e.touches[0],rect=canvas.getBoundingClientRect();
+    mouseX=t.clientX-rect.left;mouseY=t.clientY-rect.top;
+    tx=mouseX;ty=mouseY;isHovering=true;
+  });
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    const t=e.touches[0],rect=canvas.getBoundingClientRect();
+    mouseX=t.clientX-rect.left;mouseY=t.clientY-rect.top;
+    rotY+=(mouseX-tx)*0.005;rotX+=(mouseY-ty)*0.005;
+    tx=mouseX;ty=mouseY;
+  },{passive:false});
+  canvas.addEventListener('touchend',()=>{isHovering=false;});
+  draw();
+})();
+
+// ============================================================
+// 5. SKILLS 3D CAROUSEL
+// ============================================================
+(function(){
+  const carousel=document.getElementById('skills-carousel');
+  const cards=carousel.querySelectorAll('.skill-card');
+  const prevBtn=document.getElementById('carousel-prev');
+  const nextBtn=document.getElementById('carousel-next');
+  const dotsContainer=document.getElementById('carousel-dots');
+  let current=0,total=cards.length,isDragging=false,startX=0,delta=0;
+
+  for(let i=0;i<total;i++){
+    const dot=document.createElement('div');
+    dot.className='carousel-dot'+(i===0?' active':'');
+    dot.dataset.index=i;
+    dot.addEventListener('click',()=>goTo(i));
+    dotsContainer.appendChild(dot);
+  }
+
+  function update(){
+    const radius=280,step=360/total;
+    cards.forEach((card,i)=>{
+      let angle=step*(i-current);
+      const rad=angle*Math.PI/180;
+      const x=Math.sin(rad)*radius;
+      const z=Math.cos(rad)*radius-radius;
+      card.style.transform='translateX('+x+'px) translateZ('+z+'px)';
+      card.style.opacity=0.3+((z+radius*2)/(radius*2))*0.7;
+      card.style.zIndex=Math.round(((z+radius*2)/(radius*2))*100);
+      card.classList.toggle('active',i===current);
+    });
+    dotsContainer.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===current));
+  }
+
+  function goTo(i){current=((i%total)+total)%total;update();}
+  function next(){goTo(current+1);}
+  function prev(){goTo(current-1);}
+  prevBtn.addEventListener('click',prev);
+  nextBtn.addEventListener('click',next);
+
+  carousel.addEventListener('mousedown',e=>{isDragging=true;startX=e.clientX;delta=0;carousel.style.cursor='grabbing';});
+  window.addEventListener('mousemove',e=>{if(!isDragging)return;delta=e.clientX-startX;});
+  window.addEventListener('mouseup',()=>{if(!isDragging)return;isDragging=false;carousel.style.cursor='grab';if(Math.abs(delta)>50){if(delta<0)next();else prev();}});
+
+  let touchStart=0;
+  carousel.addEventListener('touchstart',e=>{touchStart=e.touches[0].clientX;},{passive:true});
+  carousel.addEventListener('touchend',e=>{const diff=e.changedTouches[0].clientX-touchStart;if(Math.abs(diff)>50){if(diff<0)next();else prev();}},{passive:true});
+
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev();if(e.key==='ArrowRight')next();});
+  update();
+
+  let autoRotate=setInterval(()=>{if(!isDragging)next();},4000);
+  carousel.addEventListener('mouseenter',()=>clearInterval(autoRotate));
+  carousel.addEventListener('mouseleave',()=>{autoRotate=setInterval(()=>{if(!isDragging)next();},4000);});
+})();
+
+// ============================================================
+// 7. SCROLL REVEAL
+// ============================================================
+(function(){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('revealed');});
+  },{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+})();
+
+// ============================================================
+// 8. SMOOTH SCROLL
+// ============================================================
+(function(){
+  document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+    anchor.addEventListener('click',function(e){
+      e.preventDefault();
+      const target=document.querySelector(this.getAttribute('href'));
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</body>
+</html>

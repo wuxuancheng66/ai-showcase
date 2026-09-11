@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codex Skills 总览与调用指南</title>
+<style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      background: #f4f6f8; color: #24292f; line-height: 1.85; font-size: 16px;
+    }
+    .page { max-width: 960px; margin: 0 auto; padding: 36px 26px 90px; }
+    .doc-header {
+      background: linear-gradient(135deg, #0f1f3d 0%, #1d3a5f 55%, #2d6a8e 100%);
+      color: #fff; border-radius: 16px; padding: 38px 38px 30px; margin-bottom: 26px;
+      box-shadow: 0 6px 18px rgba(15,31,61,.18);
+    }
+    .doc-header h1 { margin: 0 0 12px; font-size: 32px; line-height: 1.3; }
+    .doc-header p { margin: 6px 0; opacity: .93; font-size: 15px; }
+    .doc-header .badge { display:inline-block; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.25);
+      padding: 2px 10px; border-radius: 20px; font-size: 13px; margin-right: 6px; margin-top: 8px; }
+    h1.chapter {
+      font-size: 25px; margin: 46px 0 16px; padding: 13px 18px;
+      background: linear-gradient(90deg, #e8eef6, #f6f9fc);
+      border-left: 6px solid #1d3a5f; border-radius: 8px; color: #16304f;
+    }
+    h2 { font-size: 21px; margin: 36px 0 12px; padding-bottom: 7px; border-bottom: 2px solid #d9e2ec; color: #1d3a5f; }
+    h3 { font-size: 18px; margin: 26px 0 10px; color: #24527a; }
+    p { margin: 10px 0; }
+    a { color: #1d5c8e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { color: #14304f; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #e8edf3; color: #b3402a; padding: 2px 6px; border-radius: 5px; font-size: 13.5px;
+    }
+    pre {
+      background: #161b27; color: #e6e9ef; padding: 18px 20px; border-radius: 10px;
+      overflow-x: auto; font-size: 13.5px; line-height: 1.65; margin: 14px 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,.12); position: relative;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    blockquote {
+      margin: 14px 0; padding: 13px 18px; background: #eef4fb;
+      border-left: 5px solid #2d5a8e; border-radius: 0 8px 8px 0; color: #33414f;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05); border-radius: 8px; overflow: hidden; }
+    th, td { border: 1px solid #d8dee6; padding: 9px 12px; text-align: left; vertical-align: top; }
+    th { background: #eaf0f7; color: #16304f; font-weight: 600; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    ul, ol { margin: 10px 0; padding-left: 26px; }
+    li { margin: 4px 0; }
+    ul.todo { list-style: none; padding-left: 6px; }
+    li.todo { list-style: none; margin-left: 0; }
+    li.todo::before { content: "☐ "; color: #2d5a8e; font-weight: 700; }
+    hr { border: none; border-top: 1px solid #d8dee6; margin: 30px 0; }
+    .toc {
+      background: #fff; border: 1px solid #dde4ec; border-radius: 12px;
+      padding: 18px 24px; margin: 22px 0 30px; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    .toc-title { font-weight: 700; font-size: 18px; color: #1d3a5f; margin-bottom: 10px; }
+    .toc-l1 { font-weight: 700; margin-top: 8px; font-size: 15px; }
+    .toc-l2 { padding-left: 20px; font-size: 14px; color: #444; }
+    .toc a { color: #1d5c8e; }
+    .callout-note { background:#fff8e6; border-left:5px solid #e6a700; padding:12px 16px; border-radius:0 8px 8px 0; margin:14px 0; }
+    @media print {
+      body { background: #fff; font-size: 12px; }
+      .page { padding: 0; }
+      .doc-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      pre { white-space: pre-wrap; box-shadow: none; }
+      .toc { break-inside: avoid; }
+      table { font-size: 12px; }
+    }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="doc-header">
+    <h1>Codex Skills 总览与调用指南</h1>
+    <p>吴宣澄 · 个人知识库文档　｜　整理日期：2026-08-10</p>
+    <span class="badge">🤖 Codex</span>
+    <span class="badge">📖 持续更新</span>
+  </header>
+  <nav class="toc"><div class="toc-title">📖 目录</div><div class="toc-l1"><a href="#Codex-Skills-总览与调用指南">Codex Skills 总览与调用指南</a></div><div class="toc-l2"><a href="#一如何调用-Skill">一、如何调用 Skill</a></div><div class="toc-l2"><a href="#二全部-Skill-清单">二、全部 Skill 清单</a></div><div class="toc-l2"><a href="#三图例与说明">三、图例与说明</a></div></nav>
+  <h1 id="Codex-Skills-总览与调用指南" class="chapter">Codex Skills 总览与调用指南</h1>
+<blockquote>生成时间：2026-09-06　|　共发现 <strong>57</strong> 个 Skill（磁盘已装）</blockquote>
+<h2 id="一如何调用-Skill">一、如何调用 Skill</h2>
+<table><thead><tr><th>环境</th><th>操作</th></tr></thead><tbody><tr><td><strong>桌面 App</strong></td><td>输入框输入 <code>@</code>，弹出列表选择 Skill</td></tr><tr><td><strong>Codex CLI / IDE</strong></td><td>输入 <code>$</code> 提及 Skill（如 <code>$skill-creator</code>），或运行 <code>/skills</code> 查看</td></tr><tr><td><strong>任意环境</strong></td><td>直接在提示词里点名，如“用 documents 技能生成一份 Word 文档”</td></tr></tbody></table>
+<h3 id="2-隐式调用自动">2. 隐式调用（自动）</h3>
+<p>任务描述与 Skill 描述匹配时，Codex 会自动加载该 Skill，无需手动指定。</p>
+<h2 id="二全部-Skill-清单">二、全部 Skill 清单</h2>
+<h3 id="个人">个人</h3>
+<ol><li><strong>code-review</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>code-review</code></li><li>用途：Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow this repo&#x27;s documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to &quot;review since X&quot;.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/code-review/SKILL.md</code></li></ul>
+<ol><li><strong>codebase-design</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>codebase-design</code></li><li>用途：Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#x27;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/codebase-design/SKILL.md</code></li></ul>
+<ol><li><strong>diagnosing-bugs</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>diagnosing-bugs</code></li><li>用途：Diagnosis loop for hard bugs and performance regressions. Use when the user says &quot;diagnose&quot;/&quot;debug this&quot;, or reports something broken/throwing/failing/slow.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/diagnosing-bugs/SKILL.md</code></li></ul>
+<ol><li><strong>domain-modeling</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>domain-modeling</code></li><li>用途：Build and sharpen a project&#x27;s domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/domain-modeling/SKILL.md</code></li></ul>
+<ol><li><strong>goal-agent-team</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>goal-agent-team</code></li><li>用途：Align requirements into one source of truth, then run autonomous goal planning and agent-team execution. Use when Codex should clarify, document, and then execute end to end with minimal interruption.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/goal-agent-team/SKILL.md</code></li></ul>
+<ol><li><strong>goal-agent-team-auto</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>goal-agent-team-auto</code></li><li>用途：Align the task into one source of truth, then execute autonomously with goal planning, agent-team delegation, and verification loops. Use when Codex should run end to end with near-zero supervision.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/goal-agent-team-auto/SKILL.md</code></li></ul>
+<ol><li><strong>hallmark</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>hallmark</code></li><li>用途：Anti-AI-slop design skill for greenfield pages, audits, redesigns, and design extraction from URLs or screenshots. Use when the user asks to build a new app or landing page, wants to redesign something, invokes Hallmark by name, or uses audit/redesign/study.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/hallmark/SKILL.md</code></li></ul>
+<ol><li><strong>implement</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>implement</code></li><li>用途：Implement a piece of work based on a spec or set of tickets.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/implement/SKILL.md</code></li></ul>
+<ol><li><strong>manual-refresher</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>manual-refresher</code></li><li>用途：刷新《Codex GPT 全面掌握手册》：核验 Codex 配置与已装技能/插件，更新手册第 2/5/23 章与版本记录，重新生成 HTML，并同步到 AI知识库与 Obsidian。当用户说&quot;刷新手册&quot;&quot;更新手册&quot;&quot;核验配置&quot;时使用。</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/manual-refresher/SKILL.md</code></li></ul>
+<ol><li><strong>prototype</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>prototype</code></li><li>用途：Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/prototype/SKILL.md</code></li></ul>
+<ol><li><strong>research</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>research</code></li><li>用途：Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/research/SKILL.md</code></li></ul>
+<ol><li><strong>resolving-merge-conflicts</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>resolving-merge-conflicts</code></li><li>用途：Use when you need to resolve an in-progress git merge/rebase conflict.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/resolving-merge-conflicts/SKILL.md</code></li></ul>
+<ol><li><strong>tdd</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>tdd</code></li><li>用途：Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/tdd/SKILL.md</code></li></ul>
+<h3 id="系统">系统</h3>
+<ol><li><strong>imagegen</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>imagegen</code></li><li>用途：Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/.system/imagegen/SKILL.md</code></li></ul>
+<ol><li><strong>openai-docs</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>openai-docs</code></li><li>用途：Use for Codex models/pricing, scheduled tasks, skills, settings, setup, troubleshooting, customization, automations, and self-knowledge—including &#x27;you,&#x27; &#x27;your,&#x27; &#x27;this app,&#x27; or &#x27;this coding agent&#x27; when they refer to Codex—and for OpenAI APIs/products and ChatGPT Work. Also use for model choice/migration, prompting, SDKs, Responses, Realtime, agents, evals, and Chat/Work/Codex comparisons. Do not use for generic app/software tasks that merely mention Codex.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/.system/openai-docs/SKILL.md</code></li></ul>
+<ol><li><strong>plugin-creator</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>plugin-creator</code></li><li>用途：Create and scaffold plugin directories for Codex with a required <code>.codex-plugin/plugin.json</code>, optional plugin folders/files, valid manifest defaults, and personal-marketplace entries by default. Use when Codex needs to create a new personal plugin, add optional plugin structure, generate or update marketplace entries for plugin ordering and availability metadata, or update an existing local plugin during development with the CLI-driven cachebuster and reinstall flow.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/.system/plugin-creator/SKILL.md</code></li></ul>
+<ol><li><strong>review-agent</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>review-agent</code></li><li>用途：Perform a read-only, defect-first review of a specified code change and return every actionable finding. Use when another agent delegates review of uncommitted changes, a base-branch diff, a commit, or custom review instructions.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/.system/review-agent/SKILL.md</code></li></ul>
+<ol><li><strong>skill-creator</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>skill-creator</code></li><li>用途：Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex&#x27;s capabilities with specialized knowledge, workflows, or tool integrations.</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/.system/skill-creator/SKILL.md</code></li></ul>
+<ol><li><strong>skill-installer</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>skill-installer</code></li><li>用途：Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos).</li><li>位置：<code>/Users/wuxuancheng/.codex/skills/.system/skill-installer/SKILL.md</code></li></ul>
+<h3 id="插件browser">插件·browser</h3>
+<ol><li><strong>control-in-app-browser</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>control-in-app-browser</code></li><li>用途：Control the in-app Browser for opening, navigating, inspecting visible or interactive page state, clicking, typing, screenshots, and local web testing. It can have existing signed-in sessions. For semantic operations on linked resources, prefer a purpose-built connector, API, or CLI when available.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-bundled/browser/26.803.41515/skills/control-in-app-browser/SKILL.md</code></li></ul>
+<h3 id="插件build-web-apps">插件·build-web-apps</h3>
+<ol><li><strong>frontend-app-builder</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>frontend-app-builder</code></li><li>用途：Use for new frontend applications, dashboards, games, creative websites, hero sections, and visually driven UI from scratch, or when the user explicitly asks for a redesign/restyle/modernization. Builds from clean, airy, high-taste, readable image-generated concept design with section-specific references, faithful implementation, and browser testing.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/build-web-apps/11c74d6b/skills/frontend-app-builder/SKILL.md</code></li></ul>
+<ol><li><strong>frontend-testing-debugging</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>frontend-testing-debugging</code></li><li>用途：Use when testing, debugging, or making targeted improvements to rendered frontend apps through the Build Web Apps or web dev plugin: local dev servers, UI regressions, interaction bugs, console errors, responsive layout, and visual QA. Check whether the Browser plugin is available and use it first when it is; otherwise use regular Playwright with the recorded reason.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/build-web-apps/11c74d6b/skills/frontend-testing-debugging/SKILL.md</code></li></ul>
+<ol><li><strong>react-best-practices</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>react-best-practices</code></li><li>用途：React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/build-web-apps/11c74d6b/skills/react-best-practices/SKILL.md</code></li></ul>
+<ol><li><strong>shadcn-best-practices</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>shadcn-best-practices</code></li><li>用途：Manages shadcn components and projects — adding, searching, fixing, debugging, styling, and composing UI. Provides project context, component docs, and usage examples. Applies when working with shadcn/ui, component registries, presets, --preset codes, or any project with a components.json file. Also triggers for &quot;shadcn init&quot;, &quot;create an app with --preset&quot;, or &quot;switch to --preset&quot;.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/build-web-apps/11c74d6b/skills/shadcn-best-practices/SKILL.md</code></li></ul>
+<ol><li><strong>stripe-best-practices</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>stripe-best-practices</code></li><li>用途：Guides Stripe integration decisions — API selection (Checkout Sessions vs PaymentIntents), Connect platform setup (Accounts v2, controller properties), billing/subscriptions, Treasury financial accounts, integration surfaces (Checkout, Payment Element), and migrating from deprecated Stripe APIs. Use when building, modifying, or reviewing any Stripe integration — including accepting payments, building marketplaces, integrating Stripe, processing payments, setting up subscriptions, or creating connected accounts.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/build-web-apps/11c74d6b/skills/stripe-best-practices/SKILL.md</code></li></ul>
+<ol><li><strong>supabase-best-practices</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>supabase-best-practices</code></li><li>用途：Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/build-web-apps/11c74d6b/skills/supabase-best-practices/SKILL.md</code></li></ul>
+<h3 id="插件chrome">插件·chrome</h3>
+<ol><li><strong>control-chrome</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>control-chrome</code></li><li>用途：Control the user&#x27;s Chrome browser for tasks that depend on existing Chrome state: tabs, logged-in sessions, or extensions. Prefer purpose-built connectors, APIs, or CLIs when available.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-bundled/chrome/26.803.41515/skills/control-chrome/SKILL.md</code></li></ul>
+<h3 id="插件computer-use">插件·computer-use</h3>
+<ol><li><strong>computer-use</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>computer-use</code></li><li>用途：Control local Mac apps through Computer Use for tasks that require reading or operating app UI. Prefer purpose-built connectors, APIs, or CLIs when available.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-bundled/computer-use/1.0.1000633/skills/computer-use/SKILL.md</code></li></ul>
+<h3 id="插件documents">插件·documents</h3>
+<ol><li><strong>documents</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>documents</code></li><li>用途：Create, edit, redline, and comment on <code>.docx</code>, Word, and Google Docs-targeted document artifacts inside the container, with a strict render-and-verify workflow. Use <code>render_docx.py</code> to generate page PNGs (and optional PDF) for visual QA, then iterate until layout is flawless before delivering the final document.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-primary-runtime/documents/26.904.11930/skills/documents/SKILL.md</code></li></ul>
+<h3 id="插件figma">插件·figma</h3>
+<ol><li><strong>figma-code-connect</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-code-connect</code></li><li>用途：Creates and maintains Figma Code Connect template files that map Figma components to code snippets. Use when the user mentions Code Connect, Figma component mapping, design-to-code translation, or asks to create/update .figma.ts or .figma.js files.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-code-connect/SKILL.md</code></li></ul>
+<ol><li><strong>figma-create-new-file</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-create-new-file</code></li><li>用途：<strong>MANDATORY prerequisite</strong> — you MUST invoke this skill BEFORE every <code>create_new_file</code> tool call. NEVER call <code>create_new_file</code> directly without loading this skill first. Trigger whenever the user wants a new blank Figma file — a new design, FigJam, or Slides file — or when you need a fresh file before calling <code>use_figma</code>. Usage — /figma-create-new-file [editorType] [fileName] (e.g. /figma-create-new-file figjam My Whiteboard, /figma-create-new-file slides Q3 Review)</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-create-new-file/SKILL.md</code></li></ul>
+<ol><li><strong>figma-design-to-code</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-design-to-code</code></li><li>用途：Use this skill when implementing a Figma design as code (design → code) — the read-FROM-Figma direction. Triggers: &#x27;implement this Figma design&#x27;, &#x27;build this screen from Figma&#x27;, &#x27;turn this Figma into code&#x27;, &#x27;code this up from Figma&#x27;, &#x27;design to code&#x27;, or a figma.com design URL provided alongside a codebase. Encodes the workflow for reading a node out of Figma with get_design_context and adapting its reference output to the target project — reusing existing components, tokens, and conventions, and honoring Code Connect mappings, component docs, design annotations, and design tokens by priority. Complements figma-code-connect (component mapping) and figma-generate-design / figma-use (the reverse, code → design direction).</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-design-to-code/SKILL.md</code></li></ul>
+<ol><li><strong>figma-generate-design</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-generate-design</code></li><li>用途：Use this skill alongside figma-use when the task involves translating an application page, view, or multi-section layout into Figma. Triggers: &#x27;write to Figma&#x27;, &#x27;create in Figma from code&#x27;, &#x27;push page to Figma&#x27;, &#x27;take this app/page and build it in Figma&#x27;, &#x27;create a screen&#x27;, &#x27;build a landing page in Figma&#x27;, &#x27;update the Figma screen to match code&#x27;, &#x27;convert this modal/dialog/drawer/panel to Figma&#x27;. This is the preferred workflow skill whenever the user wants to build or update a full page, modal, dialog, drawer, sidebar, panel, or any composed multi-section view in Figma from code or a description. Discovers design system components, variables, and styles from Code Connect files, existing screens, and library search, then imports them and assembles views incrementally section-by-section using design system tokens instead of hardcoded values.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-generate-design/SKILL.md</code></li></ul>
+<ol><li><strong>figma-generate-diagram</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-generate-diagram</code></li><li>用途：MANDATORY prerequisite — load this skill BEFORE every <code>generate_diagram</code> tool call. NEVER call <code>generate_diagram</code> directly without loading this skill first. Trigger whenever the user asks to create, generate, draw, render, sketch, or build a diagram — flowchart, architecture diagram, sequence diagram, ERD or entity-relationship diagram, state diagram or state machine, gantt chart, or timeline. Also trigger when the user mentions Mermaid syntax or wants a system architecture, decision tree, dependency graph, API call flow, auth handshake, schema, or pipeline visualized in FigJam. Routes to type-specific guidance, sets universal Mermaid constraints, and tells you when to use a different diagram type or skip the tool entirely (mindmaps, pie charts, class diagrams, etc.).</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-generate-diagram/SKILL.md</code></li></ul>
+<ol><li><strong>figma-generate-library</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-generate-library</code></li><li>用途：Build or update a professional-grade design system in Figma from a codebase. Use when the user wants to create variables/tokens, build component libraries, create individual components with proper variant sets and variable bindings, set up theming (light/dark modes), document foundations, or reconcile gaps between code and Figma. Also use when the user asks to create or generate any component in Figma — even a single one — since components require proper variable foundations, variant states, and design token bindings to be production-quality. This skill teaches WHAT to build and in WHAT ORDER — it complements the <code>figma-use</code> skill which teaches HOW to call the Plugin API. Both skills should be loaded together.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-generate-library/SKILL.md</code></li></ul>
+<ol><li><strong>figma-implement-motion</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-implement-motion</code></li><li>用途：Translates Figma motion and animations into production-ready application code. Use when implementing animation/motion from a Figma design — user mentions &quot;implement this motion&quot;, &quot;add animation from Figma&quot;, &quot;animate this component&quot;, provides a Figma URL whose node is animated, or when <code>get_design_context</code> returns motion data or instructs you to call <code>get_motion_context</code>.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-implement-motion/SKILL.md</code></li></ul>
+<ol><li><strong>figma-swiftui</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-swiftui</code></li><li>用途：SwiftUI ↔ Figma translation. Use whenever the user mentions Swift, SwiftUI, iOS, iPhone, or iPad — in EITHER direction — translating a Figma design into SwiftUI (design → code), or pushing SwiftUI views / screens / tokens back into a Figma file (code → design). Triggers on phrases like &#x27;implement this Figma design in SwiftUI&#x27;, &#x27;build this screen in Swift&#x27;, &#x27;push this SwiftUI view to Figma&#x27;, &#x27;mirror my Swift code in a Figma file&#x27;, or whenever a Figma URL appears alongside <code>.swift</code> files / an <code>.xcodeproj</code>. Routes to a direction-specific reference doc; loads alongside <code>figma-use</code> for the code → design path.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-swiftui/SKILL.md</code></li></ul>
+<ol><li><strong>figma-use</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-use</code></li><li>用途：<strong>MANDATORY prerequisite</strong> — you MUST invoke this skill BEFORE every <code>use_figma</code> tool call. NEVER call <code>use_figma</code> directly without loading this skill first. Skipping it causes common, hard-to-debug failures. Trigger whenever the user wants to perform a write action or a unique read action that requires JavaScript execution in the Figma file context — e.g. create/edit/delete nodes, set up variables or tokens, build components and variants, modify auto-layout or fills, bind variables to properties, or inspect file structure programmatically.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-use/SKILL.md</code></li></ul>
+<ol><li><strong>figma-use-figjam</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-use-figjam</code></li><li>用途：This skill helps agents use Figma&#x27;s use_figma MCP tool in the FigJam context. Can be used alongside figma-use which has foundational context for using the use_figma tool.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-use-figjam/SKILL.md</code></li></ul>
+<ol><li><strong>figma-use-motion</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-use-motion</code></li><li>用途：Motion / animation context for the <code>use_figma</code> MCP tool — animating Figma nodes via manual keyframes, animation styles, easing, and timeline duration. Load alongside figma-use whenever a task involves adding, editing, or inspecting animation on a node.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-use-motion/SKILL.md</code></li></ul>
+<ol><li><strong>figma-use-slides</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>figma-use-slides</code></li><li>用途：This skill helps agents use Figma&#x27;s use_figma MCP tool in the Slides context. Can be used alongside figma-use which has foundational context for using the use_figma tool.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/figma/11c74d6b/skills/figma-use-slides/SKILL.md</code></li></ul>
+<h3 id="插件github">插件·github</h3>
+<ol><li><strong>gh-address-comments</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>gh-address-comments</code></li><li>用途：Address actionable GitHub pull request review feedback. Use when the user wants to inspect unresolved review threads, requested changes, or inline review comments on a PR, then implement selected fixes. Use the GitHub app for PR metadata and flat comment reads, and use the bundled GraphQL script via <code>gh</code> whenever thread-level state, resolution status, or inline review context matters.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/github/11c74d6b/skills/gh-address-comments/SKILL.md</code></li></ul>
+<ol><li><strong>gh-fix-ci</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>gh-fix-ci</code></li><li>用途：Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions. Use the GitHub app from this plugin for PR metadata and patch context, and use <code>gh</code> for Actions check and log inspection before implementing any approved fix.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/github/11c74d6b/skills/gh-fix-ci/SKILL.md</code></li></ul>
+<ol><li><strong>github</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>github</code></li><li>用途：Triage and orient GitHub repository, pull request, and issue work through the connected GitHub app. Use when the user asks for general GitHub help, wants PR or issue summaries, or needs repository context before choosing a more specific GitHub workflow.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/github/11c74d6b/skills/github/SKILL.md</code></li></ul>
+<ol><li><strong>yeet</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>yeet</code></li><li>用途：Publish local changes to GitHub by confirming scope, committing intentionally, pushing the branch, and opening a draft PR through the GitHub app from this plugin, with <code>gh</code> used only as a fallback where connector coverage is insufficient.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/github/11c74d6b/skills/yeet/SKILL.md</code></li></ul>
+<h3 id="插件linear">插件·linear</h3>
+<ol><li><strong>linear</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>linear</code></li><li>用途：Manage issues, projects &amp; team workflows in Linear. Use when the user wants to read, create or updates tickets in Linear.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/linear/11c74d6b/skills/linear/SKILL.md</code></li></ul>
+<h3 id="插件neon-postgres">插件·neon-postgres</h3>
+<ol><li><strong>neon-postgres</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>neon-postgres</code></li><li>用途：Guides and best practices for working with Neon Serverless Postgres. Covers getting started, local development with Neon, choosing a connection method, Neon features, authentication (@neondatabase/auth), PostgREST-style data API (@neondatabase/neon-js), Neon CLI, and Neon&#x27;s Platform API/SDKs. Use for any Neon-related questions.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/neon-postgres/11c74d6b/skills/neon-postgres/SKILL.md</code></li></ul>
+<ol><li><strong>neon-postgres-egress-optimizer</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>neon-postgres-egress-optimizer</code></li><li>用途：&gt;-</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/neon-postgres/11c74d6b/skills/neon-postgres-egress-optimizer/SKILL.md</code></li></ul>
+<h3 id="插件pdf">插件·pdf</h3>
+<ol><li><strong>pdf</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>pdf</code></li><li>用途：Read, create, inspect, render, and verify PDF files where visual layout matters, including fillable AcroForms. Use Poppler rendering plus Python tools such as reportlab, pdfplumber, and pypdf for generation and extraction.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-primary-runtime/pdf/26.904.11930/skills/pdf/SKILL.md</code></li></ul>
+<h3 id="插件presentations">插件·presentations</h3>
+<ol><li><strong>presentations</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>presentations</code></li><li>用途：Read, create or edit PowerPoint or Google Slides decks. Use for presentation, slide deck, PowerPoint, PPT, PPTX, or Google Slides requests.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-primary-runtime/presentations/26.904.11930/skills/presentations/SKILL.md</code></li></ul>
+<h3 id="插件sentry">插件·sentry</h3>
+<ol><li><strong>sentry</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>sentry</code></li><li>用途：Use when the user asks to inspect Sentry issues or events, summarize recent production errors, or pull basic Sentry health data via the Sentry API; perform read-only queries with the bundled script and require <code>SENTRY_AUTH_TOKEN</code>.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/sentry/11c74d6b/skills/sentry/SKILL.md</code></li></ul>
+<h3 id="插件spreadsheets">插件·spreadsheets</h3>
+<ol><li><strong>excel-live-control</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>excel-live-control</code></li><li>用途：Control an open or active Microsoft Excel workbook through the ChatGPT add-in or connected session. Use when the user tags the Microsoft Excel app in Codex or follows up on an established live Excel task. Do not use for standalone spreadsheet files or Google Sheets.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.904.11930/skills/excel-live-control/SKILL.md</code></li></ul>
+<ol><li><strong>spreadsheets</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>spreadsheets</code></li><li>用途：Create, edit, analyze, and verify standalone spreadsheet files or Google Sheets-ready workbooks, including .xlsx, .xls, .csv, and .tsv. Do not use for live controlling Microsoft Excel app or a live Excel session.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.904.11930/skills/spreadsheets/SKILL.md</code></li></ul>
+<h3 id="插件supabase">插件·supabase</h3>
+<ol><li><strong>supabase</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>supabase</code></li><li>用途：Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS); Supabase CLI or MCP server; schema changes, migrations, security audits, Postgres extensions (pg_graphql, pg_cron, pg_vector).</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/supabase/11c74d6b/skills/supabase/SKILL.md</code></li></ul>
+<ol><li><strong>supabase-postgres-best-practices</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>supabase-postgres-best-practices</code></li><li>用途：Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-curated/supabase/11c74d6b/skills/supabase-postgres-best-practices/SKILL.md</code></li></ul>
+<h3 id="插件template-creator">插件·template-creator</h3>
+<ol><li><strong>template-creator</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>template-creator</code></li><li>用途：Create or update a reusable personal Codex artifact-template skill. Use when the user invokes $template-creator or asks in natural language to create a reusable template from a reference document, presentation, spreadsheet, Google Docs, Slides, or Sheets link, ImageGen or Product Design image, email, Slack message, or Site project, or explicitly asks to edit or update a passed artifact-template skill. Do not use for one-off creation from an existing template.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-primary-runtime/template-creator/26.904.11930/skills/template-creator/SKILL.md</code></li></ul>
+<h3 id="插件visualize">插件·visualize</h3>
+<ol><li><strong>visualize</strong>　（💤 磁盘已装）</li></ol>
+<ul><li>调用名：<code>visualize</code></li><li>用途：Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, UI mockups, scenarios, adjustable inputs, and exploration beyond regular text.</li><li>位置：<code>/Users/wuxuancheng/.codex/plugins/cache/openai-bundled/visualize/1.0.20/skills/visualize/SKILL.md</code></li></ul>
+<h2 id="三图例与说明">三、图例与说明</h2>
+<ul><li><strong>个人 Skills</strong>：位于 <code>~/.codex/skills/</code>，随 Codex 自动加载。</li><li><strong>系统内置</strong>：位于 <code>~/.codex/skills/.system/</code>，随 Codex 自带，勿改动。</li><li><strong>插件技能</strong>：位于插件缓存，插件启用并登录对应服务后，新会话即可用。</li><li><strong>自动刷新</strong>：<code>manual-refresher</code> 技能/每周自动化会重新扫描本清单并同步进《Codex GPT 全面掌握手册》第 23 章。</li></ul>
+</div>
+</body>
+</html>

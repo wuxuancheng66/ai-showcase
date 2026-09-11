@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI × 公共治理 大一新生使用手册</title>
+<style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      background: #f6f6f4; color: #222; line-height: 1.85; font-size: 16px;
+    }
+    .page { max-width: 900px; margin: 0 auto; padding: 40px 28px 80px; }
+    .doc-header {
+      background: linear-gradient(135deg, #1d3a5f, #2d5a8e);
+      color: #fff; border-radius: 14px; padding: 34px 34px 28px; margin-bottom: 28px;
+    }
+    .doc-header h1 { margin: 0 0 10px; font-size: 30px; line-height: 1.35; }
+    .doc-header p { margin: 6px 0; opacity: .92; font-size: 15px; }
+    h1.chapter {
+      font-size: 26px; margin: 48px 0 16px; padding: 12px 16px;
+      background: #eef2f7; border-left: 6px solid #2d5a8e; border-radius: 8px;
+    }
+    h2 { font-size: 21px; margin: 38px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #dde4ec; }
+    h3 { font-size: 18px; margin: 28px 0 10px; color: #1d3a5f; }
+    h4 { font-size: 16px; margin: 20px 0 8px; }
+    p { margin: 10px 0; }
+    a { color: #2d5a8e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { color: #15304d; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #eceef1; color: #b3402a; padding: 2px 6px; border-radius: 5px; font-size: 14px;
+    }
+    pre {
+      background: #1f2430; color: #e8eaf0; padding: 18px 20px; border-radius: 10px;
+      overflow-x: auto; font-size: 13.5px; line-height: 1.65; margin: 14px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    blockquote {
+      margin: 14px 0; padding: 12px 18px; background: #eef4fb;
+      border-left: 5px solid #2d5a8e; border-radius: 0 8px 8px 0; color: #334;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; background: #fff; }
+    th, td { border: 1px solid #d8dee6; padding: 9px 12px; text-align: left; vertical-align: top; }
+    th { background: #eef2f7; color: #1d3a5f; font-weight: 600; }
+    tr:nth-child(even) td { background: #fafbfc; }
+    ul, ol { margin: 10px 0; padding-left: 26px; }
+    li { margin: 4px 0; }
+    li.todo { list-style: none; margin-left: -18px; }
+    li.todo::before { content: "☐ "; color: #2d5a8e; font-weight: 700; }
+    hr { border: none; border-top: 1px solid #d8dee6; margin: 32px 0; }
+    .toc {
+      background: #fff; border: 1px solid #dde4ec; border-radius: 12px;
+      padding: 18px 22px; margin: 22px 0 30px; box-shadow: 0 2px 6px rgba(0,0,0,.04);
+      columns: 1;
+    }
+    .toc-title { font-weight: 700; font-size: 18px; color: #1d3a5f; margin-bottom: 10px; }
+    .toc-l1 { font-weight: 700; margin-top: 8px; }
+    .toc-l2 { padding-left: 18px; }
+    .toc-l3 { padding-left: 36px; color: #555; font-size: 14px; }
+    .toc a { color: #2d5a8e; }
+    @media (min-width: 760px) { .toc { columns: 2; } }
+    @media print {
+      body { background: #fff; font-size: 12px; }
+      .page { padding: 0; }
+      .doc-header { background: #1d3a5f; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      pre { white-space: pre-wrap; box-shadow: none; }
+      .toc { break-inside: avoid; }
+    }
+    </style>
+</head>
+<body>
+<div class="page">
+  <header class="doc-header">
+    <h1>AI × 公共治理 大一新生使用手册</h1>
+    <p>中山大学 · 数字公共治理专业 · 大一新生 AI 实操手册</p>
+    <p>配套资源：一步步学会「AI 编程订阅 + API」完成政策文本分析、舆情分析、公共数据治理、政策建议与仿真。</p>
+  </header>
+  ['<nav class="toc"><div class="toc-title">目录</div>', '<div class="toc-l2"><a href="#h-1">快速上手路线（30 秒看完）</a></div>', '<div class="toc-l2"><a href="#h-2">目录</a></div>', '<div class="toc-l1"><a href="#h-3">第 0 章\u3000先花 10 分钟搞懂几个关键词</a></div>', '<div class="toc-l2"><a href="#h-4">0.1 AI 到底在做什么</a></div>', '<div class="toc-l2"><a href="#h-5">0.2 AI 参与工作的四个层次</a></div>', '<div class="toc-l2"><a href="#h-6">0.3 Coding Plan（AI 编程订阅）是什么</a></div>', '<div class="toc-l2"><a href="#h-7">0.4 API 是什么</a></div>', '<div class="toc-l2"><a href="#h-8">0.5 Coding Plan 和 API 什么时候用哪个</a></div>', '<div class="toc-l2"><a href="#h-9">0.6 三条必须知道的红线</a></div>', '<div class="toc-l1"><a href="#h-10">第 1 章\u3000动手前的准备（约 1 小时）</a></div>', '<div class="toc-l2"><a href="#h-11">1.1 建一个&quot;项目文件夹&quot;</a></div>', '<div class="toc-l2"><a href="#h-12">1.2 注册一个&quot;对话式 AI&quot;账号</a></div>', '<div class="toc-l2"><a href="#h-13">1.3 安装 Python</a></div>', '<div class="toc-l2"><a href="#h-14">1.4 安装 AI 编程工具 Cursor（这就是你的&quot;Coding Plan&quot;）</a></div>', '<div class="toc-l2"><a href="#h-15">1.5 申请 API Key 并充值（重要，跟着做）</a></div>', '<div class="toc-l2"><a href="#h-16">1.6 安装用到的 Python 库（工具箱）</a></div>', '<div class="toc-l2"><a href="#h-17">1.7 验证：跑通你的第一个 AI 脚本</a></div>', '<div class="toc-l2"><a href="#h-18">1.8 本章自检清单</a></div>', '<div class="toc-l1"><a href="#h-19">第 2 章\u3000层次一：信息检索助手——把 AI 当高级搜索引擎</a></div>', '<div class="toc-l2"><a href="#h-20">2.1 提问五要素：一个通用的提问公式</a></div>', '<div class="toc-l2"><a href="#h-21">2.2 三个练习（照着问一遍）</a></div>', '<div class="toc-l2"><a href="#h-22">2.3 三个重要习惯</a></div>', '<div class="toc-l2"><a href="#h-23">2.4 什么时候要用 API 做检索？</a></div>', '<div class="toc-l1"><a href="#h-24">第 3 章\u3000层次二：内容生成与草稿——让 AI 帮你写初稿</a></div>', '<div class="toc-l2"><a href="#h-25">3.1 通用流程（四步）</a></div>', '<div class="toc-l2"><a href="#h-26">3.2 例子 A：把会议录音变成纪要</a></div>', '<div class="toc-l2"><a href="#h-27">3.3 例子 B：写政策分析报告初稿</a></div>', '<div class="toc-l2"><a href="#h-28">3.4 怎么&quot;喂&quot;材料给 AI</a></div>', '<div class="toc-l2"><a href="#h-29">3.5 检查清单：AI 初稿你要核对什么</a></div>', '<div class="toc-l1"><a href="#h-30">第 4 章\u3000层次三：工作流自动化——API 实战（重点）</a></div>', '<div class="toc-l2"><a href="#h-31">4.0 先建立&quot;流水线&quot;思维</a></div>', '<div class="toc-l2"><a href="#h-32">4.1 第一个 API 脚本：批量分析多条文本</a></div>', '<div class="toc-l2"><a href="#h-33">4.2 场景一：政策文本分析（完整项目，务必跟着做一遍）</a></div>', '<div class="toc-l3"><a href="#h-34">第 1 步\u3000收集政策文件（原料）</a></div>', '<div class="toc-l3"><a href="#h-35">第 2 步\u3000用 Cursor（Coding Plan）写&quot;批量读取 PDF&quot;的脚本</a></div>', '<div class="toc-l3"><a href="#h-36">第 3 步\u3000用 API 批量分析每份文件</a></div>', '<div class="toc-l3"><a href="#h-37">第 4 步\u3000生成对比表和趋势摘要</a></div>', '<div class="toc-l3"><a href="#h-38">第 5 步\u3000人工核验与出报告（最重要的一步）</a></div>', '<div class="toc-l2"><a href="#h-39">4.3 场景二：舆情分析</a></div>', '<div class="toc-l3"><a href="#h-40">第 1 步\u3000准备数据</a></div>', '<div class="toc-l3"><a href="#h-41">第 2 步\u3000用 API 做情感分类</a></div>', '<div class="toc-l3"><a href="#h-42">第 3 步\u3000用 jieba 提取热点关键词（本地计算，不花 API 钱）</a></div>', '<div class="toc-l3"><a href="#h-43">第 4 步\u3000让 AI 生成舆情简报</a></div>', '<div class="toc-l3"><a href="#h-44">第 5 步\u3000画一张情感分布图（可视化）</a></div>', '<div class="toc-l2"><a href="#h-45">4.4 场景三：公共数据治理</a></div>', '<div class="toc-l3"><a href="#h-46">第 1 步\u3000准备一份&quot;脏数据&quot;</a></div>', '<div class="toc-l3"><a href="#h-47">第 2 步\u3000用 Cursor（Coding Plan）给数据&quot;体检&quot;</a></div>', '<div class="toc-l3"><a href="#h-48">第 3 步\u3000让 AI 写清洗脚本，你运行</a></div>', '<div class="toc-l3"><a href="#h-49">第 4 步\u3000用 API 写&quot;数据治理报告&quot;（AI 擅长的地方）</a></div>', '<div class="toc-l3"><a href="#h-50">第 5 步\u3000可视化：让数据会说话</a></div>', '<div class="toc-l2"><a href="#h-51">4.5 场景四：政策建议与仿真</a></div>', '<div class="toc-l3"><a href="#h-52">第 1 步\u3000准备政策草案</a></div>', '<div class="toc-l3"><a href="#h-53">第 2 步\u3000用 API 做&quot;多维度影响仿真&quot;</a></div>', '<div class="toc-l3"><a href="#h-54">第 3 步\u3000让 AI 把矩阵讲成人话</a></div>', '<div class="toc-l3"><a href="#h-55">第 4 步\u3000人工修正（模拟仿真必须有的最后一步）</a></div>', '<div class="toc-l2"><a href="#h-56">4.6 省钱省时技巧（实践后回头看）</a></div>', '<div class="toc-l1"><a href="#h-57">第 5 章\u3000层次四：AI Agent（智能体）</a></div>', '<div class="toc-l2"><a href="#h-58">5.1 Agent 是什么</a></div>', '<div class="toc-l2"><a href="#h-59">5.2 你其实已经在用 Agent 了</a></div>', '<div class="toc-l2"><a href="#h-60">5.3 进阶示例：让 Agent 定期追踪政策动态</a></div>', '<div class="toc-l2"><a href="#h-61">5.4 Agent 的边界：什么不能交给它</a></div>', '<div class="toc-l1"><a href="#h-62">第 6 章\u3000一个贯穿项目：四层全部用上</a></div>', '<div class="toc-l2"><a href="#h-63">项目：做一份《大湾区数字治理周报》</a></div>', '<div class="toc-l1"><a href="#h-64">第 7 章\u3000常见问题排查（FAQ）</a></div>', '<div class="toc-l3"><a href="#h-65">7.1 运行脚本报 <code>ModuleNotFoundError: No module named &amp;#x27;xxx&amp;#x27;</code></a></div>', '<div class="toc-l3"><a href="#h-66">7.2 报错 <code>AuthenticationError</code> 或 <code>401</code>（认证失败）</a></div>', '<div class="toc-l3"><a href="#h-67">7.3 报错 <code>Connection error</code> 或超时</a></div>', '<div class="toc-l3"><a href="#h-68">7.4 报错 <code>Insufficient Balance</code>（余额不足）</a></div>', '<div class="toc-l3"><a href="#h-69">7.5 报错 <code>InvalidRequestError</code> 或 <code>400</code></a></div>', '<div class="toc-l3"><a href="#h-70">7.6 PDF 提取出来是空的或乱码</a></div>', '<div class="toc-l3"><a href="#h-71">7.7 画图时中文显示成方块</a></div>', '<div class="toc-l3"><a href="#h-72">7.8 脚本跑一半报错，前面的结果白跑了？</a></div>', '<div class="toc-l3"><a href="#h-73">7.9 担心费用失控？</a></div>', '<div class="toc-l3"><a href="#h-74">7.10 不知道下一步该学什么？</a></div>', '<div class="toc-l1"><a href="#h-75">第 8 章\u3000大一到大四的学习路线 + 每周练习计划</a></div>', '<div class="toc-l2"><a href="#h-76">8.1 四年的宏观路线</a></div>', '<div class="toc-l2"><a href="#h-77">8.2 每周 3 小时练习计划（照着做）</a></div>', '<div class="toc-l2"><a href="#h-78">8.3 给自己的三个&quot;里程碑&quot;</a></div>', '<div class="toc-l1"><a href="#h-79">附录 A\u3000常用命令速查</a></div>', '<div class="toc-l1"><a href="#h-80">附录 B\u3000可直接抄的提问词（Prompt）模板</a></div>', '<div class="toc-l1"><a href="#h-81">附录 C\u3000三条重要提醒（再强调一遍）</a></div>', '<div class="toc-l1"><a href="#h-82">附录 D\u3000给 AI 助手的约定：安装/下载安全准则</a></div>', '<div class="toc-l2"><a href="#h-83">7 条必须遵守的检查</a></div>', '<div class="toc-l2"><a href="#h-84">最重要的原则</a></div>', '<div class="toc-l2"><a href="#h-85">背景</a></div>', '<div class="toc-l1"><a href="#h-86">附录 E\u3000用 AI 不废武功的 5 条纪律</a></div>', '<div class="toc-l1"><a href="#h-87">附录 F\u3000Coding Plan 与 API 的本质区别（进阶版）</a></div>', '<div class="toc-l1"><a href="#h-88">附录 G\u3000为什么要自己运行脚本</a></div>', '<div class="toc-l1"><a href="#h-89">附录 H\u3000把本地模型接进工作流（LM Studio / Hermes）</a></div>', '</nav>']
+  <blockquote><strong>写给谁</strong>：中山大学数字公共治理专业的大一新生，零编程基础也完全没问题。&lt;br&gt;<strong>你要准备什么</strong>：一台能上网的电脑、一个邮箱、约 20 元人民币（练习用，可选充值）、2～3 小时的空闲时间。&lt;br&gt;<strong>学完你能做到</strong>：亲手让 AI 帮你批量读政策文件、分析舆情、清洗数据、模拟政策影响，并且每一步都明白&quot;为什么这样做&quot;。</blockquote><hr><h2 id="h-1">快速上手路线（30 秒看完）</h2><ol><li>你只需要记住一句话：<strong>AI 编程订阅（Coding Plan）负责&amp;quot;陪你写代码&amp;quot;，API 负责&amp;quot;替你批量干活&amp;quot;</strong>。</li><li>先花 1 小时完成第 1 章的准备工作（装 Python、装 Cursor、申请 API Key）。</li><li>然后按第 4 章做一遍&quot;政策文本分析&quot;项目，你就掌握了 80% 的核心操作。</li><li>剩下三个场景（舆情、数据治理、仿真）套路完全一样，换个数据、换个提问词而已。</li></ol><hr><h2 id="h-2">目录</h2><ul><li>第 0 章　先花 10 分钟搞懂几个关键词</li><li>第 1 章　动手前的准备（装好所有工具）</li><li>第 2 章　层次一：信息检索助手——把 AI 当高级搜索引擎</li><li>第 3 章　层次二：内容生成与草稿——让 AI 帮你写初稿</li><li>第 4 章　层次三：工作流自动化——API 实战（重点，最厚的一章）</li><li>4.1 第一个 API 脚本</li><li>4.2 场景一：政策文本分析</li><li>4.3 场景二：舆情分析</li><li>4.4 场景三：公共数据治理</li><li>4.5 场景四：政策建议与仿真</li><li>4.6 省钱省时技巧</li><li>第 5 章　层次四：AI Agent（智能体）</li><li>第 6 章　一个贯穿项目：四层全部用上，做一份&quot;治理周报&quot;</li><li>第 7 章　常见问题排查（FAQ）</li><li>第 8 章　大一到大四的学习路线 + 每周 3 小时练习计划</li><li>附录 A　常用命令速查</li><li>附录 B　可直接抄的提问词（Prompt）模板</li><li>附录 C　三条重要提醒（学术诚信 / 隐私 / 安全）</li><li>附录 D　给 AI 助手的约定：安装/下载安全准则</li><li>附录 E　用 AI 不废武功的 5 条纪律</li><li>附录 F　Coding Plan 与 API 的本质区别（进阶版）</li><li>附录 G　为什么要自己运行脚本</li><li>附录 H　把本地模型接进工作流（LM Studio / Hermes）</li></ul><hr><h1 id="h-3">第 0 章　先花 10 分钟搞懂几个关键词</h1><p>这一章没有操作，只有概念。但它是整本手册的地基，请你耐心看完。</p><h2 id="h-4">0.1 AI 到底在做什么</h2><p>把 AI 想成&quot;读过海量书籍和网页、学会了语言规律的程序&quot;。它处理任何问题都只做三件事：</p><ol><li><strong>理解</strong>你的输入（问题、文档、数据说明）；</li><li>在它见过的海量模式里<strong>匹配</strong>最相关的内容；</li><li><strong>生成</strong>一段新的回答。</li></ol><p>所以 AI 特别擅长那些&quot;<strong>见过类似情况就能处理</strong>&quot;的重复性脑力劳动，比如：归纳政策要点、整理会议纪要、找数据异常、对比两份文件的异同。</p><p><strong>它的局限</strong>：它不&quot;懂&quot;事实，它只&quot;猜&quot;最合理的答案。所以 AI 可能编造来源、算错数字——<strong>一切结果都必须由你核验</strong>。这一点全手册通用。</p><h2 id="h-5">0.2 AI 参与工作的四个层次</h2><table><thead><tr><th>层次</th><th>你在做什么</th><th>AI 做什么</th><th>你主要在哪个工具里用</th></tr></thead><tbody><tr><td>层次一：信息检索助手</td><td>提问</td><td>找资料、初步整理</td><td>对话式 AI（网页/App）</td></tr><tr><td>层次二：内容生成与草稿</td><td>给方向和材料</td><td>出初稿，你修改定稿</td><td>对话式 AI</td></tr><tr><td>层次三：工作流自动化</td><td>写脚本搭流水线</td><td>按步骤批量处理文件和数据</td><td><strong>API</strong> + Python</td></tr><tr><td>层次四：AI Agent（智能体）</td><td>给一个目标</td><td>自己规划、调用工具、逐步完成</td><td>Agent 工具（Cursor/Claude Code 等）</td></tr></tbody></table><p>前两层不需要写代码，谁都会用；第三层是<strong>本手册的重点</strong>，第四层是进阶玩法。</p><h2 id="h-6">0.3 Coding Plan（AI 编程订阅）是什么</h2><p>&quot;Coding Plan&quot;不是某个产品的官方名字，圈子里通常指<strong>包月付费的 AI 编程工具</strong>，例如：</p><ul><li><strong>Cursor</strong>（推荐大一新生入门，有免费版）</li><li><strong>Claude Code</strong>（命令行里的 AI 编程助手）</li><li><strong>GitHub Copilot</strong>（GitHub 出品，大学生可免费申请，见 1.4 节）</li></ul><p>它们的作用：你打开代码编辑器，AI 在旁边<strong>陪你写代码</strong>——自动补全、解释代码、帮你修报错、按你的要求改代码。</p><p>特点：<strong>交互式</strong>（要人坐在电脑前）＋ <strong>包月固定价</strong>（用多用少一个价）。</p><h2 id="h-7">0.4 API 是什么</h2><p>API（Application Programming Interface，应用程序接口）是模型公司提供的&quot;<strong>程序调用入口</strong>&quot;。你的 Python 脚本可以像打电话一样，一次调用一次 AI，连续处理几千份文件——<strong>不需要人坐在屏幕前</strong>。</p><p>特点：<strong>无人值守</strong>（脚本自己跑）＋ <strong>按用量计费</strong>（按&quot;token&quot;计费，token 大致可以理解为一个中文词或几个英文字符）。</p><h2 id="h-8">0.5 Coding Plan 和 API 什么时候用哪个</h2><table><thead><tr><th>场景</th><th>用哪个</th><th>为什么</th></tr></thead><tbody><tr><td>写代码时想让 AI 帮忙</td><td>Coding Plan</td><td>交互式，包月随便用</td></tr><tr><td>修报错、解释代码</td><td>Coding Plan</td><td>同上</td></tr><tr><td>批量处理 100 份 PDF</td><td>API</td><td>脚本循环调用，不需要人盯着</td></tr><tr><td>每天自动跑一遍数据</td><td>API</td><td>可以定时无人运行</td></tr><tr><td>偶尔用一下、想省钱</td><td>API（先充 10 元）</td><td>按量计费，不用不花钱</td></tr></tbody></table><p>一句话总结：<strong>写代码靠 Coding Plan，跑批量靠 API，两者配合 = 又便宜又能干</strong>。</p><h2 id="h-9">0.6 三条必须知道的红线</h2><ol><li><strong>AI 会犯错</strong>：编造文件、算错数字、引用不存在的&quot;来源&quot;都可能发生。凡是要交给老师或公开的内容，逐条核验。</li><li><strong>学术诚信</strong>：是否允许使用 AI、如何标注，以学校和课程老师的规定为准。允许的情况下，通常要声明&quot;哪些部分用了 AI 辅助&quot;。</li><li><strong>隐私与安全</strong>：不要上传身份证号、学号、未公开数据、他人隐私到任何 AI 平台；API Key 相当于你的密码，绝不外传、绝不提交到公开代码仓库。</li></ol><hr><h1 id="h-10">第 1 章　动手前的准备（约 1 小时）</h1><blockquote>目标：把这五样东西准备好——① 项目文件夹　② 一个对话式 AI 账号　③ Python　④ AI 编程工具 Cursor　⑤ API Key。&lt;br&gt;做完第 1.7 节你就能跑通第一个&quot;AI 脚本&quot;，后面全都不慌了。</blockquote><h2 id="h-11">1.1 建一个&quot;项目文件夹&quot;</h2><p>以后你每个项目（政策分析、舆情分析……）都放一个独立文件夹，别乱放。</p><ol><li>打开电脑的&quot;文稿/Documents&quot;文件夹。</li><li>新建一个文件夹，命名为 <code>AI治理练习</code>（英文名 <code>AI_governance</code> 也可以，避免某些工具对中文路径报错）。</li><li>在这个文件夹里再建两个子文件夹，分别叫 <code>policy_pdfs</code>（放政策 PDF）和 <code>scripts</code>（放 Python 脚本）。</li><li>记住这个文件夹的完整路径。macOS 上通常长这样：<code>/Users/你的用户名/Documents/AI治理练习</code>。</li></ol><blockquote>小技巧：以后所有脚本、数据都放这个文件夹里，管理起来很清爽。</blockquote><h2 id="h-12">1.2 注册一个&quot;对话式 AI&quot;账号</h2><p>对话式 AI 用于第 2、3 章（检索、起草），不花钱。</p><ol><li>用浏览器打开 DeepSeek 官网 <code>chat.deepseek.com</code>（也可以用其他同类产品，操作逻辑都一样）。</li><li>点&quot;注册&quot;，用邮箱或手机号注册并登录。</li><li>随便问它一句&quot;你好&quot;，确认能用。</li></ol><blockquote>为什么推荐 DeepSeek：对国内网络友好、便宜、中文好，而且它开放 API，和第 4 章用的接口是同一家，流程最顺。</blockquote><h2 id="h-13">1.3 安装 Python</h2><p>Python 是你要学的第一门&quot;能让 AI 干活&quot;的语言。安装步骤：</p><p><strong>如果你是 macOS：</strong></p><ol><li>打开&quot;终端&quot;（按 <code>Command + 空格</code>，输入&quot;终端&quot;，回车）。</li><li>输入下面这行，回车，等它运行完：</li></ol><p><code>xcode-select --install</code>（如果提示已安装，就跳过） 3. 再输入下面这行，回车： <code>python3 --version</code> 4. 如果显示类似 <code>Python 3.12.x</code> 或更高，说明系统自带 Python，直接跳到 1.4 节。 5. 如果提示找不到命令，去官网 <code>python.org</code> 下载安装包，安装时勾选&quot;Add Python to PATH&quot;，装完重新打开终端再试一次。</p><p><strong>如果你是 Windows：</strong></p><ol><li>打开官网 <code>python.org</code>，点 Downloads，下载最新版安装包。</li><li>运行安装包，<strong>务必勾选</strong>&quot;Add python.exe to PATH&quot;（这步很重要），然后点 Install Now。</li><li>装完后按 <code>Win + R</code>，输入 <code>cmd</code> 回车，打开命令行，输入：</li></ol><p><code>python --version</code> 4. 显示版本号就成功了。</p><blockquote>看到版本号不等于会编程，别慌，你只需要会&quot;运行别人写好的脚本&quot;和&quot;复制粘贴代码&quot;，本手册教的就是这个。</blockquote><h2 id="h-14">1.4 安装 AI 编程工具 Cursor（这就是你的&quot;Coding Plan&quot;）</h2><p>Cursor 是一个 AI 编程编辑器，免费版够你大学前两年用。</p><ol><li>打开 <code>cursor.com</code>，点 Download 下载对应你系统的版本。</li><li>安装并打开，用邮箱或 GitHub 账号登录（免费注册即可）。</li><li>打开后它会显示一个欢迎页。把 Cursor 想象成&quot;自带 AI 助手的记事本&quot;，你不需要先学它，第 2 步做项目时自然就会用。</li></ol><p><strong>省钱彩蛋（大学生福利）</strong>：如果你有 GitHub 账号，去 <code>education.github.com</code> 申请 GitHub 学生开发者包（GitHub Student Developer Pack），一般用学生证/学号就能认证，通过后可以<strong>免费</strong>使用 GitHub Copilot Pro 等一堆工具。大一入学注册好学生身份后就去申请。</p><h2 id="h-15">1.5 申请 API Key 并充值（重要，跟着做）</h2><p>API Key 是&quot;你的程序调用 AI 的钥匙&quot;。申请步骤：</p><ol><li>打开 <code>platform.deepseek.com</code>，用刚才的账号登录。</li><li>左侧菜单找到&quot;API Keys&quot;，点&quot;创建 API Key&quot;。</li><li>给它起个名字（比如 <code>我的第一个key</code>），创建后<strong>立刻复制保存</strong>到记事本里——密钥只显示这一次，关闭页面就看不到了。</li><li>左侧找到&quot;充值/费用&quot;，先充 <strong>10 元</strong>。放心，这个量足够你练完本手册所有项目还有富余。</li><li>记下两个信息（后面脚本要用）：</li></ol><ul><li><strong>API Key</strong>：形如 <code>sk-xxxxxxxxxxxxxxxx</code></li><li><strong>接口地址（base_url）</strong>：<code>https://api.deepseek.com</code></li></ul><blockquote>安全提醒：这个 Key 相当于你的密码。不要发给别人，不要传到 GitHub 上，用完的项目文件夹里也别存到会被分享的地方。</blockquote><h2 id="h-16">1.6 安装用到的 Python 库（工具箱）</h2><p>库（library）就是别人写好的现成功能包。打开终端（macOS）/命令行（Windows），输入下面这行并回车：</p><p><code>pip3 install openai pypdf pandas jieba matplotlib requests</code></p><p>（Windows 上如果提示找不到 pip3，就换成 <code>pip install ...</code>）</p><p>看到一堆&quot;Successfully installed&quot;就成功了。如果报错，看第 7 章 FAQ 的&quot;ModuleNotFoundError&quot;这一条。</p><h2 id="h-17">1.7 验证：跑通你的第一个 AI 脚本</h2><p>现在做一次完整的小测试，证明&quot;你 → Python → API → AI → 回答&quot;这条路是通的。</p><ol><li>打开 Cursor，点菜单 File → Open Folder，选择你 1.1 节建的 <code>AI治理练习</code> 文件夹。</li><li>在左侧文件列表空白处右键 → New File，新建一个文件，命名为 <code>hello_ai.py</code>。</li><li>把下面的代码完整复制进去（<strong>把 `sk-你的密钥` 换成你自己的 API Key</strong>）：</li></ol><pre><code class="language-python">from openai import OpenAI
+
+# 连接 AI：填你自己的密钥和接口地址
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,          # 换成你自己的密钥
+    base_url=&quot;https://api.deepseek.com&quot;  # 接口地址
+)
+
+# 问 AI 一个问题
+resp = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,         # 模型名，以平台文档为准
+    messages=[
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是数字公共治理专业的助教。&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;用三句话解释什么是数字政府。&quot;},
+    ]
+)
+
+# 打印 AI 的回答
+print(resp.choices[0].message.content)</code></pre><ol><li>运行：在 Cursor 里按 <code>Command + 回车</code>（macOS）或 <code>Ctrl + 回车</code>（Windows），或点右上角运行按钮。</li><li>如果下方输出区出现三句关于&quot;数字政府&quot;的中文回答，<strong>恭喜你，全链路打通了！</strong> 这是你掌握 API 的里程碑时刻。</li></ol><p>如果报错，优先检查：密钥有没有粘贴对（是不是多了空格）、网络是否正常、<code>openai</code> 库是否装好（见 1.6 和 FAQ）。</p><h2 id="h-18">1.8 本章自检清单</h2><ul><li class="todo">建好了 <code>AI治理练习</code> 文件夹，里面有 <code>policy_pdfs</code> 和 <code>scripts</code></li><li class="todo">DeepSeek 网页版能正常对话</li><li class="todo"><code>python3 --version</code> 能看到版本号</li><li class="todo">Cursor 安装并登录成功</li><li class="todo">拿到了 API Key，充了 10 元，记下了接口地址</li><li class="todo">Python 库安装成功</li><li class="todo"><code>hello_ai.py</code> 成功打印出 AI 的回答</li></ul><hr><h1 id="h-19">第 2 章　层次一：信息检索助手——把 AI 当高级搜索引擎</h1><blockquote>这一章不写代码，用 DeepSeek 网页版就能做。目标：把&quot;翻资料&quot;变成&quot;AI 先整理、你来核实&quot;。</blockquote><h2 id="h-20">2.1 提问五要素：一个通用的提问公式</h2><p>同样一个问题，问得越清楚，AI 答得越好。记住这个公式：</p><p><strong>「你扮演谁」+「做什么任务」+「背景/材料」+「具体要求」+「输出格式」</strong></p><p>示例（研究&quot;粤港澳大湾区数字政府建设&quot;）：</p><blockquote>你是一名研究数字政府的助理研究员（角色）。请帮我梳理粤港澳大湾区数字政府建设的典型案例（任务），重点关注广州、深圳、珠海三个城市近三年的实践（背景）。请列出 5 个案例，每个案例包含：实施主体、核心做法、成效、可借鉴点（要求）。用表格输出（格式）。</blockquote><p>对比一下&quot;随便问&quot;：<code>大湾区数字政府有什么案例？</code>——也能答，但答案泛泛而谈。<strong>多花 30 秒把问题写具体，效果天差地别。</strong></p><h2 id="h-21">2.2 三个练习（照着问一遍）</h2><p><strong>练习 1：案例检索</strong></p><blockquote>你是政策研究助理。请找出 5 个中国&quot;城市大脑&quot;建设典型案例，每个用 3 句话概括，并说明它们对公共治理的意义。</blockquote><p><strong>练习 2：概念辨析</strong></p><blockquote>请对比&quot;数字公共治理&quot;&quot;电子政务&quot;&quot;智慧城市&quot;三个概念的区别与联系，用一张表格展示，并用一句话总结各自的核心。</blockquote><p><strong>练习 3：找政策文件线索</strong></p><blockquote>请列出近三年广东省关于&quot;数据要素市场化&quot;的重要政策文件名称和发布机构。注意：如果你不确定，请明确标注&quot;这条信息我无法确认，请自行核实&quot;，不要编造。</blockquote><h2 id="h-22">2.3 三个重要习惯</h2><ol><li><strong>要求 AI 区分&amp;quot;事实&amp;quot;和&amp;quot;推断&amp;quot;</strong>：在问题末尾加一句&quot;请把确定的事实和你推测的内容分开标注&quot;。</li><li><strong>关键信息一定二次核实</strong>：AI 给的&quot;文件名、年份、机构、数据&quot;必须去政府官网或权威媒体确认，因为它可能记错。</li><li><strong>用追问迭代</strong>：第一版不满意不要重开，直接追问&quot;第 2 点再展开&quot;&quot;换个角度&quot;&quot;给反例&quot;。</li></ol><h2 id="h-23">2.4 什么时候要用 API 做检索？</h2><p>网页版一次只能问一次。如果你有 <strong>10 个城市、每个要查 5 个关键词</strong>，手动问 50 次太累——这时就交给 API 脚本批量跑（第 4 章会教你）。原则是：<strong>一次性的小问题用网页版，成批的重复问题用 API</strong>。</p><hr><h1 id="h-24">第 3 章　层次二：内容生成与草稿——让 AI 帮你写初稿</h1><blockquote>核心思路：<strong>AI 出初稿，你改定稿</strong>。你的时间花在&quot;判断和修改&quot;上，而不是&quot;从空白文档开始憋&quot;。</blockquote><h2 id="h-25">3.1 通用流程（四步）</h2><ol><li><strong>给材料</strong>：把相关的文本、数据、要求发给 AI。</li><li><strong>定框架</strong>：先让 AI 列出大纲，你确认或调整，再让它填充。</li><li><strong>出初稿</strong>：基于大纲生成完整初稿。</li><li><strong>你改定稿</strong>：核对事实、补充专业判断、调整语气，这是你作为&quot;未来公共治理人才&quot;的价值所在。</li></ol><h2 id="h-26">3.2 例子 A：把会议录音变成纪要</h2><p>假设你参加了一场关于&quot;社区数字化治理&quot;的讨论会，录了音。</p><ol><li>先让 AI 把录音转文字（语音转文字工具很多，或用会议软件的自动转写功能），得到一份文字稿。</li><li>把文字稿粘贴到 DeepSeek，输入：</li></ol><blockquote>这是某次会议的讨论文字稿。请整理成会议纪要，包含：会议主题、讨论要点（按议题分组）、达成的共识、待办事项（写明负责人和时间）。语言简洁，直接输出结果，不要客套话。&lt;br&gt;&lt;br&gt;文字稿如下：&lt;br&gt;（粘贴文字稿）</blockquote><ol><li>AI 输出纪要后，你核对：有没有漏掉关键议题？待办事项是不是会议真实提到的？改完后存档。</li></ol><h2 id="h-27">3.3 例子 B：写政策分析报告初稿</h2><ol><li>把政策原文（或你收集的资料）发给 AI。</li><li>输入：</li></ol><blockquote>你是政策分析助手。请基于以下材料，写一份政策分析报告初稿，结构为：一、政策背景与目标；二、主要内容解读；三、实施难点与风险；四、对数字公共治理的意义；五、完善建议。每部分 2～3 段，用通俗中文，先列大纲。&lt;br&gt;&lt;br&gt;材料如下：&lt;br&gt;（粘贴材料）</blockquote><ol><li>先看大纲对不对，不对就让它改，对了再让它&quot;按这个大纲写全文&quot;。</li><li>拿到初稿后，<strong>逐条核实里面的事实</strong>（政策条文、数字、时间），再改写成你自己的语言和观点。</li></ol><h2 id="h-28">3.4 怎么&quot;喂&quot;材料给 AI</h2><ul><li><strong>短材料</strong>（几千字内）：直接复制粘贴。</li><li><strong>长文档</strong>（整本政策文件）：网页版通常支持上传 PDF/Word 附件，直接拖进去。</li><li><strong>特别长的资料</strong>：让 AI 分段处理，比如&quot;先总结第 1～10 页，再总结 11～20 页&quot;。</li><li><strong>数据表格</strong>：粘贴 CSV 文本，或截图让它&quot;看图&quot;。</li></ul><h2 id="h-29">3.5 检查清单：AI 初稿你要核对什么</h2><ul><li class="todo">关键数字、年份、机构名称是否正确</li><li class="todo">引用的政策条文是否真实存在、原文是否一致</li><li class="todo">有没有明显的逻辑漏洞或跑题</li><li class="todo">观点是否是你的立场，而不是照抄 AI 的</li><li class="todo">是否标注了 AI 辅助情况（按学校规定）</li></ul><hr><h1 id="h-30">第 4 章　层次三：工作流自动化——API 实战（重点）</h1><blockquote>这一章是整个手册的核心。你会亲手搭出一条&quot;流水线&quot;：<strong>收集文件 → 脚本读取 → API 分析 → 生成结果 → 人工核验</strong>。&lt;br&gt;学完 4.1 你就入门了；四个专业场景（政策文本分析 / 舆情分析 / 公共数据治理 / 政策仿真）套路完全一样，换汤不换药。</blockquote><h2 id="h-31">4.0 先建立&quot;流水线&quot;思维</h2><p>想象你开了一家小工厂：</p><ul><li><strong>原料</strong>：政策 PDF、评论数据、脏表格……</li><li><strong>机器</strong>：Python 脚本（负责读文件、整理格式）</li><li><strong>工人</strong>：AI（通过 API 被脚本一次次&quot;喊&quot;来干活）</li><li><strong>产品</strong>：分析结果、报告、图表</li></ul><p>你的工作不是亲手干每一道工序，而是<strong>设计流水线 + 检查产品质量</strong>。这就是&quot;用 AI 参与项目&quot;的底层逻辑。</p><p>画成图就是：</p><pre><code>文件/数据 ──► 脚本读取 ──► 调用API让AI分析 ──► 保存结果 ──► 人工核验 ──► 报告</code></pre><h2 id="h-32">4.1 第一个 API 脚本：批量分析多条文本</h2><p>网页版一次问一条，API 脚本一次能处理几百条。先看一个能直接跑的例子：</p><ol><li>在 Cursor 里新建文件 <code>batch_analyze.py</code>（放在 <code>scripts</code> 文件夹）。</li><li>复制下面代码，替换密钥：</li></ol><pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,               # 换成你的密钥
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+# 要分析的文本列表（可以是评论、政策段落、新闻……）
+texts = [
+    &quot;广州市发布了最新的数字政府建设三年行动方案。&quot;,
+    &quot;某社区试点用小程序收集居民意见，参与率明显提升。&quot;,
+    &quot;专家呼吁加强公共数据的隐私保护。&quot;,
+]
+
+for i, text in enumerate(texts, 1):
+    resp = client.chat.completions.create(
+        model=&quot;deepseek-chat&quot;,
+        messages=[
+            {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是政策分析助手。请提取：1）这段话的主题 2）关键信息 3）一句话评价。用简洁中文回答。&quot;},
+            {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: text},
+        ]
+    )
+    print(f&quot;===== 第 {i} 条 =====&quot;)
+    print(resp.choices[0].message.content)
+    print()</code></pre><ol><li>运行，看输出。如果三条都分析出来了，<strong>你已经会用 API 了</strong>。</li></ol><p><strong>这段代码逐行在干嘛</strong>（现在不要求全懂，但要知道每行是干嘛的）：</p><table><thead><tr><th>代码</th><th>作用</th></tr></thead><tbody><tr><td><code>from openai import OpenAI</code></td><td>引入&quot;打电话的工具包&quot;</td></tr><tr><td><code>client = OpenAI(...)</code></td><td>建立连接，告诉它&quot;我是谁（密钥）+ 打到哪（地址）&quot;</td></tr><tr><td><code>for i, text in enumerate(texts, 1)</code></td><td>循环：对列表里每条文本</td></tr><tr><td><code>client.chat.completions.create(...)</code></td><td>打一次电话：把 system（角色设定）+ user（你的内容）发给 AI</td></tr><tr><td><code>model=&amp;quot;deepseek-chat&amp;quot;</code></td><td>选择用哪个 AI 模型</td></tr><tr><td><code>resp.choices[0].message.content</code></td><td>取出 AI 回复的文字</td></tr><tr><td><code>print(...)</code></td><td>打印出来</td></tr></tbody></table><blockquote><strong>什么叫 token（计费单位）</strong>：大致等于&quot;一个中文词或几个英文字母&quot;。你发给 AI 的文字和 AI 回复的文字都算 token，用完扣费。DeepSeek 很便宜，正常练习根本不用担心，具体价格以平台&quot;价格&quot;页面为准。</blockquote><hr><h2 id="h-33">4.2 场景一：政策文本分析（完整项目，务必跟着做一遍）</h2><p><strong>项目目标</strong>：把 10 份政策 PDF，自动整理成&quot;每份文件的核心内容 + 关键条款 + 对比表 + 趋势摘要&quot;。</p><h3 id="h-34">第 1 步　收集政策文件（原料）</h3><ol><li>打开政府网站（如 <code>gov.cn</code>、广东省/广州市政府门户、部门官网的&quot;政策文件&quot;栏目）。</li><li>下载 10 份你感兴趣的政策 PDF（比如关于&quot;数字政府、数据要素、政务服务&quot;的文件），命名成好认的名字，比如 <code>2024_广州数字政府方案.pdf</code>。</li><li>全部放进 1.1 节建的 <code>policy_pdfs</code> 文件夹。</li></ol><blockquote>练手建议：先别追求最新最全，重点是走通流程。10 份就够。</blockquote><h3 id="h-35">第 2 步　用 Cursor（Coding Plan）写&quot;批量读取 PDF&quot;的脚本</h3><p>这一步体会&quot;Coding Plan 帮你写代码&quot;：</p><ol><li>在 Cursor 里打开你的项目文件夹。</li><li>按 <code>Command + L</code>（macOS）/<code>Ctrl + L</code>（Windows）打开对话面板。</li><li>输入这句话（这就是你用 Coding Plan 的方式）：</li></ol><blockquote>请帮我写一个 Python 脚本 <code>read_pdfs.py</code>：读取当前文件夹下 <code>policy_pdfs</code> 里的所有 PDF，把每份 PDF 的文字提取出来，保存成同名的 <code>.txt</code> 文件到 <code>policy_texts</code> 文件夹（没有就自动创建）。用 pypdf 库，处理中文，打印每份文件的提取字数。</blockquote><ol><li>Cursor 会生成代码，右下角会有&quot;Accept/接受&quot;按钮，点接受。</li><li>运行它（<code>Command + 回车</code>）。打开 <code>policy_texts</code> 文件夹，确认每份 PDF 都有对应的 <code>.txt</code>。</li></ol><blockquote>如果 Cursor 生成的代码报错，把报错信息复制，再问 Cursor：&quot;报了这个错，帮我修复&quot;，它会自己改。<strong>这就是 Coding Plan 的日常用法。</strong></blockquote><p>对照参考，效果应类似下面的脚本（如果 Cursor 写得和这个不一样，没关系，能跑就行）：</p><pre><code class="language-python">from pathlib import Path
+from pypdf import PdfReader
+
+folder = Path(&quot;policy_pdfs&quot;)     # PDF 所在文件夹
+out = Path(&quot;policy_texts&quot;)       # 输出文件夹
+out.mkdir(exist_ok=True)
+
+for pdf_path in folder.glob(&quot;*.pdf&quot;):
+    reader = PdfReader(str(pdf_path))
+    text = &quot;\n&quot;.join(page.extract_text() or &quot;&quot; for page in reader.pages)
+    (out / f&quot;{pdf_path.stem}.txt&quot;).write_text(text, encoding=&quot;utf-8&quot;)
+    print(f&quot;已提取：{pdf_path.name}，共 {len(text)} 字&quot;)</code></pre><h3 id="h-36">第 3 步　用 API 批量分析每份文件</h3><p>新建 <code>policy_pipeline.py</code>，复制下面代码（替换密钥）：</p><pre><code class="language-python">import json
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+SYSTEM_PROMPT = (
+    &quot;你是政策分析专家。请从政策文本中提取：&quot;
+    &quot;1) 文件主题 2) 核心目标 3) 关键条款（3-5条）4) 主要实施手段 &quot;
+    &quot;5) 可能的难点。用中文回答，分点列出。&quot;
+)
+
+results = {}
+for txt_path in sorted(Path(&quot;policy_texts&quot;).glob(&quot;*.txt&quot;)):
+    text = txt_path.read_text(encoding=&quot;utf-8&quot;)[:6000]  # 控制长度、控制费用
+    resp = client.chat.completions.create(
+        model=&quot;deepseek-chat&quot;,
+        messages=[
+            {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PROMPT},
+            {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: text},
+        ],
+        temperature=0.3,          # 数值越低，回答越&quot;稳定老实&quot;
+    )
+    results[txt_path.stem] = resp.choices[0].message.content
+    print(f&quot;完成：{txt_path.stem}&quot;)
+
+Path(&quot;政策分析结果.json&quot;).write_text(
+    json.dumps(results, ensure_ascii=False, indent=2), encoding=&quot;utf-8&quot;
+)
+print(&quot;全部完成，结果已保存到 政策分析结果.json&quot;)</code></pre><p>运行后，项目文件夹里会出现 <code>政策分析结果.json</code>——用 Cursor 打开它，就能看到每份政策的分析结果。</p><h3 id="h-37">第 4 步　生成对比表和趋势摘要</h3><p>单份分析还不够，你还要&quot;横向对比&quot;。再问一次 API（新建 <code>summary.py</code>）：</p><pre><code class="language-python">import json
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+data = json.loads(Path(&quot;政策分析结果.json&quot;).read_text(encoding=&quot;utf-8&quot;))
+
+# 把每份文件的分析结果拼成一段文字，让 AI 做横向对比
+combined = &quot;\n\n&quot;.join(f&quot;【{name}】\n{content}&quot; for name, content in data.items())
+
+prompt = (
+    &quot;以下是对 10 份政策文件的逐份分析。请：\n&quot;
+    &quot;1) 用表格对比它们的主题、目标、主要手段的异同；\n&quot;
+    &quot;2) 总结这组政策体现出的整体趋势（比如从&#x27;信息化&#x27;走向&#x27;数据要素化&#x27;）；\n&quot;
+    &quot;3) 指出值得关注的 3 个治理议题。&quot;
+)
+
+resp = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是公共政策研究助理，输出严谨、分点清晰。&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt + &quot;\n\n&quot; + combined},
+    ]
+)
+
+Path(&quot;政策对比与趋势.md&quot;).write_text(resp.choices[0].message.content, encoding=&quot;utf-8&quot;)
+print(&quot;已生成：政策对比与趋势.md&quot;)</code></pre><p>运行后打开 <code>政策对比与趋势.md</code> 查看。</p><h3 id="h-38">第 5 步　人工核验与出报告（最重要的一步）</h3><p>AI 的分析<strong>只是草稿</strong>。现在轮到你了：</p><ol><li>抽查 2～3 份文件，对照原文，核对 AI 提取的关键条款是否准确、有没有遗漏；</li><li>修正明显错误；</li><li>在报告里加上你的专业判断（这部分 AI 替代不了）；</li><li>按老师要求标注&quot;哪些内容由 AI 辅助生成&quot;。</li></ol><p><strong>到这里，你已经完整走完了&amp;quot;层次三&amp;quot;的第一个项目。</strong> 后面的三个场景，本质都是这个流程的变体。</p><hr><h2 id="h-39">4.3 场景二：舆情分析</h2><p><strong>项目目标</strong>：拿到一批网民评论，自动完成&quot;情感分类（正面/负面/中性）→ 热点关键词 → 舆情简报&quot;，最后画一张情感分布图。</p><h3 id="h-40">第 1 步　准备数据</h3><p>真正的舆情数据一般来自微博、政务留言板、问卷开放题等。<strong>注意</strong>：练习时请使用公开的、不含个人隐私的数据，不要爬取和传播他人隐私。</p><p>练手方法：在 <code>AI治理练习</code> 文件夹新建一个 <code>评论数据.csv</code>，用记事本/文本编辑打开，输入下面内容（第一行是表头，后面每行一条评论，自己编 20 条左右，内容围绕&quot;社区数字化、政务服务&quot;之类的主题）：</p><pre><code>内容
+希望小区门口办事窗口能开得久一点
+政务小程序挺好用的，办事不用跑腿了
+系统经常卡顿，体验很差
+数据共享后办事效率明显提升
+担心个人信息被滥用
+社区养老驿站上线了预约功能，很方便</code></pre><blockquote>提示：<code>.csv</code> 是表格的纯文本格式，Excel/WPS 也能直接打开编辑。保存时注意选 UTF-8 编码。</blockquote><h3 id="h-41">第 2 步　用 API 做情感分类</h3><p>新建 <code>sentiment.py</code>：</p><pre><code class="language-python">import csv
+from collections import Counter
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+# 读取评论（假设第一列是评论文本）
+comments = []
+with open(&quot;评论数据.csv&quot;, encoding=&quot;utf-8&quot;) as f:
+    for row in csv.reader(f):
+        if row:                     # 跳过空行
+            comments.append(row[0])
+
+def classify(text):
+    resp = client.chat.completions.create(
+        model=&quot;deepseek-chat&quot;,
+        messages=[
+            {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;判断这条评论的情感倾向，只回答三个词之一：正面/负面/中性。&quot;},
+            {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: text},
+        ],
+        temperature=0,              # 0 = 尽量稳定，不要发挥
+    )
+    return resp.choices[0].message.content.strip()
+
+counts = Counter()
+for c in comments[1:]:              # 跳过表头
+    label = classify(c)
+    counts[label] += 1
+    print(f&quot;{label}\t{c[:25]}&quot;)
+
+print(&quot;\n情感分布：&quot;, dict(counts))</code></pre><p>运行后，你会看到每条评论的标签和整体分布。</p><blockquote><strong>省钱小技巧</strong>：情感分类这种简单任务，token 消耗很小，几十条评论也就几分钱。真正贵的是让 AI 写长文章，所以&quot;能本地算的用代码，AI 只做它擅长的判断&quot;。</blockquote><h3 id="h-42">第 3 步　用 jieba 提取热点关键词（本地计算，不花 API 钱）</h3><p>关键词统计不需要 AI，用 Python 本地就能算，这就是&quot;该省则省&quot;：</p><p>新建 <code>keywords.py</code>：</p><pre><code class="language-python">import jieba.analyse
+
+text = open(&quot;评论数据.csv&quot;, encoding=&quot;utf-8&quot;).read()
+tags = jieba.analyse.extract_tags(text, topK=15, withWeight=True)
+
+for word, weight in tags:
+    print(f&quot;{word}\t{weight:.4f}&quot;)</code></pre><p>运行后会输出热度最高的词（比如&quot;办事、数据、效率&quot;）。这就是&quot;热点&quot;的雏形。</p><h3 id="h-43">第 4 步　让 AI 生成舆情简报</h3><p>新建 <code>brief.py</code>：把上两步的结果喂给 AI，让它写一份简报。</p><pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+sentiment = &quot;正面 12 条，负面 3 条，中性 5 条&quot;          # 填第 2 步的结果
+keywords = &quot;办事、数据、效率、体验、安全&quot;                  # 填第 3 步的结果
+
+prompt = f&quot;&quot;&quot;请基于以下舆情统计结果，写一份简短舆情简报：
+1) 一句话概述整体舆情态势；
+2) 列出 2-3 个公众最关注的话题及可能原因；
+3) 给出 2 条治理建议。
+
+统计结果：
+- 情感分布：{sentiment}
+- 高频关键词：{keywords}
+&quot;&quot;&quot;
+
+resp = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是政务舆情分析师，输出简洁专业的简报。&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt},
+    ]
+)
+print(resp.choices[0].message.content)</code></pre><h3 id="h-44">第 5 步　画一张情感分布图（可视化）</h3><p>新建 <code>visualize.py</code>：</p><pre><code class="language-python">import matplotlib.pyplot as plt
+
+# 让 matplotlib 显示中文（macOS 用 PingFang SC，Windows 用 Microsoft YaHei）
+plt.rcParams[&quot;font.sans-serif&quot;] = [&quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, &quot;SimHei&quot;, &quot;Arial Unicode MS&quot;]
+plt.rcParams[&quot;axes.unicode_minus&quot;] = False
+
+labels = [&quot;正面&quot;, &quot;负面&quot;, &quot;中性&quot;]
+values = [12, 3, 5]          # 填第 2 步统计的数字
+
+plt.figure(figsize=(6, 6))
+plt.pie(values, labels=labels, autopct=&quot;%.1f%%&quot;)
+plt.title(&quot;舆情情感分布&quot;)
+plt.savefig(&quot;情感分布.png&quot;, dpi=150, bbox_inches=&quot;tight&quot;)
+print(&quot;已保存：情感分布.png&quot;)</code></pre><p>运行后在项目文件夹找到 <code>情感分布.png</code>，打开看看。如果中文显示成方块，看 FAQ 的&quot;可视化中文乱码&quot;。</p><blockquote><strong>回顾一下</strong>：这个项目里，情感分类、写简报用了 API；关键词统计、画图用了本地代码。这就是&quot;API 和代码配合&quot;的真实形态——<strong>AI 做判断和写作，代码做计算和画图</strong>。</blockquote><hr><h2 id="h-45">4.4 场景三：公共数据治理</h2><p><strong>项目目标</strong>：拿到一份&quot;脏数据&quot;（有缺失、重复、格式混乱），让 AI 帮忙体检、清洗，最后出一份数据质量报告和一张可视化图。</p><blockquote>公共数据治理的核心就三件事：<strong>清洗（让数据能算）→ 质检（发现数据问题）→ 呈现（让数据会说话）</strong>。</blockquote><h3 id="h-46">第 1 步　准备一份&quot;脏数据&quot;</h3><p>练手：在项目文件夹新建 <code>原始数据.csv</code>，内容如下（故意包含各种脏数据问题——缺失、重复、多余空格、错误格式）：</p><pre><code>姓名,年龄,所在区,提交时间
+张三,24,天河区,2026-01-05
+李四,,越秀区,2026/01/07
+王五,31,天河区,2026-01-05
+张三,24,天河区,2026-01-05
+赵六,28, 白云区 ,2026-01-12
+钱七,abc,海珠区,2026-01-14
+孙八,35,,2026-01-15</code></pre><p>（你可以再加几行，让问题更丰富。）</p><h3 id="h-47">第 2 步　用 Cursor（Coding Plan）给数据&quot;体检&quot;</h3><ol><li>在 Cursor 对话面板输入：</li></ol><blockquote>请写一个 Python 脚本 <code>data_check.py</code>，读取 <code>原始数据.csv</code>（UTF-8 编码），输出一份数据质量体检报告，包含：总行数、各列缺失值数量、完全重复的行数、每列的数据类型、明显的异常值（比如年龄列里的非数字）。用 pandas 实现，输出要清晰。</blockquote><ol><li>接受代码并运行。你会看到类似：</li></ol><pre><code>总行数：8
+姓名 缺失：0
+年龄 缺失：1
+...
+重复行：1
+年龄 列存在非数字值：abc</code></pre><p><strong>这一步完全用 Coding Plan 完成，没花一分钱 API 费用</strong>——因为数据计算用代码就够了。</p><h3 id="h-48">第 3 步　让 AI 写清洗脚本，你运行</h3><p>基于体检结果，再问 Cursor：</p><blockquote>请写一个 <code>clean_data.py</code>：1) 删除完全重复的行；2) 删除&quot;年龄&quot;列中无法转换为数字的行；3) 把&quot;提交时间&quot;统一成 YYYY-MM-DD 格式（兼容 2026/01/07 这种写法）；4) 去掉所有文本列首尾的空格；5) 保存为 <code>清洗后数据.csv</code>（用 UTF-8 with BOM 编码，方便 Excel 打开）。</blockquote><p>接受并运行。结束后打开 <code>清洗后数据.csv</code> 确认。</p><p>参考实现（能跑就行，不必完全一样）：</p><pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv(&quot;原始数据.csv&quot;, encoding=&quot;utf-8&quot;)
+
+# 1) 删除完全重复的行
+df = df.drop_duplicates()
+
+# 2) 删除年龄列中无法转为数字的行
+df[&quot;年龄&quot;] = pd.to_numeric(df[&quot;年龄&quot;], errors=&quot;coerce&quot;)
+df = df.dropna(subset=[&quot;年龄&quot;])
+df[&quot;年龄&quot;] = df[&quot;年龄&quot;].astype(int)
+
+# 3) 统一日期格式
+df[&quot;提交时间&quot;] = pd.to_datetime(df[&quot;提交时间&quot;], format=&quot;mixed&quot;).dt.strftime(&quot;%Y-%m-%d&quot;)
+
+# 4) 去掉文本列首尾空格
+for col in df.select_dtypes(include=&quot;object&quot;).columns:
+    df[col] = df[col].str.strip()
+
+# 5) 保存
+df.to_csv(&quot;清洗后数据.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
+print(&quot;清洗完成，剩余行数：&quot;, len(df))</code></pre><h3 id="h-49">第 4 步　用 API 写&quot;数据治理报告&quot;（AI 擅长的地方）</h3><p>计算交给代码，<strong>总结和解释交给 AI</strong>。新建 <code>report.py</code>：</p><pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+quality_findings = &quot;&quot;&quot;原始数据共 8 行，发现：1 行完全重复；
+年龄列有 1 个缺失、1 个非数字值；日期格式不统一；部分文本含多余空格。
+清洗后剩余 6 行。&quot;&quot;&quot;
+
+prompt = f&quot;&quot;&quot;请基于以下数据质检结果，写一份简短的《公共数据质量报告》，包含：
+1) 数据存在的主要问题分类；
+2) 这些问题可能导致的分析风险；
+3) 对数据治理流程的 3 条改进建议。
+
+质检结果：
+{quality_findings}
+&quot;&quot;&quot;
+
+resp = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是数据治理专家，输出专业且通俗的报告。&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt},
+    ]
+)
+print(resp.choices[0].message.content)</code></pre><h3 id="h-50">第 5 步　可视化：让数据会说话</h3><p>用第 4.3 节的 <code>visualize.py</code> 思路，把情感饼图换成&quot;各区数据量柱状图&quot;即可：</p><pre><code class="language-python">import matplotlib.pyplot as plt
+import pandas as pd
+
+plt.rcParams[&quot;font.sans-serif&quot;] = [&quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, &quot;SimHei&quot;, &quot;Arial Unicode MS&quot;]
+plt.rcParams[&quot;axes.unicode_minus&quot;] = False
+
+df = pd.read_csv(&quot;清洗后数据.csv&quot;, encoding=&quot;utf-8-sig&quot;)
+counts = df[&quot;所在区&quot;].value_counts()
+
+counts.plot(kind=&quot;bar&quot;, figsize=(6, 4), title=&quot;各区提交数量&quot;)
+plt.xticks(rotation=0)
+plt.savefig(&quot;各区数据分布.png&quot;, dpi=150, bbox_inches=&quot;tight&quot;)
+print(&quot;已保存：各区数据分布.png&quot;)</code></pre><p><strong>小结</strong>：这个场景里，Coding Plan 负责&quot;写计算脚本&quot;，代码负责&quot;跑计算&quot;，API 负责&quot;写解释性报告&quot;——三者的分工你应该越来越有感觉了。</p><hr><h2 id="h-51">4.5 场景四：政策建议与仿真</h2><p><strong>项目目标</strong>：给 AI 一份政策草案，让它扮演&quot;仿真器&quot;，模拟政策对不同群体的影响、识别风险、提出优化建议。</p><blockquote>这里的&quot;仿真&quot;不是真正用数学模型跑模拟，而是<strong>让 AI 基于它的知识，系统性地推演政策可能的影响面</strong>。它的价值是&quot;逼你考虑周全&quot;，不是&quot;替你下结论&quot;。</blockquote><h3 id="h-52">第 1 步　准备政策草案</h3><p>新建 <code>政策草案.txt</code>，写一段你自己的政策设想（大一新生不用写得多专业，有想法就行），例如：</p><pre><code>关于在社区推广&quot;AI 政务问答机器人&quot;的试点方案（草案）
+一、目的：在 10 个社区部署 AI 问答机器人，解答居民关于社保、户籍、办事流程的常见问题，缓解窗口压力。
+二、内容：机器人提供 7×24 小时在线问答；对无法回答的问题转人工；收集高频问题用于优化。
+三、保障：需要数据支持、系统维护经费、居民使用培训。</code></pre><h3 id="h-53">第 2 步　用 API 做&quot;多维度影响仿真&quot;</h3><p>新建 <code>simulation.py</code>：</p><pre><code class="language-python">import json
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+draft = Path(&quot;政策草案.txt&quot;).read_text(encoding=&quot;utf-8&quot;)
+
+prompt = f&quot;&quot;&quot;你是一名公共政策仿真分析师。以下是某地拟出台的政策草案：
+---
+{draft}
+---
+请完成以下任务，并用 JSON 格式输出：
+1) &quot;stakeholders&quot;：列出受影响的利益相关方（至少 5 类，如居民、基层工作人员、技术供应商等）；
+2) 对每一类，给出影响方向（正面/负面/中性）和影响强度（1-5 分）；
+3) &quot;risks&quot;：列出 3 个主要实施风险；
+4) &quot;suggestions&quot;：给出 3 条优化建议。
+&quot;&quot;&quot;
+
+resp = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是政策仿真专家，只输出合法 JSON，不要输出其他文字。&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt},
+    ],
+    temperature=0.5,
+)
+
+result = resp.choices[0].message.content
+Path(&quot;仿真结果.json&quot;).write_text(result, encoding=&quot;utf-8&quot;)
+print(result)</code></pre><p>运行后打开 <code>仿真结果.json</code>，你会看到一份结构化的&quot;影响矩阵&quot;。</p><h3 id="h-54">第 3 步　让 AI 把矩阵讲成人话</h3><p>JSON 适合机器读，不适合人读。再问一次，让它生成&quot;政策影响分析报告&quot;：</p><pre><code class="language-python">from openai import OpenAI
+from pathlib import Path
+
+client = OpenAI(
+    api_key=&quot;sk-你的密钥&quot;,
+    base_url=&quot;https://api.deepseek.com&quot;
+)
+
+sim = Path(&quot;仿真结果.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+
+prompt = f&quot;&quot;&quot;请根据以下政策仿真结果，写一份《政策影响分析报告》：
+一、政策概述；二、利益相关方影响分析（按影响强度排序）；三、主要风险；
+四、优化建议。语言通俗，适合向非技术领导汇报。
+
+仿真结果：
+{sim}
+&quot;&quot;&quot;
+
+resp = client.chat.completions.create(
+    model=&quot;deepseek-chat&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+)
+Path(&quot;政策影响分析报告.md&quot;).write_text(resp.choices[0].message.content, encoding=&quot;utf-8&quot;)
+print(&quot;已生成：政策影响分析报告.md&quot;)</code></pre><h3 id="h-55">第 4 步　人工修正（模拟仿真必须有的最后一步）</h3><ul><li>AI 列的影响方和风险<strong>可能漏掉你专业课上学的关键因素</strong>（比如财政承受能力、数据安全合规），补充进去；</li><li>影响强度是 AI 的估计，不是实测数据，报告里要如实说明；</li><li>用你自己的专业判断定稿。</li></ul><blockquote>记住：<strong>AI 的仿真结果 = 高质量的&amp;quot;头脑风暴清单&amp;quot;，不是&amp;quot;研究结论&amp;quot;</strong>。真正的研究结论需要数据支撑和你的专业判断。</blockquote><hr><h2 id="h-56">4.6 省钱省时技巧（实践后回头看）</h2><ol><li><strong>先小样测试，再全量跑</strong>：先让脚本处理 3 条数据，确认输出满意，再放开处理全部——避免浪费钱跑出垃圾结果。</li><li><strong>控制输入长度</strong>：长文档只喂关键段落（比如截取前 6000 字），<code>text[:6000]</code> 就是干这个的。</li><li><strong>能本地算的别用 API</strong>：关键词统计、去重、清洗用 pandas/jieba 本地算，API 只做&quot;理解与生成&quot;。</li><li><strong>温度调低</strong>：分析类任务 <code>temperature=0.3</code> 或 <code>0</code>，回答更稳定、更少胡说。</li><li><strong>保存中间结果</strong>：每步结果都存成文件（JSON/MD），万一后面出错不用重跑前面。</li><li><strong>选择合适模型</strong>：简单任务用便宜的对话模型；需要深度推理再考虑更强的模型（以平台文档为准）。</li><li><strong>善用 Coding Plan</strong>：写脚本、改代码、修 bug 全部在 Cursor 里做，这部分不花 API 的钱。</li></ol><hr><h1 id="h-57">第 5 章　层次四：AI Agent（智能体）</h1><h2 id="h-58">5.1 Agent 是什么</h2><p>前面三层的共同点：<strong>每一步都是你发起的</strong>。Agent（智能体）的不同在于：<strong>你给一个目标，它自己拆解任务、调用工具、逐步完成</strong>。</p><p>打个比方：</p><ul><li>层次一～三：你指挥 AI 干活，它干一步停一步；</li><li>层次四：你当&quot;项目负责人&quot;，Agent 当&quot;项目经理&quot;，你只看结果、把关质量。</li></ul><h2 id="h-59">5.2 你其实已经在用 Agent 了</h2><p>Cursor 里的对话面板就是最简单的 Agent 形态：你让它&quot;写一个脚本，读取 PDF、提取文本、保存成 txt&quot;，它会自己写代码、创建文件、甚至运行。你给目标，它自主完成。</p><p>再比如我（Codex）就是 Agent：你提出目标，我会规划步骤、读写文件、运行命令、产出成果。</p><p><strong>大一阶段你不需要自己&amp;quot;开发&amp;quot;Agent</strong>，会&quot;使用&quot;现成 Agent 工具就够了：</p><table><thead><tr><th>工具</th><th>适合场景</th><th>说明</th></tr></thead><tbody><tr><td>Cursor</td><td>写代码、改代码</td><td>免费版够用</td></tr><tr><td>Claude Code</td><td>命令行里的全能 Agent</td><td>需要订阅或 API，进阶再试</td></tr><tr><td>Codex（现在这个）</td><td>完成任务、产出文件</td><td>学会把目标描述清楚最重要</td></tr></tbody></table><h2 id="h-60">5.3 进阶示例：让 Agent 定期追踪政策动态</h2><p>假设你想&quot;每周追踪广东省数字治理相关政策动态&quot;。思路有两种：</p><p><strong>方案 A（简单，推荐大一先用）</strong>：每周手动触发一次。</p><ol><li>准备一个 <code>追踪政策.py</code>：它用 <code>requests</code> 库打开政府网站政策列表页，把标题抓下来。</li><li>用 API 让 AI 筛选出与&quot;数字治理&quot;相关的标题并生成摘要。</li><li>每周花 10 分钟运行一次，把结果整理成简报。</li></ol><p><strong>方案 B（自动，大二以后再折腾）</strong>：</p><ol><li>把脚本设置成定时运行（macOS 用&quot;日历&quot;或&quot;启动台&quot;里的自动化；Windows 用&quot;任务计划程序&quot;）。</li><li>用 API 的&quot;让 AI 写邮件&quot;功能，让 AI 把简报发到你的邮箱。</li><li>你需要先学&quot;邮件发送&quot;的 API 用法，这部分等你有基础后让 Cursor 帮你写。</li></ol><blockquote>提醒：方案 B 涉及定时任务和邮件，容易踩坑，<strong>大一先不要追求全自动</strong>，把&quot;每周手动跑一次&quot;做好就非常优秀了。</blockquote><h2 id="h-61">5.4 Agent 的边界：什么不能交给它</h2><ul><li><strong>不能</strong>：替你做涉及个人隐私、金钱、法律效力的决定；替你写作业冒充原创。</li><li><strong>应该</strong>：让它&quot;先出方案，你审核后执行&quot;。比如让它先列出步骤清单给你看，确认再动手。</li><li><strong>原则</strong>：<strong>Agent 是&amp;quot;效率工具&amp;quot;，不是&amp;quot;甩手掌柜&amp;quot;</strong>——你永远是最终责任人。</li></ul><hr><h1 id="h-62">第 6 章　一个贯穿项目：四层全部用上</h1><h2 id="h-63">项目：做一份《大湾区数字治理周报》</h2><p>把四个层次串起来，做一份像样的&quot;成果&quot;——这份东西以后可以放进你的课程作业作品集。</p><p><strong>周报结构</strong>（AI 辅助生成）：</p><ol><li>本周政策动态（检索 + 分析）</li><li>公众关注话题（舆情）</li><li>一组关键数据图表（数据治理）</li><li>一条政策微建议（仿真）</li></ol><p><strong>完整流程表</strong>：</p><table><thead><tr><th>步骤</th><th>做什么</th><th>用哪层</th><th>用哪个工具</th></tr></thead><tbody><tr><td>1</td><td>检索本周相关政策新闻/文件，收集 5 条</td><td>层次一</td><td>对话式 AI + 政府网站</td></tr><tr><td>2</td><td>把 5 条材料整理成统一格式的文本</td><td>层次二</td><td>对话式 AI</td></tr><tr><td>3</td><td>用 API 批量提取每条的核心信息</td><td>层次三</td><td>Python + API</td></tr><tr><td>4</td><td>抓取/整理一组评论，做情感分类和关键词</td><td>层次三</td><td>Python + API + jieba</td></tr><tr><td>5</td><td>清洗一份公开小数据集，画出分布图</td><td>层次三</td><td>Cursor + pandas</td></tr><tr><td>6</td><td>让 AI 基于以上内容生成&quot;政策微建议&quot;</td><td>层次三</td><td>API</td></tr><tr><td>7</td><td>让 Agent 把各部分组装成周报初稿</td><td>层次四</td><td>Cursor 对话</td></tr><tr><td>8</td><td>你逐项核验、修改、定稿</td><td>——（人工）</td><td>你自己</td></tr></tbody></table><p><strong>做完这个项目，你就拥有了一个可复用的&amp;quot;模板&amp;quot;</strong>：以后任何主题（养老服务数字化、乡村治理、数据安全……），把第 1 步的内容换掉，整个流水线都能复用。这就是&quot;把 AI 嵌入工作流&quot;的真实含义。</p><hr><h1 id="h-64">第 7 章　常见问题排查（FAQ）</h1><p>遇到报错先别慌，大多数问题就这几种。<strong>报错信息是最好的线索，把它复制给 Cursor，让 AI 帮你修。</strong></p><h3 id="h-65">7.1 运行脚本报 <code>ModuleNotFoundError: No module named &amp;#x27;xxx&amp;#x27;</code></h3><p>原因：库没装上（或装到了另一个 Python 环境）。 解决：运行 <code>pip3 install xxx</code>（把 xxx 换成报错里的名字），再重跑。</p><h3 id="h-66">7.2 报错 <code>AuthenticationError</code> 或 <code>401</code>（认证失败）</h3><p>原因：API Key 不对、过期或没粘贴对（可能多了空格）。 解决：检查 <code>api_key=&amp;quot;sk-...&amp;quot;</code> 里的内容是否与平台上的完全一致；重新复制粘贴；确认没有余额（看第 7.4 条）。</p><h3 id="h-67">7.3 报错 <code>Connection error</code> 或超时</h3><p>原因：网络不通，或平台暂时不可用。 解决：检查网络；等几分钟重试；如果反复失败，确认接口地址 <code>base_url</code> 写的是 <code>https://api.deepseek.com</code>（不要加多余字符）。</p><h3 id="h-68">7.4 报错 <code>Insufficient Balance</code>（余额不足）</h3><p>解决：去平台充值页面充值（10 元够用很久）；或检查是不是有大循环不小心跑太多。</p><h3 id="h-69">7.5 报错 <code>InvalidRequestError</code> 或 <code>400</code></h3><p>原因：请求内容有问题（比如文本太长超限、格式错误）。 解决：把喂给 AI 的文本截短（如 <code>text[:6000]</code>）；检查 messages 格式是否和示例一致。</p><h3 id="h-70">7.6 PDF 提取出来是空的或乱码</h3><p>原因：有些 PDF 是扫描件（图片），没有文字层。 解决：先确认文件是不是扫描件；扫描件需要 OCR（文字识别），可以先让 Cursor 教你用 <code>paddleocr</code> 或在线工具处理；或在政府网站找 HTML/Word 版本替代。</p><h3 id="h-71">7.7 画图时中文显示成方块</h3><p>原因：matplotlib 默认字体不含中文。 解决：代码开头加上第 4.3/4.4 节那两行 <code>plt.rcParams[...]</code>；如果还不行，让 Cursor 根据你的系统推荐字体。</p><h3 id="h-72">7.8 脚本跑一半报错，前面的结果白跑了？</h3><p>解决：把每步结果及时存文件（<code>json</code>/<code>csv</code>）；在循环里加 <code>try ... except</code> 跳过单条错误，例如：</p><pre><code class="language-python">for i, text in enumerate(texts):
+    try:
+        resp = client.chat.completions.create(...)
+        results.append(resp.choices[0].message.content)
+    except Exception as e:
+        print(f&quot;第 {i} 条失败：{e}，跳过&quot;)</code></pre><h3 id="h-73">7.9 担心费用失控？</h3><ul><li>练习阶段每次跑之前，先数一下循环次数 × 文本长度，心里有数；</li><li>用第 4.6 节技巧控制；</li><li>平台后台有&quot;用量统计&quot;，定期看一眼；</li><li>实在担心，就只充 10 元——上限在那，花完就停。</li></ul><h3 id="h-74">7.10 不知道下一步该学什么？</h3><p>看第 8 章路线图，按&quot;每周练习计划&quot;走；遇到具体问题，把报错或需求描述清楚，让 Cursor 帮你。</p><hr><h1 id="h-75">第 8 章　大一到大四的学习路线 + 每周练习计划</h1><h2 id="h-76">8.1 四年的宏观路线</h2><table><thead><tr><th>阶段</th><th>重点</th><th>你该掌握的东西</th><th>产出物示例</th></tr></thead><tbody><tr><td>大一上</td><td>对话式 AI + Python 基础</td><td>提问公式、Python 语法基础、能跑脚本</td><td>课程小作业的 AI 辅助草稿</td></tr><tr><td>大一下</td><td>Coding Plan 写代码</td><td>用 Cursor 写/改/修脚本</td><td>数据清洗脚本、简单爬虫</td></tr><tr><td>大二上</td><td>API 批量自动化</td><td>批量分析文件、结构化输出</td><td>政策文本分析项目</td></tr><tr><td>大二下</td><td>数据治理进阶</td><td>pandas 数据分析、可视化</td><td>舆情分析 + 数据报告</td></tr><tr><td>大三</td><td>Agent 与工作流</td><td>搭完整流水线、定时任务</td><td>政策动态追踪系统、课程论文</td></tr><tr><td>大四</td><td>复合能力</td><td>数据采集→分析→报告全流程</td><td>毕业论文/作品集/实习项目</td></tr></tbody></table><h2 id="h-77">8.2 每周 3 小时练习计划（照着做）</h2><p><strong>周一（1 小时）——概念与提问</strong></p><ul><li>用对话式 AI 完成 3 次&quot;五要素提问&quot;练习；</li><li>主题围绕你的专业课程内容，比如&quot;智慧城市&quot;&quot;数据要素&quot;。</li></ul><p><strong>周三（1 小时）——动手写脚本</strong></p><ul><li>打开 Cursor，让 AI 帮你写一个小脚本并运行（读文件、算个数、画张图）；</li><li>脚本不用多复杂，重点是<strong>养成&amp;quot;让 AI 写代码、自己看懂大概、跑起来、改一改&amp;quot;的习惯</strong>。</li></ul><p><strong>周五（1 小时）——API 实践或复盘</strong></p><ul><li>单周：用 API 批量处理一份数据（评论、政策段落都行）；</li><li>双周：把本周做的事写进你的《AI 实践日志》（哪怕 5 行字，坚持下来就是巨大的积累）。</li></ul><h2 id="h-78">8.3 给自己的三个&quot;里程碑&quot;</h2><ol><li><strong>第一个月</strong>：完成第 4.2 节&quot;政策文本分析&quot;项目，能独立讲清楚整条流水线。</li><li><strong>第一学期结束</strong>：完成第 6 章&quot;治理周报&quot;项目，攒下第一份作品集。</li><li><strong>大二开学前</strong>：能把&quot;政策文本分析 + 舆情分析 + 数据治理&quot;三件套组合，套用到一个自己感兴趣的新主题上。</li></ol><blockquote>记住：<strong>做 1 个完整项目，胜过看 100 篇教程</strong>。手册读完，立刻去把 4.2 节做一遍，你会有质的飞跃。</blockquote><hr><h1 id="h-79">附录 A　常用命令速查</h1><table><thead><tr><th>想做什么</th><th>输入什么</th></tr></thead><tbody><tr><td>查看 Python 版本</td><td><code>python3 --version</code></td></tr><tr><td>安装库</td><td><code>pip3 install 库名</code></td></tr><tr><td>运行脚本</td><td><code>python3 文件名.py</code>（Windows 可能用 <code>python 文件名.py</code>）</td></tr><tr><td>中途停止脚本</td><td>按 <code>Ctrl + C</code></td></tr><tr><td>查看当前文件夹</td><td><code>ls</code>（Windows 用 <code>dir</code>）</td></tr><tr><td>进入文件夹</td><td><code>cd 文件夹名</code></td></tr><tr><td>创建文件夹</td><td><code>mkdir 文件夹名</code></td></tr></tbody></table><blockquote>这些命令大一不用全部背下来，用 Cursor 时大部分操作点界面就行，命令行命令慢慢积累。</blockquote><h1 id="h-80">附录 B　可直接抄的提问词（Prompt）模板</h1><p><strong>模板 1：归纳总结</strong></p><blockquote>请把下面这段文字归纳成 5 个要点，每个要点一句话，保留关键数字和专有名词。原文：……</blockquote><p><strong>模板 2：对比分析</strong></p><blockquote>请对比 A 和 B 的异同，用表格呈现，最后用一句话总结核心区别。</blockquote><p><strong>模板 3：批量分析（API 用）</strong></p><blockquote>你是政策分析专家。请从以下文本提取：1）主题 2）核心目标 3）关键条款 4）难点。分点输出。文本：……</blockquote><p><strong>模板 4：报告初稿</strong></p><blockquote>请基于以下材料写一份报告初稿，结构为：背景、现状、问题、建议。先列大纲，确认后再写全文。材料：……</blockquote><p><strong>模板 5：仿真推演</strong></p><blockquote>请列出这项政策可能影响的利益相关方，分析各自的收益与风险，并给出 3 条优化建议。政策内容：……</blockquote><p><strong>模板 6：让 AI 教 AI（学写代码）</strong></p><blockquote>我是一个完全没学过编程的大一新生，请用最简单的话解释这段代码每一行在做什么：……（粘贴代码）</blockquote><h1 id="h-81">附录 C　三条重要提醒（再强调一遍）</h1><ol><li><strong>学术诚信</strong>：先看学校和课程的规定。允许使用 AI 时，规范标注&quot;哪些内容由 AI 辅助生成&quot;，不把 AI 内容冒充自己的原创。</li><li><strong>隐私安全</strong>：不向任何 AI 平台上传身份证、学号、未公开数据、他人隐私；API Key 是密码，绝不外传。</li><li><strong>人永远是主角</strong>：AI 负责速度与初稿，你负责方向、判断与责任。<strong>会用 AI 的价值，恰恰在于你比 AI 更懂公共治理。</strong></li></ol><hr><blockquote><strong>手册完。现在，关掉这篇文档，打开 Cursor，从 4.2 节开始动手吧。</strong>&lt;br&gt;祝你在中山大学数字公共治理专业，把 AI 变成你最趁手的工具。</blockquote><hr><h1 id="h-82">附录 D　给 AI 助手的约定：安装/下载安全准则</h1><blockquote>约定人：吴宣澄　｜　生效日期：2026-08-05&lt;br&gt;这条准则约束的是&quot;帮你操作电脑的 AI 助手&quot;（比如 Codex），而不是你本人。</blockquote><h2 id="h-83">7 条必须遵守的检查</h2><ol><li><strong>来源可靠</strong>：只从官方官网或官方应用商店下载，不用来路不明的镜像站、破解站、第三方转载。</li><li><strong>下载地址正规</strong>：核对网址是否为官方域名，防止仿冒钓鱼。</li><li><strong>文件完整</strong>：下载后核对官方校验值（checksum），确认文件未被篡改、未下载不完整。</li><li><strong>版本兼容</strong>：确认软件适配本机芯片、系统版本和运行环境。</li><li><strong>安装方式规范</strong>：优先用官方安装程序或应用商店；不使用&quot;解包硬装&quot;等绕过手段。</li><li><strong>装后验证</strong>：检查签名有效、能正常启动、核心功能正常，验证通过后才交付使用。</li><li><strong>权限最小化</strong>：只申请完成任务所需的最小权限，不附带安装捆绑软件。</li></ol><h2 id="h-84">最重要的原则</h2><blockquote>如果某个操作无法验证安全性、或存在风险，<strong>先停下来告知用户</strong>，绝不擅自继续。</blockquote><h2 id="h-85">背景</h2><p>2026-08-05 安装 Cursor 时，AI 助手使用非标准解包方式破坏了应用签名，导致应用无法打开。经此教训，用户明确要求：以后安装/下载任何东西前，必须先检测安全性和稳定性。</p><hr><h1 id="h-86">附录 E　用 AI 不废武功的 5 条纪律</h1><blockquote>一句话：AI 是&quot;陪练&quot;，不是&quot;代打&quot;。它能替你跑，但不能替你长。</blockquote><ol><li><strong>先自己写，再让 AI 点评</strong>：写作业先自己憋出第一稿（哪怕很烂），再问 AI&quot;帮我挑毛病、给改进建议&quot;。让 AI 当批改老师，不当代笔。</li><li><strong>结构必须你自己搭</strong>：可以让 AI 提供材料、灵感和素材，但大纲和核心论点必须是你的。谁搭结构，谁掌握作品的灵魂。</li><li><strong>每周留一段&amp;quot;无 AI 时间&amp;quot;</strong>：比如每周手写一篇 500 字观点短文，或默写本周学过的概念——模拟考试状态，训练徒手能力。</li><li><strong>考试前&amp;quot;断网复习&amp;quot;</strong>：复习时不开 AI，用自己的话复述、默写。用 AI 复述知识 = 你以为会了，其实没会。</li><li><strong>定期自检</strong>：每月问自己：&quot;如果明天 AI 突然消失，我还能独立完成核心任务吗？&quot;答案若是否定的，说明依赖过度，该补基本功了。</li></ol><blockquote>为什么对数字公共治理专业尤其重要：未来你是评估、治理 AI 的人。一个从没自己写过分析的人，无法判断 AI 的分析好不好；一个不会自己干活的人，无法为 AI 干出来的活负责。</blockquote><hr><h1 id="h-87">附录 F　Coding Plan 与 API 的本质区别（进阶版）</h1><p><strong>一个项目里有两个 AI，在不同时间、干不同的活：</strong></p><table><thead><tr><th>阶段</th><th>谁在动脑</th><th>用什么</th><th>花谁的钱</th></tr></thead><tbody><tr><td>写脚本、改脚本、修 bug（开发时）</td><td>Coding Plan</td><td>Cursor / Composer</td><td>Cursor 订阅</td></tr><tr><td>脚本运行、批量分析（运行时）</td><td>API</td><td>脚本里的 API 调用</td><td>模型平台余额</td></tr><tr><td>读 PDF、清洗、画图（本地计算）</td><td>无（代码）</td><td>Python 库</td><td>免费</td></tr><tr><td>核验、改报告</td><td>你</td><td>——</td><td>——</td></tr></tbody></table><p><strong>三个关键认知：</strong></p><ol><li><strong>上下文成本被&amp;quot;转移&amp;quot;而不是&amp;quot;消失&amp;quot;</strong>：开发时的大量对话发生在一次性阶段，走包月订阅；运行时每次调用只带最小必要内容，没有历史堆积，所以几乎不存在上下文冗余。</li><li><strong>API 按 token 计费，不是按次</strong>：费用 = 输入 + 输出 token，跟内容长度成正比。省钱的真正关键是&quot;每次调用小而聚焦&quot;（如 <code>text[:6000]</code> 截断），而不是调用次数少。</li><li><strong>上下文控制是设计原则</strong>：一份文件一次调用、每次只带一个清晰指令。把&quot;每次该问什么&quot;提前设计好并固化进脚本，是工作流的核心价值。</li></ol><p><strong>脚本的三个隐藏价值：</strong></p><ul><li><strong>可复用</strong>：换主题只改数据源，工作流不用重写；</li><li><strong>可审计</strong>：同一脚本 + 同一输入 = 同一输出，过程可复现、可留档、可向别人解释（公共治理的立身之本）；</li><li><strong>可换模型</strong>：改一行 base_url 和 model，就能在云端 / 本地模型之间切换。</li></ul><hr><h1 id="h-88">附录 G　为什么要自己运行脚本</h1><blockquote>澄清：这不需要你会编程，只需要会&quot;点运行 + 看结果 + 填参数&quot;。</blockquote><ol><li><strong>你是电脑的主人</strong>：有些操作和文件（密码、密钥、隐私数据）AI 不该碰，必须你自己跑；</li><li><strong>工作流要&amp;quot;无人值守&amp;quot;</strong>：周报、定期追踪等脚本要自动重复跑，不能每次靠 AI 召唤；</li><li><strong>验证与审计</strong>：能复现、能解释、能为流程负责，是公共治理从业者的核心能力；</li><li><strong>换工具也自由</strong>：学校机房、实习电脑、别的 AI 工具上，你依然能干活；</li><li><strong>最佳姿势</strong>：AI 生成工作流 + 你运行 + 你核验。AI 负责快，你负责会和判断。</li></ol><hr><h1 id="h-89">附录 H　把本地模型接进工作流（LM Studio / Hermes）</h1><p><strong>本地模型的价值：</strong></p><ul><li><strong>免费</strong>：不花 API 的钱，想跑多少次跑多少次；</li><li><strong>隐私</strong>：数据不出你的电脑，适合不想上传的作业数据、舆情评论、未公开资料；</li><li><strong>无限试错</strong>：可以大胆实验提示词，不用心疼余额。</li></ul><p><strong>关键事实</strong>：LM Studio 可以开一个&quot;本地服务器&quot;，地址是 <code>http://localhost:1234/v1</code>，接口格式和 DeepSeek 完全兼容（都是 OpenAI 格式）。所以<strong>手册里所有脚本，只需要改一行 base_url</strong>，同一个工作流就能切到本地模型跑——这就是附录 F 说的&quot;可换模型&quot;的实战。</p><p><strong>三步接进工作流：</strong></p><ol><li>打开 LM Studio → 左侧 Models → 下载一个中文本地模型（建议 7B～14B 的量化版，比如 Qwen 系列）；</li><li>在 LM Studio 右侧打开 <strong>Local Server（本地服务器）</strong>，启动后地址是 <code>http://localhost:1234/v1</code>；</li><li>把脚本里这两行改成：</li></ol><pre><code class="language-python">base_url=&quot;http://localhost:1234/v1&quot;   # 指向本地模型
+model=&quot;你下载的模型名&quot;                  # 例如 qwen2.5-7b-instruct</code></pre><p><strong>模型分工（路由原则）：</strong></p><table><thead><tr><th>任务类型</th><th>用谁</th><th>例子</th></tr></thead><tbody><tr><td>简单批量</td><td>本地小模型</td><td>情感分类、关键词、短文本摘要、翻译、打标签</td></tr><tr><td>复杂分析</td><td>云端 DeepSeek</td><td>长政策文件分析、对比推理、仿真、重要报告</td></tr><tr><td>隐私数据</td><td>一律本地</td><td>不想上传的评论、作业、未公开资料</td></tr></tbody></table><p><strong>Hermes agent 的定位</strong>：如果它是能自主行动的 Agent，适合做&quot;本地小助手&quot;——自动整理文件夹、批量给评论打标签、把网页转成摘要。但本地小模型做 Agent 能力有限，遇到复杂推理会翻车，所以&quot;简单任务自动化&quot;才是它的主场。</p><p><strong>三个提醒：</strong></p><ol><li>本地小模型质量明显弱于云端大模型，<strong>重要结果必须核验</strong>；</li><li>本地服务器没启动时，脚本会连接失败；</li><li>模型大小受电脑内存限制，太大了跑不动。</li></ol>
+</div>
+</body>
+</html>

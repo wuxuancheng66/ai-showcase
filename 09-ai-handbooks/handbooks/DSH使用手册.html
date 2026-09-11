@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepSeek Harness（DSH）使用手册</title>
+<style>
+:root{--bg:#f7f7f5;--card:#ffffff;--ink:#1f2328;--muted:#656d76;--accent:#0a84ff;--line:#e4e6e8;--code-bg:#f0f2f4;--th-bg:#f2f4f6;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:15px;}
+.wrap{max-width:900px;margin:0 auto;padding:32px 20px 80px;}
+header{background:linear-gradient(135deg,#0a84ff,#5e5ce6);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:26px;box-shadow:0 4px 20px rgba(10,132,255,.25);}
+header h1{font-size:24px;font-weight:700;margin-bottom:6px;}
+header p{opacity:.92;font-size:13px;}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:26px;}
+.toc h2{font-size:15px;color:var(--accent);margin-bottom:10px;border:none;padding:0;}
+.toc ul{list-style:none;}
+.toc li{margin:5px 0;font-size:14px;}
+.toc li.sub{padding-left:16px;font-size:13px;}
+.toc a{color:var(--ink);text-decoration:none;border-bottom:1px dashed #c9cdd3;}
+.toc a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+h1{font-size:26px;margin:0;}
+h2{font-size:20px;margin:30px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line);color:#111;}
+h2::before{content:"▍";color:var(--accent);margin-right:6px;}
+h3{font-size:16px;margin:22px 0 8px;color:#333;}
+p{margin:10px 0;}
+a{color:var(--accent);}
+strong{color:#111;}
+code{background:var(--code-bg);border-radius:5px;padding:2px 6px;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13px;}
+pre{background:#1f2430;color:#e6e6e6;border-radius:10px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:13px;line-height:1.6;}
+pre code{background:none;color:inherit;padding:0;font-size:13px;}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+th{background:var(--th-bg);text-align:left;font-weight:600;}
+th,td{border:1px solid var(--line);padding:9px 13px;vertical-align:top;}
+tr:nth-child(even) td{background:#fafbfc;}
+blockquote{border-left:4px solid var(--accent);background:#eef4ff;border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;color:#333;}
+hr{border:none;border-top:1px solid var(--line);margin:26px 0;}
+ul,ol{margin:10px 0 10px 24px;}
+li{margin:4px 0;}
+@media (max-width:640px){header{padding:20px;} .wrap{padding:16px 12px 60px;}}
+@media print{header{background:#fff;color:#111;box-shadow:none;border:1px solid #ccc;} pre{background:#f5f5f5;color:#111;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>DeepSeek Harness（DSH）使用手册</h1>
+<p>最后更新：2026-08-25 · 由 DSH 智能体现场实测后编写 · 适用环境：macOS（Apple M5）· DSH Desktop · dsh 0.1.1-rc.2</p>
+</header>
+<nav class="toc">
+<h2>📑 目录</h2>
+<ul>
+<li><a href="#目录">目录</a></li>
+<li><a href="#1-dsh-是什么">1. DSH 是什么</a></li>
+<li><a href="#2-模型与成本">2. 模型与成本</a></li>
+<li><a href="#3-经济模式主-pro-子-flash本机已配置">3. 经济模式：主 Pro · 子 Flash（本机已配置）</a></li>
+<li><a href="#4-4-大内置模式总览与选择">4. 4 大内置模式：总览与选择</a></li>
+<li class="sub"><a href="#模式对比表">模式对比表</a></li>
+<li class="sub"><a href="#怎么切换模式">怎么切换模式</a></li>
+<li class="sub"><a href="#选择心法一句话版">选择心法（一句话版）</a></li>
+<li><a href="#5-模式一标准模式standard全能默认">5. 模式一：标准模式（standard）——全能默认</a></li>
+<li class="sub"><a href="#详细介绍">详细介绍</a></li>
+<li class="sub"><a href="#精通教程">精通教程</a></li>
+<li><a href="#6-模式二ptc-模式code程序化组合">6. 模式二：PTC 模式（code）——程序化组合</a></li>
+<li class="sub"><a href="#详细介绍">详细介绍</a></li>
+<li class="sub"><a href="#精通教程">精通教程</a></li>
+<li><a href="#7-模式三极简模式minimal轻快省">7. 模式三：极简模式（minimal）——轻快省</a></li>
+<li class="sub"><a href="#详细介绍">详细介绍</a></li>
+<li class="sub"><a href="#精通教程">精通教程</a></li>
+<li><a href="#8-模式四创造模式cordis造你自己的模式">8. 模式四：创造模式（cordis）——造你自己的模式</a></li>
+<li class="sub"><a href="#详细介绍">详细介绍</a></li>
+<li class="sub"><a href="#精通教程">精通教程</a></li>
+<li><a href="#9-梁神模式liangshen两阶段省流模式">9. 梁神模式（liangshen）——两阶段省流模式</a></li>
+<li class="sub"><a href="#详细介绍">详细介绍</a></li>
+<li class="sub"><a href="#精通教程">精通教程</a></li>
+<li><a href="#10-子代理调度体系">10. 子代理调度体系</a></li>
+<li><a href="#11-长期目标goal">11. 长期目标（Goal）</a></li>
+<li><a href="#12-skills-技能">12. Skills 技能</a></li>
+<li><a href="#13-权限与沙箱如何不被打扰">13. 权限与沙箱（如何不被打扰）</a></li>
+<li><a href="#14-插件市场与已装插件">14. 插件市场与已装插件</a></li>
+<li><a href="#15-外部-agent-调度codex-claude-kimi">15. 外部 Agent 调度（Codex / Claude / Kimi）</a></li>
+<li><a href="#16-常用命令与斜杠命令">16. 常用命令与斜杠命令</a></li>
+<li><a href="#17-会话记录与排错">17. 会话记录与排错</a></li>
+<li><a href="#18-智能体的自主调度策略">18. 智能体的自主调度策略</a></li>
+</ul>
+</nav>
+<h1 id="deepseek-harnessdsh使用手册">DeepSeek Harness（DSH）使用手册</h1>
+<blockquote>最后更新：2026-08-25（已补充 4 大内置模式详解与精通教程） · 由你的 DSH 智能体现场实测后编写 适用环境：macOS（Apple M5）· DSH Desktop · dsh 0.1.1-rc.2</blockquote>
+<h2 id="目录">目录</h2>
+<ol><li><a href="#梁神模式liangshen两阶段省流模式">梁神模式（liangshen）——两阶段省流模式</a></li><li><a href="#子代理调度体系">子代理调度体系</a></li><li><a href="#长期目标goal">长期目标（Goal）</a></li><li><a href="#skills-技能">Skills 技能</a></li><li><a href="#权限与沙箱如何不被打扰">权限与沙箱（如何不被打扰）</a></li><li><a href="#插件市场与已装插件">插件市场与已装插件</a></li><li><a href="#外部-agent-调度codex-claude-kimi">外部 Agent 调度（Codex / Claude / Kimi）</a></li><li><a href="#常用命令与斜杠命令">常用命令与斜杠命令</a></li><li><a href="#会话记录与排错">会话记录与排错</a></li><li><a href="#智能体的自主调度策略">智能体的自主调度策略</a></li></ol>
+<hr>
+<h2 id="1-dsh-是什么">1. DSH 是什么</h2>
+<p>DeepSeek Harness（DSH）是一个本地的 AI 智能体运行框架 + 图形界面（Web GUI，<code>http://127.0.0.1:43120</code>）。它和你平时用的 Claude Code、Codex 不同：</p>
+<table>
+<tr><th>特性</th><th>说明</th></tr>
+<tr><td>模型</td><td>官方 DeepSeek API（V4 Pro / V4 Flash / V4 Flash Vision）</td></tr>
+<tr><td>形态</td><td>桌面 App（DSH Desktop）+ 浏览器界面 + 命令行 <code>dsh</code></td></tr>
+<tr><td>多智能体</td><td>子代理（subagent）、工作流（workflow）、长线目标（goal）、Ralph 循环</td></tr>
+<tr><td>插件</td><td>cordis 插件体系 + 可视化插件市场（1550+ 插件）</td></tr>
+<tr><td>沙箱</td><td>三级文件沙箱（read-only / workspace-write / danger-full-access）</td></tr>
+<tr><td>数据</td><td>全部存本机 <code>~/.dsh/</code>（会话、设置、记忆、预设）</td></tr>
+</table>
+<p><strong>核心目录一览</strong></p>
+<table>
+<tr><th>路径</th><th>用途</th></tr>
+<tr><td><code>~/.dsh/settings.yaml</code></td><td>全局设置（默认模型、默认预设等）</td></tr>
+<tr><td><code>~/.dsh/.agent-presets/</code></td><td>你自己的 Agent 预设（模式）</td></tr>
+<tr><td><code>~/.dsh/profiles/{web,desktop,headless}/</code></td><td>各运行档的插件与补丁</td></tr>
+<tr><td><code>~/.dsh/sessions/</code></td><td>全部会话日志（zstd 压缩的 JSONL）</td></tr>
+<tr><td><code>~/.dsh/memory/</code></td><td>智能体的长期记忆库</td></tr>
+<tr><td><code>~/.dsh/.credentials.yaml</code></td><td>API Key 凭据（权限 600，勿外传）</td></tr>
+</table>
+<hr>
+<h2 id="2-模型与成本">2. 模型与成本</h2>
+<p>DSH 里可用的三个官方模型（全部 100 万 token 上下文）：</p>
+<table>
+<tr><th>模型 ID</th><th>定位</th><th>适用</th></tr>
+<tr><td><code>deepseek-v4-pro</code></td><td>贵、强、深度推理</td><td>架构设计、跨系统改造、需要权衡的重活</td></tr>
+<tr><td><code>deepseek-v4-flash</code></td><td>便宜、快</td><td>机械重复、单一文件、简单检索、子代理默认</td></tr>
+<tr><td><code>deepseek-v4-flash-vision-exp</code></td><td>带视觉</td><td>读图、截图分析、OCR</td></tr>
+</table>
+<ul><li>主 Agent 默认模型：设置 → 模型，或在 <code>~/.dsh/settings.yaml</code> 的 <code>agent-default-model</code> 分节修改。</li><li>会话中也可以随时切换模型（GUI 模型选择器），切换只影响当前会话。</li></ul>
+<p><strong>省钱要点</strong></p>
+<ul><li>子代理默认走 Flash（见下一节"经济模式"）。</li><li>长会话用 <code>/compact</code> 压缩上下文。</li><li>不要让 Agent 读 <code>node_modules</code>、<code>.git</code>、缓存等大目录。</li><li>重活才用 Pro，轻活一律 Flash。</li></ul>
+<hr>
+<h2 id="3-经济模式主-pro-子-flash本机已配置">3. 经济模式：主 Pro · 子 Flash（本机已配置）</h2>
+<p>2026-08-25 已在本机部署一个自定义 Agent 预设 <strong>「经济模式（主Pro·子Flash）」</strong>，并设为默认。</p>
+<table>
+<tr><th>项</th><th>配置</th></tr>
+<tr><td>预设 ID</td><td><code>economy-standard</code></td></tr>
+<tr><td>位置</td><td><code>~/.dsh/.agent-presets/economy-standard/</code>（agent.cordis.yml + preset.yml）</td></tr>
+<tr><td>效果</td><td>主 Agent 用 <code>deepseek-v4-pro</code>；所有 <code>subagent</code> / <code>subagent_fork</code> 派出的子代理默认用 <code>deepseek-v4-flash</code>（输出上限 65536 token）</td></tr>
+<tr><td>其余能力</td><td>与内置「标准模式」完全一致</td></tr>
+</table>
+<ul><li><strong>切换预设</strong>：GUI 设置 → Agent 预设（新会话生效；已开着的会话不受影响）。</li><li><strong>改回标准模式</strong>：把 <code>~/.dsh/settings.yaml</code> 里 <code>agent-presets.default</code> 改回 <code>standard</code>，或删掉 <code>economy-standard</code> 目录。</li><li><strong>重活子代理例外</strong>：工作流脚本里可以给单个子代理显式指定 <code>model: 'deepseek-v4-pro'</code> 覆盖回来。</li><li>注意：App 更新不会动 <code>~/.dsh/.agent-presets/</code> 里的用户预设，安全。</li></ul>
+<hr>
+<h2 id="4-4-大内置模式总览与选择">4. 4 大内置模式：总览与选择</h2>
+<p>DSH 出厂自带 <strong>4 种 Agent 模式（预设）</strong>，外加你已部署的「经济模式」和社区「梁神模式」。模式决定一个会话里智能体"能看到什么工具、以什么方式干活"。模式与<strong>权限预设</strong>是两回事：权限预设管沙箱和审批（见 §12），模式管工具和干活方式，互相独立。</p>
+<h3 id="模式对比表">模式对比表</h3>
+<table>
+<tr><th>模式</th><th>ID</th><th>一句话定位</th><th>工具形态</th><th>适合场景</th></tr>
+<tr><td><strong>标准模式</strong></td><td><code>standard</code></td><td>功能完整的全能编码 Agent</td><td>直接调用全部工具（native）</td><td>日常绝大多数任务（出厂默认）</td></tr>
+<tr><td><strong>PTC 模式</strong></td><td><code>code</code></td><td>用 TypeScript 程序组合多步操作</td><td>只见 <code>run_code</code> + 自动生成的 SDK</td><td>多步骤、要可复现、要精确控制</td></tr>
+<tr><td><strong>极简模式</strong></td><td><code>minimal</code></td><td>只有 bash + 文件编辑的轻量 Agent</td><td>持久 Shell + str_replace_editor</td><td>快速小活、省 token、少打扰</td></tr>
+<tr><td><strong>创造模式</strong></td><td><code>cordis</code></td><td>现场造插件 / 自定义预设的模式</td><td>标准能力 + Cordis 实验工具</td><td>开发、实验、定制你自己的模式</td></tr>
+<tr><td><strong>经济模式</strong></td><td><code>economy-standard</code></td><td>主 Pro · 子 Flash 的省钱版标准模式</td><td>同标准模式（子代理走 Flash）</td><td>你的日常默认（已配置，见 §3）</td></tr>
+<tr><td><strong>梁神模式</strong></td><td><code>liangshen</code></td><td>两阶段：先极简省流、后自动升 PTC 编程（社区）</td><td>阶段1: bash + 编辑器；阶段2: run_code + SDK</td><td>想省钱又想要 PTC 能力的多步编码（见 §9）</td></tr>
+</table>
+<h3 id="怎么切换模式">怎么切换模式</h3>
+<ul><li><strong>单次会话</strong>：对话输入框上方的模式选择器（如"标准模式"下拉），选了再发第一条消息即可。</li><li><strong>改默认</strong>：设置 → Agent 预设 → 选择默认；<strong>只对新会话生效</strong>，已开着的会话保持创建时的模式。</li><li><strong>命令行</strong>：<code>dsh --profile web</code> 的默认由 <code>~/.dsh/settings.yaml</code> 的 <code>agent-presets.default</code> 决定。</li></ul>
+<h3 id="选择心法一句话版">选择心法（一句话版）</h3>
+<ul><li>不确定 → 标准模式（或你的经济模式）。</li><li>任务步骤多、想让它"一次规划好再执行" → <strong>PTC 模式</strong>。</li><li>只是改个小文件、跑条命令 → <strong>极简模式</strong>。</li><li>想自定义 DSH、造新模式 → <strong>创造模式</strong>。</li><li>想首轮便宜、后续编程式干活 → <strong>梁神模式</strong>（社区）。</li></ul>
+<hr>
+<h2 id="5-模式一标准模式standard全能默认">5. 模式一：标准模式（standard）——全能默认</h2>
+<h3 id="详细介绍">详细介绍</h3>
+<p>标准模式是 DSH 的出厂默认，功能最完整。智能体直接调用（native schema）以下工具家族：</p>
+<table>
+<tr><th>工具族</th><th>能力</th></tr>
+<tr><td><code>tool-bash</code> / <code>tool-pwsh</code></td><td>执行 Shell / PowerShell 命令（macOS 走 bash）</td></tr>
+<tr><td><code>tool-fs</code> / <code>tool-fs-search</code></td><td>读、写、搜索文件</td></tr>
+<tr><td><code>tool-jobs</code></td><td>后台任务：启动、查看输出、停止</td></tr>
+<tr><td><code>tool-skill</code> + <code>skill-filesystem</code></td><td>技能系统：加载与调用 Skills</td></tr>
+<tr><td><code>tool-goal</code></td><td>长线目标管理（<code>/goal</code>）</td></tr>
+<tr><td><code>planning</code></td><td>计划模式：先规划再动手</td></tr>
+<tr><td><code>delegation</code></td><td>子代理体系：subagent / subagent_fork / workflow / ralph</td></tr>
+<tr><td><code>tool-ask-user</code></td><td>需要时主动向你提问</td></tr>
+<tr><td><code>tool-todo</code></td><td>任务清单</td></tr>
+<tr><td><code>tool-web</code></td><td>网页搜索与读取</td></tr>
+<tr><td><code>compaction</code></td><td>上下文压缩（<code>/compact</code>，长会话省钱）</td></tr>
+</table>
+<h3 id="精通教程">精通教程</h3>
+<ol><li><strong>子代理并行</strong>：大任务拆小块 → 直接说"把这个项目拆成 3 个子代理并行做"。经济模式下子代理自动走 Flash，省钱。</li><li><strong>计划模式</strong>：复杂任务先"用计划模式列方案，我确认后再执行"，避免它乱冲。</li><li><strong>长线目标</strong>：重复性长期任务用 <code>/goal</code> 挂起来，跨会话自动推进。</li><li><strong>技能复用</strong>：把常用流程写成 Skill，以后一句话调用。</li><li><strong>后台任务</strong>：长命令让它放后台跑（<code>tool-jobs</code>），边跑边聊别的。</li><li><strong>网页检索</strong>：需要最新资料时让它用 <code>tool-web</code> 查（注意网络与来源）。</li></ol>
+<hr>
+<h2 id="6-模式二ptc-模式code程序化组合">6. 模式二：PTC 模式（code）——程序化组合</h2>
+<h3 id="详细介绍">详细介绍</h3>
+<p>PTC = 用编程的方式组合工具。开启后，智能体<strong>看不到几十个工具按钮</strong>，只看到一个 <code>run_code</code> 工具 + 一份自动生成的 <strong>TypeScript SDK</strong>；它把多步操作写成一个 TypeScript 程序，一次运行跑完整条流水线。</p>
+<p>核心概念（由 <code>tool-presentation</code> 决定"模型看到工具的哪种形态"）：</p>
+<table>
+<tr><th>形态</th><th>说明</th></tr>
+<tr><td><code>native</code></td><td>模型直接看到并调用每个工具的 schema（标准/极简等模式默认）</td></tr>
+<tr><td><code>code</code></td><td>模型只见 <code>run_code</code> + 生成的 TS SDK，只能通过写程序调工具</td></tr>
+<tr><td><code>both</code></td><td>两种都给</td></tr>
+</table>
+<h3 id="精通教程">精通教程</h3>
+<ol><li><strong>什么时候用</strong>：任务步骤多且固定（拉代码 → 改 → 构建 → 测试 → 打包 → 汇报），想要一次成型、结果可复现；或想让模型"想清楚再执行"，而不是一步一停。</li><li><strong>怎么引导</strong>：直接说"用代码模式把这件事做成一个程序：……，然后运行"。它会生成 TS 程序并执行 <code>run_code</code>。</li><li><strong>好处</strong>：程序可复现、可改参数重跑；多步之间不丢上下文；适合流水线类任务。</li><li><strong>注意事项</strong>：</li></ol>
+<ul><li>PTC 需要 Code Runtime（桌面版已内置）；未组装运行时的部署无法使用该模式。</li><li>在 <code>code</code> 形态下，模型直呼其他工具名会得到 <code>UNKNOWN_TOOL</code>——它只能走 SDK。</li><li>程序报错时让它"修一下程序再跑"，而不是让它换工具。</li></ul>
+<ol><li><strong>进阶</strong>：让程序把结果写入文件、打印结构化输出，方便你事后检查；需要重活时可在程序里指定子代理/模型。</li></ol>
+<hr>
+<h2 id="7-模式三极简模式minimal轻快省">7. 模式三：极简模式（minimal）——轻快省</h2>
+<h3 id="详细介绍">详细介绍</h3>
+<p>极简模式只保留两样东西：</p>
+<ul><li><strong>持久 Shell</strong>（persistent bash）：一个保持状态的长驻终端，连续执行命令，不用每次重开环境。</li><li><strong>str_replace_editor</strong>：精确的字符串替换式文件编辑器（读文件、改片段、插入、删除）。</li></ul>
+<p>没有网页检索、没有 Skills、没有子代理、没有目标管理——工具面最小，上下文开销最低。</p>
+<h3 id="精通教程">精通教程</h3>
+<ol><li><strong>什么时候用</strong>：改一行配置、跑一条命令、快速查个文件——任务小到不值得开全套工具时。</li><li><strong>好处</strong>：模型不被工具清单干扰，响应更快、更省 token；持久 Shell 让它不用反复 cd。</li><li><strong>技巧</strong>：</li></ol>
+<ul><li>让它"先看文件再改"，用 str_replace_editor 做精准修改。</li><li>连续操作同一终端时让它复用持久 Shell。</li></ul>
+<ol><li><strong>不适用</strong>：需要网页检索、子代理并行、技能、长线目标的任务，请切回标准/经济模式。</li></ol>
+<hr>
+<h2 id="8-模式四创造模式cordis造你自己的模式">8. 模式四：创造模式（cordis）——造你自己的模式</h2>
+<h3 id="详细介绍">详细介绍</h3>
+<p>创造模式 = 标准模式的全部能力 + 一套 <strong>Cordis 实验工具</strong>：</p>
+<table>
+<tr><th>工具</th><th>用途</th></tr>
+<tr><td><code>cordis_inspect</code></td><td>只读查看当前运行时的服务、插件、已注册工具、API/事件</td></tr>
+<tr><td><code>cordis_define</code></td><td>在内存里定义一个动态插件包</td></tr>
+<tr><td><code>cordis_run</code></td><td>运行刚定义的包（可注册工具/提示词/监听器）</td></tr>
+<tr><td><code>cordis_stop</code> / <code>cordis_undefine</code></td><td>停止 / 移除动态包（实验完清理）</td></tr>
+</table>
+<ul><li>动态包<strong>只存在于内存</strong>：不落盘、重启即消失，不会自动转正式插件——适合"先试后装"。</li><li>⚠️ 沙箱只约束"诚实代码"，不是安全边界：官方提示<strong>像对待 bash 一样慎重使用</strong>。</li></ul>
+<h3 id="精通教程">精通教程</h3>
+<ol><li><strong>复制即创作</strong>：DSH 的预设创作 = "复制现有预设 → 改配置"。你的「经济模式」就是这么来的（复制 standard → 把子代理行改成 Flash）。</li><li><strong>自定义一个新模式</strong>（例：做一个"只读咨询模式"）：</li></ol>
+<ul><li>复制 <code>~/.dsh/.agent-presets/standard/</code> → 新目录 <code>consultant</code>；</li><li>编辑 <code>agent.cordis.yml</code>：去掉 <code>tool-bash</code> 行，只留 <code>tool-fs</code> / <code>tool-fs-search</code> / <code>tool-web</code>；</li><li>编辑 <code>preset.yml</code>：写名称、描述、排序；</li><li>设置 → Agent 预设里选它，<strong>新会话</strong>生效。</li></ul>
+<ol><li><strong>机制要点（踩坑必看）</strong>：</li></ol>
+<ul><li>预设目录权限要收紧：目录 <code>700</code>、文件 <code>600</code>（防他人/他进程读取）。</li><li><code>cordis.patch.yml</code> 的 patch 是<strong>顶层键整体替换</strong>（<code>target[key] = value</code>）——写 config 必须写全，否则原 config 会被整个抹掉。</li><li>已开着的会话不会变，只有新会话用新模式。</li></ul>
+<ol><li><strong>现场实验</strong>：想试一个插件又不想装？在创造模式里 <code>cordis_define</code> + <code>cordis_run</code> 试跑，满意后再正式安装。</li><li><strong>安全</strong>：别用创造模式做日常活；实验完记得 <code>cordis_stop</code> / <code>cordis_undefine</code> 清理，避免动态包残留影响其他会话。</li></ol>
+<hr>
+<h2 id="9-梁神模式liangshen两阶段省流模式">9. 梁神模式（liangshen）——两阶段省流模式</h2>
+<h3 id="详细介绍">详细介绍</h3>
+<p>梁神模式是<strong>社区制作</strong>的一个"两阶段"模式（改编自 DSH 内置的极简 + 标准模式，MIT 协议，代码来自开源上游 <code>xiaobright/dsh-anchored-standard</code>）。它把"省钱"和"强大"结合到同一个会话里：</p>
+<table>
+<tr><th>阶段</th><th>工具面</th><th>特点</th></tr>
+<tr><td><strong>阶段 1：极简锚定</strong></td><td>只有 2 个工具：持久 bash + str_replace_editor；提示词只有一行</td><td>首轮对话极省 token，输出预算还被限制在 1024 token，不加载任何运行时上下文</td></tr>
+<tr><td><strong>阶段 2：自动升级</strong></td><td>首次有效工具调用 / 首轮回复后，自动切到 <strong>PTC 编程模式</strong>（<code>run_code</code> + 自动生成的 TS SDK）</td><td>完整技能目录、工作区说明随之开放，用写程序的方式干重活</td></tr>
+</table>
+<p>一句话：<strong>首轮便宜，之后强大</strong>。它先用极简面"锚定"模型、花最小的代价让模型理解任务，再自动解锁 PTC 的完整程序化能力。</p>
+<blockquote>⚠️ 说明：preset.yml 里那串"双腿一软瘫坐在地 / 原子弹爆炸 / 文言文二进制摩斯电码"是作者的玩笑式描述，实际能力就是上面的两阶段机制。</blockquote>
+<h3 id="精通教程">精通教程</h3>
+<ol><li><strong>什么时候用</strong>：典型的多步编码任务，尤其适合"先让模型用便宜的首轮理解任务，再让它用程序精确执行"。想省 token 又想要 PTC 能力时选它。</li><li><strong>怎么用</strong>：设置 → Agent 预设 → 选「梁神模式」，<strong>新会话</strong>生效。无需任何特殊操作，它会自动从阶段 1 升到阶段 2。</li><li><strong>特点与注意</strong>：</li></ol>
+<ul><li>阶段 1 的编辑器走<strong>宿主文件沙箱</strong>（比内置极简模式更安全，不裸挂本地文件系统）。</li><li>它带两个自定义脚本：<code>tool-bootstrap.mjs</code>（负责两阶段切换）、<code>custom-bash.mjs</code>（Windows 下的 bash 通道，macOS 用不到）；已核对无异常网络/破坏行为。</li><li>这是<strong>第三方社区实验模式</strong>，不是官方 4 大模式；升级到阶段 2 后持久 shell 会保留整个会话。</li></ul>
+<ol><li><strong>进阶</strong>：阶段 1 的 1024 token 输出上限想改大，可编辑 preset 里的 <code>bootstrapMaxTokens</code>（<code>~/.dsh/.agent-presets/liangshen/agent.cordis.yml</code>），改完重开新会话生效。</li></ol>
+<hr>
+<h2 id="10-子代理调度体系">10. 子代理调度体系</h2>
+<p>智能体可以自主委派子代理，四种形态：</p>
+<table>
+<tr><th>工具</th><th>用途</th><th>形态</th></tr>
+<tr><td><code>subagent</code></td><td>派一个新上下文的子代理</td><td>默认后台（可继续对话）</td></tr>
+<tr><td><code>subagent_fork</code></td><td>派一个继承当前对话的子代理</td><td>默认后台（可继续）</td></tr>
+<tr><td><code>workflow</code></td><td>大规模扇出（脚本编排多阶段、结构化结果）</td><td>前台脚本</td></tr>
+<tr><td><code>ralph</code></td><td>长线目标的新鲜智能体迭代（每轮全新上下文）</td><td>前台循环</td></tr>
+</table>
+<p>配套工具：<code>list_agents</code>（查看子代理）、<code>send_message</code>（给后台子代理追加任务）、<code>interrupt_agent</code>（叫停）、<code>job_list</code> / <code>job_output</code> / <code>job_kill</code>（后台作业管理）。</p>
+<p><strong>调度策略（智能体内部约定）</strong></p>
+<ol><li>先估复杂度：机械重复/单一文件/可并行 → 轻活；架构级/跨系统/需权衡 → 重活。</li><li>轻活派 Flash 子代理并行后台跑；重活主 Agent 亲自用 Pro 做。</li><li>独立工作同时开工、不互相等待；只有下一步依赖子代理结果时才前台等。</li><li>花钱、删文件、force push 等危险操作，必须先问你。</li></ol>
+<hr>
+<h2 id="11-长期目标goal">11. 长期目标（Goal）</h2>
+<p>长线任务用目标机制：智能体会自动多轮持续推进，直到完成或被阻塞。</p>
+<ul><li>会话内可持续：跨多次对话继续推进同一目标。</li><li>每个目标有轮次上限与阻塞上报机制。</li><li>GUI 侧边栏可以看到目标进度。</li></ul>
+<p>适用场景：多步改造、跨文件重构、需要多轮迭代的任务。</p>
+<hr>
+<h2 id="12-skills-技能">12. Skills 技能</h2>
+<p>技能是任务型指令包，智能体遇到匹配任务时自动加载执行。本机已有：</p>
+<table>
+<tr><th>技能</th><th>用途</th></tr>
+<tr><td><code>join-meeting</code></td><td>让 AI 加入视频会议（Google Meet / Teams / Zoom），语音+视觉出席</td></tr>
+<tr><td><code>ski</code></td><td>语音循环：浮动小部件收音 → Kokoro 本地 TTS 回话</td></tr>
+</table>
+<p>技能目录：<code>~/.agents/skills/</code>（用户级）。触发方式：直接说"用 xxx 技能"或任务明显匹配时智能体自动加载。</p>
+<hr>
+<h2 id="13-权限与沙箱如何不被打扰">13. 权限与沙箱（如何不被打扰）</h2>
+<p>DSH 有三级文件沙箱，每级对应"会不会弹确认"：</p>
+<table>
+<tr><th>预设名</th><th>沙箱</th><th>审批</th><th>体验</th></tr>
+<tr><td><code>workspace-write</code>（本机默认）</td><td>会话工作目录内自由读写</td><td>ask</td><td>项目内干活基本不弹窗；跨目录写/删才确认</td></tr>
+<tr><td><code>danger-full-access</code></td><td>不限制文件修改</td><td>never</td><td>永不弹窗，但失去文件保护</td></tr>
+<tr><td><code>read-only</code></td><td>只读</td><td>ask</td><td>最严格</td></tr>
+</table>
+<ul><li>本机默认保持 <code>workspace-write</code>（安全与便利的平衡）。</li><li><strong>切换方式</strong>：会话内输入 <code>/permissionPresets danger-full-access</code>（或 <code>workspace-write</code> / <code>read-only</code>）；<code>/permissionPresets</code>（不带参数）查看当前状态。</li><li>想改"未来所有新会话"的默认：<code>~/.dsh/settings.yaml</code> 加：</li></ul>
+<pre><code>  permission:
+    defaultPreset: workspace-write   # 或 danger-full-access / read-only</code></pre>
+<ul><li>环境变量 <code>DSH_PERMISSION_MODE=danger-full-access</code> 启动时也可以放宽审批策略。</li><li>智能体的行为约定不变：<strong>危险操作（删文件、格式化、强制推送、花钱）仍会先问你</strong>，与沙箱无关。</li></ul>
+<hr>
+<h2 id="14-插件市场与已装插件">14. 插件市场与已装插件</h2>
+<p>GUI 里 <strong>设置 → 插件市场</strong> 可以逛装 1550+ 社区插件（一键安装、热启用、卸载）。目录源：<code>awesome-dsh-plugin.com</code>。</p>
+<p>本机已装（web profile）：</p>
+<table>
+<tr><th>插件</th><th>用途</th></tr>
+<tr><td><code>dshmarket</code>（内嵌）</td><td>可视化插件市场本体</td></tr>
+<tr><td><code>@linxin666/dsh-web-ui-all</code></td><td>Web UI 全家桶：任务看板、Git 分支图、技能浏览器、会话恢复等</td></tr>
+<tr><td><code>dsh-at-file</code></td><td>输入框 <code>@文件</code> 引用</td></tr>
+<tr><td><code>dsh-balance-plugin</code></td><td>查看 API 余额</td></tr>
+<tr><td><code>dsh-client-auto-continue</code></td><td>自动继续</td></tr>
+<tr><td><code>dsh-memory</code></td><td>记忆插件</td></tr>
+<tr><td><code>dsh-context</code>（本次新装）</td><td>上下文面板 + <code>/context</code> 命令，一眼看上下文占用</td></tr>
+</table>
+<p>命令行装插件：<code>dsh plugin --profile web add <包名></code>；卸载 <code>dsh plugin --profile web remove <包名></code>。</p>
+<p>社区热门候选（想装就在市场里搜）：</p>
+<table>
+<tr><th>插件</th><th>star</th><th>用途</th></tr>
+<tr><td>dsh-TUI</td><td>2395</td><td>Claude Code 风格全屏终端 UI</td></tr>
+<tr><td>DSH-better-sidebar</td><td>2736</td><td>侧边栏工作台（文件/终端/Git/子代理）</td></tr>
+<tr><td>modlens</td><td>3563</td><td>给纯文本模型外挂视觉（OCR/版面/语义）</td></tr>
+<tr><td>dsh-vision-router</td><td>949</td><td>免费视觉链 + 像素工具</td></tr>
+<tr><td>Aegis</td><td>1119</td><td>软件工程方法包（基线优先、系统化调试）</td></tr>
+<tr><td>dsh-agent-teams</td><td>913</td><td>多智能体团队编排</td></tr>
+</table>
+<hr>
+<h2 id="15-外部-agent-调度codex-claude-kimi">15. 外部 Agent 调度（Codex / Claude / Kimi）</h2>
+<p>智能体可以用命令行调用你机器上的其他编码 Agent 当外部工人。2026-08-25 实测状态：</p>
+<table>
+<tr><th>CLI</th><th>状态</th><th>说明</th></tr>
+<tr><td><code>codex</code></td><td>✅ 可用</td><td>已认证；<code>codex exec -m deepseek-v4-flash</code> 可切便宜模型；<strong>琐碎任务也固定烧约 9k token</strong>（系统提示词+插件同步开销），只适合需要它独有能力（浏览器/电脑操作）的重活；需放开沙箱才能跑</td></tr>
+<tr><td><code>claude</code></td><td>✅ 已打通（本次配置）</td><td>把 VS Code 里的 DeepSeek 环境变量同步进了 <code>~/.claude/settings.json</code> 的 <code>env</code> 块，现在 <code>claude -p</code> 直接可用；主模型 <code>deepseek-v4-pro[1m]</code>、子代理 <code>deepseek-v4-flash</code>（<code>CLAUDE_CODE_SUBAGENT_MODEL</code>）</td></tr>
+<tr><td><code>kimi</code></td><td>❌ 未登录</td><td><code>~/.kimi-code/config.toml</code> 为空；要使用先跑 <code>kimi</code> 登录</td></tr>
+</table>
+<p>调用示例：</p>
+<pre><code>claude -p &quot;修一下 src/utils.ts 的类型报错&quot;          # headless 单任务
+codex exec -m deepseek-v4-flash &quot;生成单元测试&quot;      # 便宜模型</code></pre>
+<hr>
+<h2 id="16-常用命令与斜杠命令">16. 常用命令与斜杠命令</h2>
+<p><strong>命令行</strong></p>
+<table>
+<tr><th>命令</th><th>用途</th></tr>
+<tr><td><code>dsh --profile web --dump-config</code></td><td>导出当前生效配置（排错用）</td></tr>
+<tr><td><code>dsh plugin --profile web add/remove <包></code></td><td>装/卸插件</td></tr>
+<tr><td><code>dsh --profile headless "任务"</code></td><td>无界面跑一个任务</td></tr>
+<tr><td><code>dsh web</code></td><td>启动 Web GUI</td></tr>
+</table>
+<p><strong>会话内斜杠命令</strong></p>
+<table>
+<tr><th>命令</th><th>用途</th></tr>
+<tr><td><code>/compact</code></td><td>压缩上下文（长会话省钱）</td></tr>
+<tr><td><code>/goal</code></td><td>查看/管理长线目标</td></tr>
+<tr><td><code>/permissionPresets [预设]</code></td><td>查看/切换权限预设</td></tr>
+<tr><td><code>/context</code>（dsh-context）</td><td>查看上下文占用面板</td></tr>
+<tr><td><code>/feedback</code></td><td>反馈</td></tr>
+</table>
+<hr>
+<h2 id="17-会话记录与排错">17. 会话记录与排错</h2>
+<ul><li>所有会话都存在 <code>~/.dsh/sessions/<工作目录>/<会话id>/session.jsonl.zstd</code>。</li><li>查看某会话实际用的模型：</li></ul>
+<pre><code>  zstd -d -c ~/.dsh/sessions/&lt;...&gt;/&lt;会话id&gt;/session.jsonl.zstd | head -c 2000
+  # 找 request/header 事件里的 model 字段</code></pre>
+<ul><li>主会话与每个子代理各有一个独立会话目录；子代理会话的 <code>session</code> 事件里有 <code>parentSession</code>、<code>origin: subagent</code>。</li><li><strong>验证"经济模式"是否生效</strong>：新开一个会话，派个子代理干点活，然后解压子代理的会话日志看 <code>request/header</code> 里 <code>model</code> 是否为 <code>deepseek-v4-flash</code>。</li></ul>
+<hr>
+<h2 id="18-智能体的自主调度策略">18. 智能体的自主调度策略</h2>
+<p>为了让任务"最优、最经济、高质量"，智能体遵循这套内部策略（已写入长期记忆）：</p>
+<ol><li><strong>先估复杂度，再选路</strong>。</li><li>轻活 / 机械重复 / 单一文件 / 可并行 → DeepSeek V4 Flash 子代理，并行后台跑。</li><li>重活 / 架构级 / 跨系统 / 需要深度权衡 → 主 Agent 用 V4 Pro，或显式指定 Pro 子代理。</li><li>并行扇出用 <code>workflow</code>（支持每个子代理单独指定 model/provider——经济路由的实现点）；长线目标用 <code>ralph</code>；单次委托用 <code>subagent</code>。</li><li>外部工具按需：Codex 只做它能干的独活（接受 9k token 固定开销）；Claude headless 可做常规编码活。</li><li><strong>危险操作（花钱/删文件/force push）必须先问用户</strong>；看不到逐 token 账单，只能策略性省钱。</li></ol>
+<hr>
+<p>*本手册由 DSH 智能体在 2026-08-25 结合本机实测生成；配置变更后请以 <code>~/.dsh/</code> 实际文件为准。*</p>
+<footer style="margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;">
+本手册由 DSH 智能体于 2026-08-25 结合本机实测生成；配置变更后请以 ~/.dsh/ 实际文件为准。
+</footer>
+</div>
+</body>
+</html>

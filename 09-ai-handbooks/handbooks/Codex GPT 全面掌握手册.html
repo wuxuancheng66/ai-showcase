@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codex GPT 全面掌握手册（进阶完整版）</title>
+<style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      background: #f4f6f8; color: #24292f; line-height: 1.85; font-size: 16px;
+    }
+    .page { max-width: 960px; margin: 0 auto; padding: 36px 26px 90px; }
+    .doc-header {
+      background: linear-gradient(135deg, #0f1f3d 0%, #1d3a5f 55%, #2d6a8e 100%);
+      color: #fff; border-radius: 16px; padding: 38px 38px 30px; margin-bottom: 26px;
+      box-shadow: 0 6px 18px rgba(15,31,61,.18);
+    }
+    .doc-header h1 { margin: 0 0 12px; font-size: 32px; line-height: 1.3; }
+    .doc-header p { margin: 6px 0; opacity: .93; font-size: 15px; }
+    .doc-header .badge { display:inline-block; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.25);
+      padding: 2px 10px; border-radius: 20px; font-size: 13px; margin-right: 6px; margin-top: 8px; }
+    h1.chapter {
+      font-size: 25px; margin: 46px 0 16px; padding: 13px 18px;
+      background: linear-gradient(90deg, #e8eef6, #f6f9fc);
+      border-left: 6px solid #1d3a5f; border-radius: 8px; color: #16304f;
+    }
+    h2 { font-size: 21px; margin: 36px 0 12px; padding-bottom: 7px; border-bottom: 2px solid #d9e2ec; color: #1d3a5f; }
+    h3 { font-size: 18px; margin: 26px 0 10px; color: #24527a; }
+    p { margin: 10px 0; }
+    a { color: #1d5c8e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { color: #14304f; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #e8edf3; color: #b3402a; padding: 2px 6px; border-radius: 5px; font-size: 13.5px;
+    }
+    pre {
+      background: #161b27; color: #e6e9ef; padding: 18px 20px; border-radius: 10px;
+      overflow-x: auto; font-size: 13.5px; line-height: 1.65; margin: 14px 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,.12); position: relative;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    blockquote {
+      margin: 14px 0; padding: 13px 18px; background: #eef4fb;
+      border-left: 5px solid #2d5a8e; border-radius: 0 8px 8px 0; color: #33414f;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05); border-radius: 8px; overflow: hidden; }
+    th, td { border: 1px solid #d8dee6; padding: 9px 12px; text-align: left; vertical-align: top; }
+    th { background: #eaf0f7; color: #16304f; font-weight: 600; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    ul, ol { margin: 10px 0; padding-left: 26px; }
+    li { margin: 4px 0; }
+    ul.todo { list-style: none; padding-left: 6px; }
+    li.todo { list-style: none; margin-left: 0; }
+    li.todo::before { content: "☐ "; color: #2d5a8e; font-weight: 700; }
+    hr { border: none; border-top: 1px solid #d8dee6; margin: 30px 0; }
+    .toc {
+      background: #fff; border: 1px solid #dde4ec; border-radius: 12px;
+      padding: 18px 24px; margin: 22px 0 30px; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    .toc-title { font-weight: 700; font-size: 18px; color: #1d3a5f; margin-bottom: 10px; }
+    .toc-l1 { font-weight: 700; margin-top: 8px; font-size: 15px; }
+    .toc-l2 { padding-left: 20px; font-size: 14px; color: #444; }
+    .toc a { color: #1d5c8e; }
+    .callout-note { background:#fff8e6; border-left:5px solid #e6a700; padding:12px 16px; border-radius:0 8px 8px 0; margin:14px 0; }
+    @media print {
+      body { background: #fff; font-size: 12px; }
+      .page { padding: 0; }
+      .doc-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      pre { white-space: pre-wrap; box-shadow: none; }
+      .toc { break-inside: avoid; }
+      table { font-size: 12px; }
+    }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="doc-header">
+    <h1>Codex GPT 全面掌握手册</h1>
+    <p>中山大学数字公共治理 · 吴宣澄　｜　整理日期：2026-08-10</p>
+    <p>整合 DeepSeek 对话 + 本机现状核验 + 官方资料核实，一站式掌握：认知框架 / 核心能力 / 权限沙箱 / 插件 MCP / 模型路由 / 技能教学 / 国内接入 OpenAI 原生模型 / 错误纠正 / 进阶玩法。</p>
+    <span class="badge">📘 23 章 + 12 附录</span>
+    <span class="badge">🤖 Codex</span>
+    <span class="badge">🌐 国内接入指南</span>
+  </header>
+  <nav class="toc"><div class="toc-title">📖 目录</div><div class="toc-l1"><a href="#Codex-GPT-全面掌握手册进阶完整版">Codex GPT 全面掌握手册（进阶完整版）</a></div><div class="toc-l2"><a href="#如何使用本手册">如何使用本手册</a></div><div class="toc-l1"><a href="#第-1-章-认知框架Work-与-Codex-的真实分工">第 1 章　认知框架：Work 与 Codex 的真实分工</a></div><div class="toc-l2"><a href="#11-为什么你会困惑新手必经之路">1.1 为什么你会困惑（新手必经之路）</a></div><div class="toc-l2"><a href="#12-核心差异对照表">1.2 核心差异对照表</a></div><div class="toc-l2"><a href="#13-什么场景用哪个速查">1.3 什么场景用哪个（速查）</a></div><div class="toc-l2"><a href="#14-判断口诀记住这一条就够">1.4 判断口诀（记住这一条就够）</a></div><div class="toc-l2"><a href="#15-最佳组合拳军师--士兵">1.5 最佳组合拳：军师 + 士兵</a></div><div class="toc-l2"><a href="#16-常见认知误区先排雷">1.6 常见认知误区（先排雷）</a></div><div class="toc-l1"><a href="#第-2-章-你的环境现状配置清单--逐项说明">第 2 章　你的环境现状（配置清单 + 逐项说明）</a></div><div class="toc-l2"><a href="#21-已完成的配置2026-08-10-核验">2.1 已完成的配置（2026-08-10 核验）</a></div><div class="toc-l2"><a href="#22-configtoml-逐行解读你的核心配置文件">2.2 config.toml 逐行解读（你的核心配置文件）</a></div><div class="toc-l2"><a href="#23-CC-Switch-里有哪些开关逐个说明">2.3 CC Switch 里有哪些开关（逐个说明）</a></div><div class="toc-l2"><a href="#24-MCP-服务清单已配置">2.4 MCP 服务清单（已配置）</a></div><div class="toc-l1"><a href="#第-3-章-Codex-五大核心能力详解">第 3 章　Codex 五大核心能力详解</a></div><div class="toc-l2"><a href="#31-Agent-Loop自主循环一切能力的根基">3.1 Agent Loop（自主循环）——一切能力的根基</a></div><div class="toc-l2"><a href="#32-Computer-Use电脑让-AI-真正动手">3.2 Computer Use（@电脑）——让 AI 真正&quot;动手&quot;</a></div><div class="toc-l2"><a href="#33-Skills技能包把固定流程变成一键调用">3.3 Skills（技能包）——把固定流程变成&quot;一键调用&quot;</a></div><div class="toc-l2"><a href="#34-Automations自动化任务定时自动干活">3.4 Automations（自动化任务）——定时自动干活</a></div><div class="toc-l2"><a href="#35-goal-目标模式把模糊想法变成任务书">3.5 /goal 目标模式——把模糊想法变成任务书</a></div><div class="toc-l2"><a href="#36-主任务与子任务大脑和小兵">3.6 主任务与子任务——&quot;大脑&quot;和&quot;小兵&quot;</a></div><div class="toc-l1"><a href="#第-4-章-Mac-权限与沙箱安全与自由的平衡">第 4 章　Mac 权限与沙箱（安全与自由的平衡）</a></div><div class="toc-l2"><a href="#41-macOS-四类系统权限">4.1 macOS 四类系统权限</a></div><div class="toc-l2"><a href="#42-沙箱三档">4.2 沙箱三档</a></div><div class="toc-l2"><a href="#43-网页搜索四档怎么选">4.3 网页搜索四档怎么选</a></div><div class="toc-l2"><a href="#44-隐私纪律公共治理专业特别重要">4.4 隐私纪律（公共治理专业特别重要）</a></div><div class="toc-l2"><a href="#45-为什么开梯子全局模式Codex-会卡住">4.5 为什么开梯子（全局模式）Codex 会卡住</a></div><div class="toc-l1"><a href="#第-5-章-插件与-MCP-全景逐个详解">第 5 章　插件与 MCP 全景（逐个详解）</a></div><div class="toc-l2"><a href="#51-MCP-是什么先搞懂底层">5.1 MCP 是什么（先搞懂底层）</a></div><div class="toc-l2"><a href="#52-电脑Computer-Use操作桌面应用">5.2 @电脑（Computer Use）——操作桌面应用</a></div><div class="toc-l2"><a href="#53-ChromeChrome-浏览器自动化">5.3 @Chrome（Chrome 浏览器自动化）</a></div><div class="toc-l2"><a href="#54-Documents文档生成PRD纪要论文">5.4 Documents（文档生成）——PRD、纪要、论文</a></div><div class="toc-l2"><a href="#55-Spreadsheets表格处理数据分析师">5.5 Spreadsheets（表格处理）——数据分析师</a></div><div class="toc-l2"><a href="#56-Presentations幻灯片">5.6 Presentations（幻灯片）</a></div><div class="toc-l2"><a href="#57-PDF文档处理">5.7 PDF（文档处理）</a></div><div class="toc-l2"><a href="#58-Figma设计稿转代码">5.8 Figma（设计稿转代码）</a></div><div class="toc-l2"><a href="#59-Build-Web-Apps一键建站">5.9 Build Web Apps（一键建站）</a></div><div class="toc-l2"><a href="#510-GitHub仓库管理">5.10 GitHub（仓库管理）</a></div><div class="toc-l2"><a href="#511-Sentry错误监控分析">5.11 Sentry（错误监控分析）</a></div><div class="toc-l2"><a href="#512-Linear项目管理">5.12 Linear（项目管理）</a></div><div class="toc-l2"><a href="#513-数据库四件套Neon--Supabase--MotherDuck--Convex">5.13 数据库四件套（Neon / Supabase / MotherDuck / Convex）</a></div><div class="toc-l2"><a href="#514-MCP-服务详解">5.14 MCP 服务详解</a></div><div class="toc-l1"><a href="#第-6-章-界面美化与语音听写设置">第 6 章　界面美化与语音/听写设置</a></div><div class="toc-l2"><a href="#61-主题美化你的当前配置">6.1 主题美化（你的当前配置）</a></div><div class="toc-l2"><a href="#62-快捷键速查">6.2 快捷键速查</a></div><div class="toc-l2"><a href="#63-语音聊天与全局听写">6.3 语音聊天与全局听写</a></div><div class="toc-l2"><a href="#64-自定义指令Custom-Instructions">6.4 自定义指令（Custom Instructions）</a></div><div class="toc-l2"><a href="#65-本地记忆Memories">6.5 本地记忆（Memories）</a></div><div class="toc-l2"><a href="#66-AGENTSmd项目级规则比记忆更精确">6.6 AGENTS.md（项目级规则）——比记忆更精确</a></div><div class="toc-l1"><a href="#第-7-章-模型路由DeepSeek-高性价比方案">第 7 章　模型路由：DeepSeek 高性价比方案</a></div><div class="toc-l2"><a href="#71-你当前的链路图">7.1 你当前的链路图</a></div><div class="toc-l2"><a href="#72-DeepSeek-V4-Flash--Pro-选哪个">7.2 DeepSeek V4 Flash / Pro 选哪个</a></div><div class="toc-l2"><a href="#73-性能与性价比与-GPT-对比">7.3 性能与性价比（与 GPT 对比）</a></div><div class="toc-l2"><a href="#74-CC-Switch-使用要点">7.4 CC Switch 使用要点</a></div><div class="toc-l2"><a href="#75-多模态外挂纯文本模型的眼睛">7.5 多模态外挂（纯文本模型的&quot;眼睛&quot;）</a></div><div class="toc-l2"><a href="#76-主-Agent-GPT--DeepSeek-子代理省钱不降智">7.6 主 Agent GPT + DeepSeek 子代理（省钱不降智）</a></div><div class="toc-l1"><a href="#第-8-章-终极目标国内正规中转站接入-OpenAI-原生模型免注册-ChatGPT">第 8 章　终极目标：国内正规中转站接入 OpenAI 原生模型（免注册 ChatGPT）</a></div><div class="toc-l2"><a href="#81-目标与原理">8.1 目标与原理</a></div><div class="toc-l2"><a href="#82-渠道对比按可信度排序">8.2 渠道对比（按可信度排序）</a></div><div class="toc-l2"><a href="#83-三步接入法">8.3 三步接入法</a></div><div class="toc-l2"><a href="#84-风险提示务必读">8.4 风险提示（务必读）</a></div><div class="toc-l1"><a href="#第-9-章-对话中的错误点与遗漏点纠正">第 9 章　对话中的错误点与遗漏点纠正</a></div><div class="toc-l2"><a href="#91-错误点第-1-版已列此处合并更新">9.1 错误点（第 1 版已列，此处合并更新）</a></div><div class="toc-l2"><a href="#92-遗漏点对话没讲到讲得不够本版已补">9.2 遗漏点（对话没讲到/讲得不够，本版已补）</a></div><div class="toc-l1"><a href="#第-10-章-进阶玩法与拓展内容">第 10 章　进阶玩法与拓展内容</a></div><div class="toc-l2"><a href="#101-自建技能手把手教程">10.1 自建技能（手把手教程）</a></div><div class="toc-l2"><a href="#102-并行工作流生产力翻倍">10.2 并行工作流（生产力翻倍）</a></div><div class="toc-l2"><a href="#103-省钱架构GPT-主脑--DeepSeek-小兵">10.3 省钱架构：GPT 主脑 + DeepSeek 小兵</a></div><div class="toc-l2"><a href="#104-本地视觉隐私最强">10.4 本地视觉（隐私最强）</a></div><div class="toc-l2"><a href="#105-自动化日报你的第一个自动化项目">10.5 自动化日报（你的第一个自动化项目）</a></div><div class="toc-l2"><a href="#106-学习路线建议结合数字公共治理专业">10.6 学习路线建议（结合数字公共治理专业）</a></div><div class="toc-l1"><a href="#第-11-章-新手实操项目边做边学">第 11 章　新手实操项目（边做边学）</a></div><div class="toc-l2"><a href="#项目给公共管理-2026-级新生做一份数据小调研">项目：给&quot;公共管理 2026 级新生&quot;做一份数据小调研</a></div><div class="toc-l1"><a href="#第-12-章-常见问题-FAQ50-问速查">第 12 章　常见问题 FAQ（50 问速查）</a></div><div class="toc-l2"><a href="#基础与认知">基础与认知</a></div><div class="toc-l2"><a href="#安装与配置">安装与配置</a></div><div class="toc-l2"><a href="#权限与沙箱">权限与沙箱</a></div><div class="toc-l2"><a href="#网络与代理">网络与代理</a></div><div class="toc-l2"><a href="#模型与-API">模型与 API</a></div><div class="toc-l2"><a href="#语音与界面">语音与界面</a></div><div class="toc-l2"><a href="#插件使用">插件使用</a></div><div class="toc-l2"><a href="#数据与隐私">数据与隐私</a></div><div class="toc-l2"><a href="#故障排查">故障排查</a></div><div class="toc-l1"><a href="#第-13-章-公共治理专业实战场景学以致用">第 13 章　公共治理专业实战场景（学以致用）</a></div><div class="toc-l2"><a href="#131-场景一政策文本分析">13.1 场景一：政策文本分析</a></div><div class="toc-l2"><a href="#132-场景二舆情分析">13.2 场景二：舆情分析</a></div><div class="toc-l2"><a href="#133-场景三公共数据治理">13.3 场景三：公共数据治理</a></div><div class="toc-l2"><a href="#134-场景四政策建议与仿真">13.4 场景四：政策建议与仿真</a></div><div class="toc-l2"><a href="#135-把四个场景串成一个学期项目">13.5 把四个场景串成一个学期项目</a></div><div class="toc-l1"><a href="#第-14-章-提示词工程进阶让-Codex-更懂你">第 14 章　提示词工程进阶（让 Codex 更懂你）</a></div><div class="toc-l2"><a href="#141-写好提示词的五个要素">14.1 写好提示词的五个要素</a></div><div class="toc-l2"><a href="#142-防止-AI-编造的五个技巧">14.2 防止 AI 编造的五个技巧</a></div><div class="toc-l2"><a href="#143-让-Codex-按你的风格输出">14.3 让 Codex 按你的风格输出</a></div><div class="toc-l2"><a href="#144-常见提示词错误对照纠正">14.4 常见提示词错误（对照纠正）</a></div><div class="toc-l2"><a href="#145-处理模糊需求的追问技巧">14.5 处理模糊需求的追问技巧</a></div><div class="toc-l1"><a href="#第-15-章-故障排查手册报错对照速查">第 15 章　故障排查手册（报错对照速查）</a></div><div class="toc-l2"><a href="#151-Codex-一直加载不回答">15.1 Codex 一直加载/不回答</a></div><div class="toc-l2"><a href="#152-插件相关报错">15.2 插件相关报错</a></div><div class="toc-l2"><a href="#153-模型API-报错">15.3 模型/API 报错</a></div><div class="toc-l2"><a href="#154-环境类报错">15.4 环境类报错</a></div><div class="toc-l2"><a href="#155-通用恢复流程三连">15.5 通用恢复流程（三连）</a></div><div class="toc-l1"><a href="#第-16-章-零基础代码与命令行入门30-分钟够用">第 16 章　零基础代码与命令行入门（30 分钟够用）</a></div><div class="toc-l2"><a href="#161-代码是什么用生活比喻">16.1 代码是什么（用生活比喻）</a></div><div class="toc-l2"><a href="#162-常见文件后缀是什么意思">16.2 常见文件后缀是什么意思</a></div><div class="toc-l2"><a href="#163-命令行是什么终端--Terminal">16.3 命令行是什么（终端 / Terminal）</a></div><div class="toc-l2"><a href="#164-怎么看懂报错不求甚解版">16.4 怎么看懂报错（不求甚解版）</a></div><div class="toc-l2"><a href="#165-让-Codex-帮你学代码">16.5 让 Codex 帮你学代码</a></div><div class="toc-l1"><a href="#第-17-章-用-Codex-辅助英语学习与雅思备考">第 17 章　用 Codex 辅助英语学习与雅思备考</a></div><div class="toc-l2"><a href="#171-阅读与精读">17.1 阅读与精读</a></div><div class="toc-l2"><a href="#172-写作批改大作文小作文">17.2 写作批改（大作文/小作文）</a></div><div class="toc-l2"><a href="#173-口语练习">17.3 口语练习</a></div><div class="toc-l2"><a href="#174-听力与单词">17.4 听力与单词</a></div><div class="toc-l2"><a href="#175-学习计划生成">17.5 学习计划生成</a></div><div class="toc-l1"><a href="#第-18-章-数据备份恢复与迁移">第 18 章　数据备份、恢复与迁移</a></div><div class="toc-l2"><a href="#181-需要备份什么">18.1 需要备份什么</a></div><div class="toc-l2"><a href="#182-手动备份一条命令">18.2 手动备份（一条命令）</a></div><div class="toc-l2"><a href="#183-让-Codex-定期自动备份">18.3 让 Codex 定期自动备份</a></div><div class="toc-l2"><a href="#184-配置坏了怎么恢复">18.4 配置坏了怎么恢复</a></div><div class="toc-l2"><a href="#185-换电脑迁移清单">18.5 换电脑迁移清单</a></div><div class="toc-l1"><a href="#第-19-章-更多实用工作流复制即用">第 19 章　更多实用工作流（复制即用）</a></div><div class="toc-l2"><a href="#191-会议纪要工作流">19.1 会议纪要工作流</a></div><div class="toc-l2"><a href="#192-读书文献笔记工作流">19.2 读书/文献笔记工作流</a></div><div class="toc-l2"><a href="#193-个人知识库整理工作流Obsidian-友好">19.3 个人知识库整理工作流（Obsidian 友好）</a></div><div class="toc-l2"><a href="#194-汇报材料工作流">19.4 汇报材料工作流</a></div><div class="toc-l2"><a href="#195-数据可视化工作流">19.5 数据可视化工作流</a></div><div class="toc-l2"><a href="#196-时间管理与计划工作流">19.6 时间管理与计划工作流</a></div><div class="toc-l2"><a href="#197-邮件通知工作流">19.7 邮件/通知工作流</a></div><div class="toc-l1"><a href="#第-20-章-Codex-社区与生态找到更多能力">第 20 章　Codex 社区与生态（找到更多能力）</a></div><div class="toc-l2"><a href="#201-技能从哪来">20.1 技能从哪来</a></div><div class="toc-l2"><a href="#202-如何安全地装社区技能">20.2 如何安全地装社区技能</a></div><div class="toc-l2"><a href="#203-值得关注的生态工具进阶玩家">20.3 值得关注的生态工具（进阶玩家）</a></div><div class="toc-l2"><a href="#204-保持更新">20.4 保持更新</a></div><div class="toc-l1"><a href="#第-21-章-从大一到大四的-AI-成长路线图详细版">第 21 章　从大一到大四的 AI 成长路线图（详细版）</a></div><div class="toc-l2"><a href="#211-大一第-1-学期打基础会用工具">21.1 大一（第 1 学期）：打基础，会用工具</a></div><div class="toc-l2"><a href="#212-大二会建流程自动化">21.2 大二：会建流程，自动化</a></div><div class="toc-l2"><a href="#213-大三会管数据会用-API">21.3 大三：会管数据，会用 API</a></div><div class="toc-l2"><a href="#214-大四会做研究输出成果">21.4 大四：会做研究，输出成果</a></div><div class="toc-l2"><a href="#215-贯穿四年的-5-条铁律">21.5 贯穿四年的 5 条铁律</a></div><div class="toc-l1"><a href="#第-22-章-十类日常需求的完美说法">第 22 章　十类日常需求的&quot;完美说法&quot;</a></div><div class="toc-l2"><a href="#221-整理文件">22.1 整理文件</a></div><div class="toc-l2"><a href="#222-搜索资料">22.2 搜索资料</a></div><div class="toc-l2"><a href="#223-处理数据">22.3 处理数据</a></div><div class="toc-l2"><a href="#224-写文档">22.4 写文档</a></div><div class="toc-l2"><a href="#225-做-PPT">22.5 做 PPT</a></div><div class="toc-l2"><a href="#226-操作电脑">22.6 操作电脑</a></div><div class="toc-l2"><a href="#227-学习一个概念">22.7 学习一个概念</a></div><div class="toc-l2"><a href="#228-解决报错">22.8 解决报错</a></div><div class="toc-l2"><a href="#229-自动化任务">22.9 自动化任务</a></div><div class="toc-l2"><a href="#2210-让-Codex-教我做事">22.10 让 Codex 教我做事</a></div><div class="toc-l2"><a href="#2211-一句话总结好说法的公式">22.11 一句话总结：好说法的公式</a></div><div class="toc-l1"><a href="#第-23-章-Skill-技能全览与使用教学48-技能整合">第 23 章　Skill 技能全览与使用教学（48 技能整合）</a></div><div class="toc-l2"><a href="#231-怎么调用-Skill三种方式">23.1 怎么调用 Skill（三种方式）</a></div><div class="toc-l2"><a href="#232-当前可用的技能逐个教学">23.2 当前可用的技能（逐个教学）</a></div><div class="toc-l2"><a href="#233-磁盘缓存中有但当前配置未启用的技能">23.3 磁盘缓存中有、但当前配置未启用的技能</a></div><div class="toc-l2"><a href="#234-系统内置技能6-个随-Codex-自带">23.4 系统内置技能（6 个，随 Codex 自带）</a></div><div class="toc-l2"><a href="#235-技能管理速查">23.5 技能管理速查</a></div><div class="toc-l2"><a href="#236-技能自动刷新机制配合自动化">23.6 技能自动刷新机制（配合自动化）</a></div><div class="toc-l1"><a href="#附录-A-常用命令速查">附录 A　常用命令速查</a></div><div class="toc-l1"><a href="#附录-B-提示词模板库30-条可直接抄">附录 B　提示词模板库（30+ 条，可直接抄）</a></div><div class="toc-l2"><a href="#电脑操作类">电脑操作类</a></div><div class="toc-l2"><a href="#文档与表格类">文档与表格类</a></div><div class="toc-l2"><a href="#建站与设计类">建站与设计类</a></div><div class="toc-l2"><a href="#数据库类">数据库类</a></div><div class="toc-l2"><a href="#学习与研究类">学习与研究类</a></div><div class="toc-l2"><a href="#自动化类">自动化类</a></div><div class="toc-l2"><a href="#进阶调度类">进阶调度类</a></div><div class="toc-l2"><a href="#提问技巧类">提问技巧类</a></div><div class="toc-l2"><a href="#隐私与安全类">隐私与安全类</a></div><div class="toc-l1"><a href="#附录-C-安全准则与参考资料">附录 C　安全准则与参考资料</a></div><div class="toc-l2"><a href="#C1-安装下载安全准则2026-08-05-生效必须遵守">C.1 安装下载安全准则（2026-08-05 生效，必须遵守）</a></div><div class="toc-l2"><a href="#C2-隐私红线公共治理专业">C.2 隐私红线（公共治理专业）</a></div><div class="toc-l2"><a href="#C3-参考资料">C.3 参考资料</a></div><div class="toc-l2"><a href="#C4-版本记录">C.4 版本记录</a></div><div class="toc-l1"><a href="#附录-D-术语表Glossary">附录 D　术语表（Glossary）</a></div><div class="toc-l1"><a href="#附录-E-每周练习计划30-分钟天">附录 E　每周练习计划（30 分钟/天）</a></div><div class="toc-l1"><a href="#附录-F-常用网站与资源清单">附录 F　常用网站与资源清单</a></div><div class="toc-l1"><a href="#附录-G-常见缩写对照">附录 G　常见缩写对照</a></div><div class="toc-l1"><a href="#附录-H-可直接复制的长模板完整版">附录 H　可直接复制的长模板（完整版）</a></div><div class="toc-l2"><a href="#H1-AI-日报模板配合-Automations">H.1 AI 日报模板（配合 Automations）</a></div><div class="toc-l2"><a href="#H2-周报模板">H.2 周报模板</a></div><div class="toc-l2"><a href="#H3-调研报告模板">H.3 调研报告模板</a></div><div class="toc-l2"><a href="#H4-期末论文提纲模板">H.4 期末论文提纲模板</a></div><div class="toc-l1"><a href="#附录-I-月度自我检查清单">附录 I　月度自我检查清单</a></div><div class="toc-l2"><a href="#环境与安全">环境与安全</a></div><div class="toc-l2"><a href="#技能与能力">技能与能力</a></div><div class="toc-l2"><a href="#数据与隐私-2">数据与隐私</a></div><div class="toc-l2"><a href="#习惯与产出">习惯与产出</a></div><div class="toc-l1"><a href="#附录-J-一页速查卡打印贴墙版">附录 J　一页速查卡（打印贴墙版）</a></div><div class="toc-l2"><a href="#常用指令速查">常用指令速查</a></div><div class="toc-l2"><a href="#卡住时怎么办三步">卡住时怎么办（三步）</a></div><div class="toc-l2"><a href="#关键设置速查">关键设置速查</a></div><div class="toc-l1"><a href="#附录-K-快速开局十句话不知道说什么时用">附录 K　快速开局十句话（不知道说什么时用）</a></div><div class="toc-l1"><a href="#附录-L-给未来的自己手册维护说明">附录 L　给未来的自己（手册维护说明）</a></div></nav>
+  <h1 id="Codex-GPT-全面掌握手册进阶完整版" class="chapter">Codex GPT 全面掌握手册（进阶完整版）</h1>
+<blockquote><strong>适用对象</strong>：中山大学数字公共治理专业 · 吴宣澄
+<strong>整理日期</strong>：2026-08-10（第 2 版，全面扩写）
+<strong>来源</strong>：与 DeepSeek 的整段对话 + 本机现状逐项核验 + 官方资料核实
+<strong>版本说明</strong>：第 1 版约 5 千字，本版扩写至 2 万字以上，新增「插件逐个详解」「新手实操项目」「FAQ 50 问」「提示词模板库 30+」等章节。</blockquote>
+<hr>
+<h2 id="如何使用本手册">如何使用本手册</h2>
+<ul><li><strong>第一次用</strong>：按顺序读第 1~4 章，建立认知和权限基础</li><li><strong>想动手</strong>：直接跳到第 11 章&quot;新手实操项目&quot;，边做边查</li><li><strong>遇到问题</strong>：查第 12 章 FAQ；找不到就带着截图来问 Codex</li><li><strong>进阶玩家</strong>：读第 7、8、10 章（模型路由 / 国内接入 GPT / 自建技能）</li><li><strong>每次更新后</strong>：重读第 2 章，确认你的环境清单没有缺项</li></ul>
+<hr>
+<hr>
+<h1 id="第-1-章-认知框架Work-与-Codex-的真实分工" class="chapter">第 1 章　认知框架：Work 与 Codex 的真实分工</h1>
+<h2 id="11-为什么你会困惑新手必经之路">1.1 为什么你会困惑（新手必经之路）</h2>
+<p>几乎每个刚开始用 ChatGPT 桌面版的人都会问：&quot;Work 和 Codex 到底有什么区别？我该用哪个？&quot;</p>
+<p>你可能会发现：<strong>ChatGPT Work 现在也能操作电脑</strong>（@电脑、@Chrome 在 Work 模式下同样可用），下载安装、整理文件、填表都很方便。这不是错觉——之前&quot;Work 不能操作电脑&quot;的说法<strong>过于绝对</strong>了。</p>
+<p>真正的区别不是&quot;能不能操作&quot;，而是<strong>操作得多深、多稳、能扛多大的活</strong>：</p>
+<ul><li><strong>ChatGPT Work</strong>：像一位&quot;全科助理&quot;。轻量桌面操作很方便，深度思考、查资料、写初稿、出方案是它的强项；但遇到批量处理、写代码、长任务自主执行，它偏向&quot;聊一步做一步&quot;。</li><li><strong>Codex</strong>：像一个不知疲倦的&quot;执行者&quot;。它被训练成&quot;自己写代码 → 自己运行 → 自己看结果 → 自己纠错&quot;的闭环，擅长批量处理、分析数据、写脚本、长耗时多步骤任务，直到把成品交付到你手里。</li></ul>
+<h2 id="12-核心差异对照表">1.2 核心差异对照表</h2>
+<table><thead><tr><th>维度</th><th>ChatGPT Work</th><th>Codex</th></tr></thead><tbody><tr><td>角色</td><td>轻量操作 + 规划/研究</td><td>深度执行 + 批量 + 长任务</td></tr><tr><td>操作电脑</td><td>✅ 可以（轻量桌面操作）</td><td>✅ 可以（更强、更稳）</td></tr><tr><td>批量处理（几十上百个文件）</td><td>⚠️ 一次做一件，容易累</td><td>✅ 写脚本批量跑</td></tr><tr><td>长任务自主循环</td><td>⚠️ 弱，聊一步做一步</td><td>✅ 强，自己迭代直到完成</td></tr><tr><td>代码 / 脚本 / 调试</td><td>❌ 基本不支持</td><td>✅ 主场</td></tr><tr><td>生成成品（报告/图表/网页）</td><td>⚠️ 偏弱</td><td>✅ 强，放到位</td></tr><tr><td>适合</td><td>下载安装、查资料、写方案、出初稿</td><td>数据分析、批量处理、写代码、复杂交付</td></tr></tbody></table>
+<h2 id="13-什么场景用哪个速查">1.3 什么场景用哪个（速查）</h2>
+<table><thead><tr><th>任务</th><th>推荐</th></tr></thead><tbody><tr><td>下载安装软件、整理几个文件、填表</td><td><strong>Work</strong>（方便顺手）或 Codex @电脑</td></tr><tr><td>批量处理（200 个文件分类、100 份 PDF 提取要点）</td><td><strong>Codex</strong></td></tr><tr><td>分析数据、出统计表和报告</td><td><strong>Codex</strong></td></tr><tr><td>头脑风暴、查资料、写方案初稿</td><td><strong>Work</strong></td></tr><tr><td>写代码 / 脚本 / 调试</td><td><strong>Codex</strong></td></tr><tr><td>长耗时、多步骤自主任务</td><td><strong>Codex</strong></td></tr><tr><td>操作当前浏览器（查资料、填表单）</td><td>Work 或 Codex @Chrome</td></tr></tbody></table>
+<h2 id="14-判断口诀记住这一条就够">1.4 判断口诀（记住这一条就够）</h2>
+<blockquote><strong>&quot;点几下鼠标&quot;能搞定的 → Work；&quot;跑一遍脚本&quot;才能搞定的 → Codex；又要想清楚、又要干出来 → 两个配合。</strong></blockquote>
+<ul><li>打开软件、下载安装、把 3 个 PDF 合并 → Work</li><li>把 200 个文件分类、把 30 份政策 PDF 每篇提取 5 个要点、分析问卷出报告 → Codex</li><li>先想方案再执行 → Work 出提纲，Codex 去抓数据、做分析、出成品</li></ul>
+<h2 id="15-最佳组合拳军师--士兵">1.5 最佳组合拳：军师 + 士兵</h2>
+<p>真正的聪明用法不是二选一，而是<strong>分工</strong>：</p>
+<ol><li>用 <strong>ChatGPT Work</strong> 当军师：出方案、写提纲、查背景资料</li><li>把方案交给 <strong>Codex</strong> 当士兵：批量处理、写代码、出报告、交付成品</li></ol>
+<p>例如：用 Work 写&quot;社区数字化调研&quot;的提纲和问卷框架，再让 Codex 去抓数据、做统计、生成报告和图表。</p>
+<h2 id="16-常见认知误区先排雷">1.6 常见认知误区（先排雷）</h2>
+<ol><li>❌ &quot;Work 完全不能操作电脑&quot; → 现在 Work 也能操作，只是适合轻量操作；批量/深度执行要靠 Codex</li><li>❌ &quot;Codex 只适合程序员&quot; → 它是行动导向，批量处理、数据分析等通用任务也能干</li><li>❌ &quot;开梯子（全局模式）能让 Codex 更快&quot; → 你的模型后端是国内的，全局代理反而卡死（见 4.5）</li><li>❌ &quot;本地项目 = 完全隐私&quot; → 文件在本地，但每次对话仍会发到云端处理</li><li>❌ &quot;AI 说的都是对的&quot; → 一切结果都要人工核验，公共治理专业尤其如此</li></ol>
+<h1 id="第-2-章-你的环境现状配置清单--逐项说明" class="chapter">第 2 章　你的环境现状（配置清单 + 逐项说明）</h1>
+<h2 id="21-已完成的配置2026-08-10-核验">2.1 已完成的配置（2026-08-10 核验）</h2>
+<table><thead><tr><th>项目</th><th>状态</th><th>一句话说明</th></tr></thead><tbody><tr><td>Codex 桌面版</td><td>✅</td><td>ChatGPT.app 26.803.41515，含 Codex CLI 0.147.0</td></tr><tr><td>DeepSeek V4 Flash/Pro</td><td>✅</td><td>经 CC Switch v3.19.1 本地路由接入，wire_api=responses</td></tr><tr><td>CC Switch</td><td>✅</td><td>v3.19.1，本地代理 127.0.0.1:15721 运行中</td></tr><tr><td>Computer Use（@电脑）</td><td>✅</td><td>插件已启用，可见&quot;电脑&quot;入口（control Mac apps）</td></tr><tr><td>Chrome 插件</td><td>✅</td><td>控制浏览器、继承登录态</td></tr><tr><td>GitHub / Figma / Linear / Sentry</td><td>✅</td><td>官方目录插件已启用</td></tr><tr><td>Build Web Apps</td><td>✅</td><td>一句话生成网页应用</td></tr><tr><td>Neon / Supabase / MotherDuck / Convex</td><td>✅</td><td>数据库四件套</td></tr><tr><td>文档/表格/PPT/PDF 技能</td><td>✅</td><td>documents / spreadsheets / presentations / pdf</td></tr><tr><td>多模态视觉</td><td>✅</td><td>llm-vision（智谱 GLM-4V-Flash）+ codex-vision</td></tr><tr><td>沙箱</td><td>✅</td><td>workspace-write + network_access=true</td></tr><tr><td>网页搜索</td><td>✅</td><td>indexed（索引模式）</td></tr><tr><td>本地记忆</td><td>✅</td><td>已开启</td></tr><tr><td>主题</td><td>✅</td><td>Catppuccin 暗色</td></tr><tr><td>goal-agent-team 技能</td><td>✅</td><td>2026-08-10 安装（目标规划 + Agent 团队执行）</td></tr><tr><td>Context7 MCP</td><td>✅</td><td>2026-08-10 安装（免费查最新 API 文档）</td></tr><tr><td>Firecrawl MCP</td><td>✅</td><td>2026-08-10 启用（官方免 Key 免费档，限速）</td></tr></tbody></table>
+<blockquote><strong>✅ 2026-09-06 刷新核验</strong>：配置已更新，比上次（08-30）更完整——
+- 模型：<code>deepseek-v4-flash-vision-exp</code>（<strong>带视觉能力的实验版 DeepSeek</strong>，可原生看图）
+- 经 CC Switch 本地代理 127.0.0.1:15721（wire_api=responses）
+- 配置中已启用的插件：browser、computer-use、visualize、documents、pdf、spreadsheets、presentations、template-creator
+- 配置中的 MCP：node_repl（内置）、computer-use、<strong>context7、firecrawl（已恢复）</strong>
+- 个人技能 13 个；frontend-design 已移入 <code>~/.codex/skills/.archive/</code>（归档停用）
+- 注意：模型带 <code>vision-exp</code>，看图可走模型原生能力；如需仍可加视觉 MCP</blockquote>
+<h2 id="22-configtoml-逐行解读你的核心配置文件">2.2 config.toml 逐行解读（你的核心配置文件）</h2>
+<p>配置文件位置：<code>~/.codex/config.toml</code>。下面是你当前配置的含义：</p>
+<pre><code class="language-toml"># 默认使用的模型提供商和模型
+model_provider = &quot;custom&quot;          # 自定义提供商（由 CC Switch 管理）
+model = &quot;deepseek-v4-flash&quot;        # 默认模型：DeepSeek V4 Flash
+model_reasoning_effort = &quot;high&quot;    # 推理强度：高（复杂任务更好，略费 token）
+disable_response_storage = true    # 不存响应记录（隐私偏好）
+model_catalog_json = &quot;cc-switch-model-catalog.json&quot;  # 自定义模型目录，让 Codex 认得出 DeepSeek
+
+# 沙箱模式
+sandbox_mode = &quot;workspace-write&quot;   # 工作区可写：项目内自由读写
+web_search = &quot;indexed&quot;             # 网页搜索：索引模式
+
+# 模型提供商定义（CC Switch 本地代理）
+[model_providers.custom]
+name = &quot;deepseek&quot;
+base_url = &quot;http://127.0.0.1:15721/v1&quot;   # CC Switch 本地代理地址
+wire_api = &quot;responses&quot;                    # OpenAI Responses 协议
+requires_openai_auth = true
+experimental_bearer_token = &quot;PROXY_MANAGED&quot;
+
+# 网络访问
+[sandbox_workspace_write]
+network_access = true              # 允许命令行联网（curl 等）
+
+# 记忆
+[memories]
+generate_memories = true
+use_memories = true</code></pre>
+<p><strong>改配置前必做</strong>：先备份 <code>cp ~/.codex/config.toml ~/.codex/config.toml.bak</code>。改完要<strong>彻底重启 Codex</strong> 才生效。</p>
+<h2 id="23-CC-Switch-里有哪些开关逐个说明">2.3 CC Switch 里有哪些开关（逐个说明）</h2>
+<p>CC Switch 设置里有几个关键开关，作用如下：</p>
+<table><thead><tr><th>开关</th><th>作用</th><th>建议</th></tr></thead><tbody><tr><td>启用本地代理</td><td>把 Codex 请求转发给第三方 API</td><td>保持开启</td></tr><tr><td>切换第三方时保留官方登录</td><td>防止切换 API 时覆盖官方登录态，插件不&quot;消失&quot;</td><td>建议开启</td></tr><tr><td>统一 Codex 会话历史</td><td>让不同服务商的会话一起显示</td><td>想要就开</td></tr><tr><td>故障转移</td><td>主 API 挂了自动切备用</td><td>可选</td></tr></tbody></table>
+<blockquote>注意：CC Switch 的配置文件是 <code>~/.cc-switch/cc-switch.db</code>（SQLite 数据库），正常不用手动改，在 App 界面里操作即可。</blockquote>
+<h2 id="24-MCP-服务清单已配置">2.4 MCP 服务清单（已配置）</h2>
+<table><thead><tr><th>MCP 服务</th><th>作用</th><th>状态（2026-09-06）</th></tr></thead><tbody><tr><td>node_repl</td><td>内置 JS 执行</td><td>✅ 配置中</td></tr><tr><td>computer-use</td><td>电脑操作（由插件托管）</td><td>✅ 插件托管</td></tr><tr><td>context7</td><td>查最新 API 文档</td><td>✅ 已恢复</td></tr><tr><td>firecrawl</td><td>联网搜索/抓取</td><td>✅ 已恢复</td></tr><tr><td>llm-vision</td><td>视觉转文字（智谱 GLM-4V-Flash）</td><td>⚠️ 不在当前配置（模型已带 vision-exp，可选）</td></tr><tr><td>codex-vision</td><td>视觉 MCP（Node 实现）</td><td>⚠️ 不在当前配置（模型已带 vision-exp，可选）</td></tr></tbody></table>
+<hr>
+<hr>
+<h1 id="第-3-章-Codex-五大核心能力详解" class="chapter">第 3 章　Codex 五大核心能力详解</h1>
+<h2 id="31-Agent-Loop自主循环一切能力的根基">3.1 Agent Loop（自主循环）——一切能力的根基</h2>
+<h3 id="311-它是什么">3.1.1 它是什么</h3>
+<p>Codex 的核心不是&quot;回答问题&quot;，而是&quot;<strong>完成任务</strong>&quot;。它会进入一个循环：</p>
+<pre><code>思考 → 行动 → 观察结果 → 再思考 → 再行动 → ……直到完成</code></pre>
+<p>例如你说&quot;把这个项目里的所有图片压缩到 500KB 以下&quot;，它会：自己写压缩脚本 → 运行 → 看哪些图片还超标 → 调整参数 → 再跑 → 直到全部达标。</p>
+<h3 id="312-你能得到什么">3.1.2 你能得到什么</h3>
+<ul><li>长任务可持续运行数小时，你不用一直盯着</li><li>你的角色从&quot;执行者&quot;变成&quot;<strong>监督者</strong>&quot;：给目标、定边界、验收结果</li><li>遇到错误它会自己读报错、自己修，而不是停下来问你&quot;怎么办&quot;</li></ul>
+<h3 id="313-用好它的三个要点">3.1.3 用好它的三个要点</h3>
+<ol><li><strong>目标要具体</strong>：不只是&quot;整理我的文件&quot;，而是&quot;把桌面上所有 PDF 按&#x27;课程/证件/其他&#x27;三个文件夹分类&quot;</li><li><strong>边界要清楚</strong>：告诉它&quot;只动桌面，别碰下载文件夹&quot;</li><li><strong>验收标准要明确</strong>：告诉它&quot;完成后列出每个文件夹的文件数量&quot;</li></ol>
+<h3 id="314-什么时候它会停下来问你">3.1.4 什么时候它会停下来问你</h3>
+<ul><li>需要删除文件（尤其 rm 命令）</li><li>需要联网下载安装东西</li><li>遇到无法判断的歧义</li></ul>
+<p>这是它的安全机制，不是&quot;卡住了&quot;。</p>
+<h2 id="32-Computer-Use电脑让-AI-真正动手">3.2 Computer Use（@电脑）——让 AI 真正&quot;动手&quot;</h2>
+<h3 id="321-基础用法">3.2.1 基础用法</h3>
+<p>在输入框输入 <code>@电脑</code> 然后直接说人话：</p>
+<ul><li><code>@电脑 打开 Safari，去百度下载最新版 Chrome 并安装到应用程序文件夹</code></li><li><code>@电脑 打开 Finder，把桌面所有 PDF 整理到&quot;PDF合集&quot;文件夹</code></li><li><code>@电脑 打开系统设置，把 Wi-Fi 关掉再重新打开</code></li></ul>
+<h3 id="322-权限要求缺一不可">3.2.2 权限要求（缺一不可）</h3>
+<p>首次使用会弹 macOS 权限申请：<strong>屏幕录制</strong> + <strong>辅助功能</strong>，缺一不可，授予后彻底重启 Codex。四类权限的详细说明见第 4.1 节。</p>
+<h3 id="323-后台-vs-前台Mac-用户重点关注">3.2.3 后台 vs 前台（Mac 用户重点关注）</h3>
+<ul><li>从 2026 年 4 月更新（v26.415）起，Mac 上 Computer Use <strong>默认后台运行</strong>，不抢你的鼠标</li><li>2026 年 5 月起还支持<strong>锁屏运行</strong>：锁上电脑它继续干活</li><li>Windows 上是前台接管模式，会看到鼠标自己动，期间别动鼠标</li></ul>
+<h3 id="324-进阶技巧">3.2.4 进阶技巧</h3>
+<ul><li><code>@电脑 在 Chrome 里……</code>：指定应用，定位更准</li><li>把常用 App 加入&quot;始终允许&quot;列表，减少弹窗</li><li>配合 Appshots（双击双 Command）先&quot;喂&quot;上下文，再让它操作，成功率更高</li></ul>
+<h2 id="33-Skills技能包把固定流程变成一键调用">3.3 Skills（技能包）——把固定流程变成&quot;一键调用&quot;</h2>
+<h3 id="331-什么是技能">3.3.1 什么是技能</h3>
+<p>技能是一个 <code>SKILL.md</code> 文件，里面写着一套&quot;遇到这类任务就按这个流程做&quot;的说明书。装好后，你说一句话就能触发整套流程。</p>
+<h3 id="332-你本机已有哪些技能">3.3.2 你本机已有哪些技能</h3>
+<p><strong>系统自带</strong>：</p>
+<ul><li><code>imagegen</code>：生成/编辑图片</li><li><code>openai-docs</code>：查 Codex / OpenAI 官方文档</li><li><code>skill-creator</code>：教你自建技能</li><li><code>skill-installer</code>：帮你安装 GitHub 上的技能</li><li><code>review-agent</code>：代码审查</li></ul>
+<p><strong>本次新装</strong>：</p>
+<ul><li><code>goal-agent-team</code>：模糊目标 → 对齐需求写文档 → 自动规划执行</li><li><code>goal-agent-team-auto</code>：无人值守版，几乎不用问你就跑完</li></ul>
+<p><strong>插件自带</strong>：documents、spreadsheets、presentations、pdf、browser、chrome、computer-use、visualize 等</p>
+<h3 id="333-如何调用">3.3.3 如何调用</h3>
+<p>新开对话后，技能会自动出现在可用列表里。使用方式：</p>
+<ul><li>直接说：&quot;用 goal-agent-team 处理这个需求：……&quot;</li><li>或让 Codex 自己判断：&quot;帮我做个……&quot;（它会按描述自动选技能）</li></ul>
+<h3 id="334-自建技能进阶详见-101">3.3.4 自建技能（进阶，详见 10.1）</h3>
+<p>把你反复做的流程（比如每周写治理周报）做成专属技能，以后一句话触发。</p>
+<h2 id="34-Automations自动化任务定时自动干活">3.4 Automations（自动化任务）——定时自动干活</h2>
+<h3 id="341-典型场景">3.4.1 典型场景</h3>
+<p>&quot;每天早上 8 点，自动搜索 AI 行业最新动态，生成日报存到本地文件夹。&quot;</p>
+<h3 id="342-两种运行位置务必分清">3.4.2 两种运行位置（务必分清）</h3>
+<table><thead><tr><th>位置</th><th>在哪跑</th><th>特点</th></tr></thead><tbody><tr><td>工作（云端）</td><td>OpenAI 服务器</td><td>关电脑也能跑，但不能碰你本地文件</td></tr><tr><td>在你的电脑上运行</td><td>你的 Mac</td><td>能操作本地文件/软件，但需开机联网</td></tr></tbody></table>
+<p><strong>要存本地文件必须选&quot;在你的电脑上运行&quot;。</strong></p>
+<h3 id="343-设置要点">3.4.3 设置要点</h3>
+<ol><li>描述任务 + 指定时间（如&quot;每天 8:00&quot;）</li><li>要求&quot;每条信息必须附来源链接&quot;</li><li>首次先手动运行一次验证</li><li>敏感操作保持&quot;手动审批&quot;</li></ol>
+<h2 id="35-goal-目标模式把模糊想法变成任务书">3.5 /goal 目标模式——把模糊想法变成任务书</h2>
+<ul><li>输入 <code>/goal 一句话目标</code>，Codex 会生成详细任务书并自动执行</li><li>适用：目标清晰、多步骤、跨应用的任务（多页报告、跨文档调研）</li><li>消耗 token 比普通对话高，配合 DeepSeek 成本可接受</li><li>权限弹窗多时：设置 → 通用 → 权限 → 开&quot;自动审查&quot;</li></ul>
+<h2 id="36-主任务与子任务大脑和小兵">3.6 主任务与子任务——&quot;大脑&quot;和&quot;小兵&quot;</h2>
+<h3 id="361-概念">3.6.1 概念</h3>
+<ul><li><strong>主任务</strong>：你在对话框说的最终目标（一句话，不限定步骤）</li><li><strong>子任务</strong>：主代理拆解出的具体工作包（分析文件、跑测试、查资料）</li></ul>
+<h3 id="362-关键认知">3.6.2 关键认知</h3>
+<ul><li>Codex <strong>不会自动派生子代理</strong>，必须你在提示词里明确说：&quot;用两个并行 Agent……&quot;</li><li>子代理适合&quot;读&quot;的活（探路、跑测试、翻日志），不适合&quot;写&quot;的小活（拆了反而慢）</li><li>多个 Agent 同时改同一片代码容易撞车，慎用</li></ul>
+<h3 id="363-什么时候值得拆">3.6.3 什么时候值得拆</h3>
+<table><thead><tr><th>类型</th><th>例子</th><th>建议</th></tr></thead><tbody><tr><td>值得拆</td><td>探索项目结构、跑测试、翻日志、做摘要</td><td>✅ 并行</td></tr><tr><td>值得并行</td><td>认证/数据库/API 各查各的</td><td>✅ 并行</td></tr><tr><td>别拆</td><td>一句话能说清的小修改</td><td>❌ 徒增成本</td></tr><tr><td>慎用</td><td>多个 Agent 改同一批文件</td><td>⚠️ 协调成本高</td></tr></tbody></table>
+<hr>
+<hr>
+<h1 id="第-4-章-Mac-权限与沙箱安全与自由的平衡" class="chapter">第 4 章　Mac 权限与沙箱（安全与自由的平衡）</h1>
+<h2 id="41-macOS-四类系统权限">4.1 macOS 四类系统权限</h2>
+<table><thead><tr><th>权限</th><th>作用</th><th>缺失后果</th></tr></thead><tbody><tr><td>屏幕录制</td><td>Codex&quot;看见&quot;屏幕</td><td>Computer Use / Appshots 失效</td></tr><tr><td>辅助功能</td><td>模拟鼠标键盘</td><td>无法操作应用</td></tr><tr><td>麦克风</td><td>语音聊天/听写</td><td>语音设置异常</td></tr><tr><td>输入监控</td><td>全局快捷键/听写热键</td><td>别的 App 里按热键无反应</td></tr></tbody></table>
+<p><strong>授予后必须完全退出并重开 Codex 才生效。</strong></p>
+<h3 id="411-关于输入监控的隐私解释">4.1.1 关于&quot;输入监控&quot;的隐私解释</h3>
+<p>这个权限让应用&quot;看见&quot;你按了哪些键，目的是实现全局快捷键（如 Cmd+Shift+Space 呼出对话框）。正规大厂不会偷偷记录你的键盘输入——它只在设定热键被按下时才响应。不放心可以&quot;用前开、用完关&quot;。</p>
+<h2 id="42-沙箱三档">4.2 沙箱三档</h2>
+<table><thead><tr><th>档位</th><th>能力</th><th>适用</th></tr></thead><tbody><tr><td>只读 Read-only</td><td>只看不改、默认不能联网</td><td>代码审查</td></tr><tr><td>工作区可写 Workspace-write</td><td>项目内自由读写，可开网络</td><td><strong>日常推荐</strong></td></tr><tr><td>完全访问 Danger-full-access</td><td>无限制</td><td>慎用</td></tr></tbody></table>
+<p><strong>你的推荐配置（已生效）</strong>：</p>
+<pre><code class="language-toml">sandbox_mode = &quot;workspace-write&quot;
+[sandbox_workspace_write]
+network_access = true</code></pre>
+<h2 id="43-网页搜索四档怎么选">4.3 网页搜索四档怎么选</h2>
+<table><thead><tr><th>选项</th><th>含义</th><th>何时用</th></tr></thead><tbody><tr><td>不允许网页搜索</td><td>完全离线</td><td>纯写代码</td></tr><tr><td>使用 OpenAI 索引</td><td>搜索引（缓存式）</td><td>简单查概念</td></tr><tr><td>访问已索引的外部网页</td><td>搜索+读全文</td><td><strong>日常首选</strong></td></tr><tr><td>不受限制访问当前网页</td><td>操作当前页面</td><td>临时操作，用完切回</td></tr></tbody></table>
+<h2 id="44-隐私纪律公共治理专业特别重要">4.4 隐私纪律（公共治理专业特别重要）</h2>
+<ul><li><strong>本地项目 ≠ 离线</strong>：代码在本地，对话仍发云端</li><li>关闭&quot;改进模型&quot;数据共享，减少数据被用于训练</li><li><strong>涉及个人信息先脱敏</strong>：姓名→学生A/B；学号→后4位；身份证→只留年份</li><li>依据《个人信息保护法》：处理他人个人信息需本人同意并告知用途；&quot;学生身份&quot;不构成豁免</li><li>一句话：<strong>能脱敏就脱敏，能不传就不传，授权没拿到，绝对不动手。</strong></li></ul>
+<h2 id="45-为什么开梯子全局模式Codex-会卡住">4.5 为什么开梯子（全局模式）Codex 会卡住</h2>
+<p><strong>这是你这台机器最容易踩的坑</strong>：你的 Codex 大脑是<strong>国内直连的 DeepSeek</strong>（实测直连 0.2 秒）。而啊哈加速器默认&quot;全局模式&quot;会把所有流量绕道香港，DeepSeek 从香港访问被限制/超时 → Codex 一直加载不回答。</p>
+<p><strong>解决</strong>：啊哈加速器 → 设置 → 加速模式 → 切「<strong>分流模式</strong>」（国内走本地网，国际走加速器）。这样开不开梯子，Codex 都正常。</p>
+<hr>
+<hr>
+<h1 id="第-5-章-插件与-MCP-全景逐个详解" class="chapter">第 5 章　插件与 MCP 全景（逐个详解）</h1>
+<blockquote>本章把每个已装插件的&quot;作用 + 指令示例 + 常见问题&quot;讲透。示例指令可直接复制使用。</blockquote>
+<h2 id="51-MCP-是什么先搞懂底层">5.1 MCP 是什么（先搞懂底层）</h2>
+<p><strong>MCP（Model Context Protocol）= 万能 USB-C 接口</strong>。以前接一个外部工具（数据库、浏览器、视觉模型）要写专门代码；现在只要工具支持 MCP 标准协议，Codex 一行配置就能调用。</p>
+<p>你的 Codex 里，插件（如 @电脑、@Chrome）和 MCP 服务（如 context7、firecrawl、llm-vision）都是通过这套机制接进来的。<strong>插件偏&quot;场景功能&quot;，MCP 偏&quot;底层服务&quot;</strong>，两者配合使用。</p>
+<h2 id="52-电脑Computer-Use操作桌面应用">5.2 @电脑（Computer Use）——操作桌面应用</h2>
+<p><strong>作用</strong>：模拟鼠标键盘，操作任何 Mac 应用（Safari、Finder、系统设置、Office 等）。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>@电脑 帮我在桌面新建一个&quot;课程资料&quot;文件夹</code></li><li><code>@电脑 打开系统设置，把 Wi-Fi 关掉再打开</code></li><li><code>@电脑 打开 Safari 去教务处官网，下载最新课表存到桌面</code></li><li><code>@电脑 打开邮件，把标题含&quot;社团通知&quot;的未读邮件内容汇总给我</code></li><li><code>@电脑 打开 Excel，把我桌面上的成绩单低于 60 分的标红</code></li></ol>
+<p><strong>常见问题</strong>：</p>
+<ul><li>首次操作新应用会弹&quot;是否允许&quot;→ 点允许，或加入&quot;始终允许&quot;</li><li>权限没给全（屏幕录制/辅助功能）→ 系统设置里补，重启 Codex</li><li>切了第三方 API 后插件&quot;消失&quot;→ 在 CC Switch 开&quot;保留官方登录&quot;，彻底重启</li></ul>
+<h2 id="53-ChromeChrome-浏览器自动化">5.3 @Chrome（Chrome 浏览器自动化）</h2>
+<p><strong>作用</strong>：控制你的 Chrome，继承登录状态（Gmail、B 站、GitHub 等直接可用）。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>@Chrome 打开我的 GitHub 仓库列表，把最近 5 个仓库名整理成表格</code></li><li><code>@Chrome 打开 B 站收藏夹，把最新 3 个视频标题和链接整理给我</code></li><li><code>@Chrome 帮我填这个网页的申请表（信息我发你）</code></li><li><code>@Chrome 搜索&quot;2026 数字政府白皮书&quot;，把前 3 条结果摘要发给我</code></li><li><code>@Chrome 打开淘宝，把购物车里最贵的商品截图发给我</code></li></ol>
+<p><strong>常见问题</strong>：</p>
+<ul><li>需要先安装 Chrome 插件并登录 ChatGPT 扩展</li><li>和 @Browser（内置浏览器）不同：@Chrome 继承你的登录态；@Browser 是干净环境</li></ul>
+<h2 id="54-Documents文档生成PRD纪要论文">5.4 Documents（文档生成）——PRD、纪要、论文</h2>
+<p><strong>作用</strong>：快速生成结构化文档（论文提纲、会议纪要、需求文档）。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>帮我生成一份《数字政府概论》期末论文提纲，包含 4 个章节</code></li><li><code>把这段会议录音文字稿整理成纪要：主题、要点、共识、待办</code></li><li><code>帮我把这 5 篇政策文件各写一段 200 字摘要，合并成一份文档</code></li><li><code>用 Documents 生成一份&quot;社区数字化治理调研&quot;的采访提纲</code></li><li><code>帮我把这份报告改写成更适合大一新生的通俗版本</code></li></ol>
+<h2 id="55-Spreadsheets表格处理数据分析师">5.5 Spreadsheets（表格处理）——数据分析师</h2>
+<p><strong>作用</strong>：处理 Excel/CSV，自动计算、整理、出图表。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>帮我把这份成绩表低于 60 分的标红，并算平均分</code></li><li><code>把这个 CSV 里的重复行去掉，按日期排序</code></li><li><code>帮我把这 100 条问卷结果做个简单的统计：各选项占比</code></li><li><code>把这份人口数据按年龄段分组，生成透视表</code></li><li><code>帮我把这份表格里的姓名列替换为学生1、学生2……，学号只留后4位（脱敏）</code></li></ol>
+<h2 id="56-Presentations幻灯片">5.6 Presentations（幻灯片）</h2>
+<p><strong>作用</strong>：把内容变成 PPT 大纲或直接生成演示文稿。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>把这 10 页内容做成 8 页 PPT 大纲，每页写清标题和要点</code></li><li><code>帮我做一个&quot;数字政府建设&quot;的 12 页演示文稿</code></li><li><code>把这份报告转成给领导汇报用的 5 分钟 PPT 提纲</code></li><li><code>帮我设计 PPT 封面：主题是&quot;AI 与公共治理&quot;</code></li></ol>
+<h2 id="57-PDF文档处理">5.7 PDF（文档处理）</h2>
+<p><strong>作用</strong>：读取、合并、拆分、提取 PDF 内容。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>帮我把桌面这几个 PDF 合并成一个</code></li><li><code>把这份政策 PDF 转成 Markdown 文本</code></li><li><code>帮我把这份 30 页 PDF 提取出所有带&quot;数据安全&quot;的段落</code></li><li><code>帮我把这份 PDF 的每一页截成图片</code></li><li><code>把这份扫描版 PDF 做文字识别（OCR）</code></li></ol>
+<h2 id="58-Figma设计稿转代码">5.8 Figma（设计稿转代码）</h2>
+<p><strong>作用</strong>：理解设计稿，生成对应网页代码。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>按这张海报的配色和排版，生成一个读书笔记模板的 HTML</code></li><li><code>这个设计稿转成响应式网页，手机端也要适配</code></li><li><code>帮我把这个图标库的样式统一成一套主题色</code></li></ol>
+<h2 id="59-Build-Web-Apps一键建站">5.9 Build Web Apps（一键建站）</h2>
+<p><strong>作用</strong>：一句话生成可运行的网页应用。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>做个倒计时网页：输入日期，显示还剩多少天</code></li><li><code>做个随机点名轮盘：把名单里的名字输进去</code></li><li><code>做个&quot;课程表&quot;网页：支持添加课程、按周显示</code></li><li><code>做个&quot;AI 日报&quot;展示页：能粘贴 Markdown 自动排版</code></li><li><code>做个简单的记账本，支持本地保存</code></li></ol>
+<h2 id="510-GitHub仓库管理">5.10 GitHub（仓库管理）</h2>
+<p><strong>作用</strong>：操作 GitHub 仓库、Issue、PR。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>帮我把这个仓库克隆到本地</code></li><li><code>给我仓库里最近 10 个 Issue 做个汇总</code></li><li><code>帮我把本地改动提交并推送到 GitHub</code></li><li><code>帮我看一下这个 PR 的代码变更，给审查意见</code></li></ol>
+<h2 id="511-Sentry错误监控分析">5.11 Sentry（错误监控分析）</h2>
+<p><strong>作用</strong>：读取错误堆栈，分析根因。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>帮我看这个报错日志的根因是什么</code></li><li><code>这个 Sentry 报错反复出现，帮我分析是代码问题还是配置问题</code></li><li><code>根据这个错误栈，给我修复建议和预防措施</code></li></ol>
+<h2 id="512-Linear项目管理">5.12 Linear（项目管理）</h2>
+<p><strong>作用</strong>：创建和更新 Issue、任务。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>在 Linear 建一个 issue：标题&quot;优化登录速度&quot;，描述如下……</code></li><li><code>把 Linear 里这周未完成的任务列给我</code></li><li><code>把这个 bug 的优先级改成高，并指派给……</code></li></ol>
+<h2 id="513-数据库四件套Neon--Supabase--MotherDuck--Convex">5.13 数据库四件套（Neon / Supabase / MotherDuck / Convex）</h2>
+<p><strong>它们是什么</strong>：四个官方数据库插件，让你用对话就能管数据库，不用写 SQL。</p>
+<p><strong>如何选择</strong>（大白话版）：</p>
+<ul><li><strong>Supabase</strong>：像&quot;实时同步的超级在线表格 + 微信群&quot;，适合多人实时协作应用</li><li><strong>Neon</strong>：像&quot;带草稿纸的仓库&quot;，先改草稿再提交，怕改坏东西就用它</li><li><strong>Convex</strong>：像&quot;点菜+上菜一条龙&quot;，管 App 的登录、消息、数据全流程</li><li><strong>MotherDuck</strong>：轻量本地/云端数据仓库，适合数据分析</li></ul>
+<p><strong>注意</strong>：它们管理的是<strong>你自己开发的应用的数据</strong>，绝不能用来操控微信等封闭平台。</p>
+<p>另外，这四款插件都需要你<strong>先注册对应服务的账号并连接</strong>（在插件设置里登录）才能真正使用；</p>
+<p>如果暂时没有账号，先用 Spreadsheets 处理本地表格即可，效果一样。</p>
+<p><strong>指令示例</strong>：</p>
+<ol><li><code>在 Supabase 建一个&quot;公共管理2026级新生&quot;表，含学号、姓名、宿舍号</code></li><li><code>往 Neon 里插入两条模拟数据，然后查一下 401 宿舍有几个人</code></li><li><code>用 Convex 把我这个待办清单改成多人实时同步版</code></li><li><code>帮我在 MotherDuck 里分析这份 CSV，按月份汇总</code></li></ol>
+<h2 id="514-MCP-服务详解">5.14 MCP 服务详解</h2>
+<h3 id="context7查最新-API-文档">context7（查最新 API 文档）</h3>
+<ul><li>作用：当你问&quot;某个库/框架怎么用&quot;时，自动去查官方文档，减少瞎编</li><li>用法：<code>use context7 for 如何用 Supabase 做行级安全策略</code></li><li>免费，无需 Key</li></ul>
+<h3 id="firecrawl联网搜索抓取">firecrawl（联网搜索/抓取）</h3>
+<ul><li>作用：搜索网页、抓取整页内容、解析 PDF/文档</li><li>当前：免 Key 免费档（限速），够日常用</li><li>用法：<code>用 firecrawl 搜索一下 2026 数字政府最新政策</code></li><li>升级：注册拿 Key 后额度更高，支持整站抓取</li></ul>
+<h3 id="llm-vision--codex-vision视觉外挂">llm-vision / codex-vision（视觉外挂）</h3>
+<ul><li>作用：让纯文本的 DeepSeek&quot;看见&quot;图片——图片先给智谱 GLM-4V-Flash 转成文字描述，再给 DeepSeek 分析</li><li>用法：直接拖图进对话即可（插件自动拦截转译）</li><li>隐私：图片会上传到智谱云端；要完全本地可用 Ollama（见 7.5）</li></ul>
+<hr>
+<hr>
+<h1 id="第-6-章-界面美化与语音听写设置" class="chapter">第 6 章　界面美化与语音/听写设置</h1>
+<h2 id="61-主题美化你的当前配置">6.1 主题美化（你的当前配置）</h2>
+<p><strong>当前已生效</strong>：</p>
+<ul><li>主题：Catppuccin（社区公认护眼）</li><li>强调色：<code>#cba6f7</code>（柔紫）</li><li>背景：<code>#1e1e2e</code>（猫眼石黑）/ 前景：<code>#cdd6f4</code>（奶白）</li><li>对比度 60、半透明侧边栏已开</li></ul>
+<p><strong>如果想换风格</strong>：</p>
+<ul><li>GitHub 搜 <code>Catppuccin codex theme</code> 可导入更多主题 JSON</li><li>常用组合：Catppuccin Mocha + 强调色 <code>#89B4FA</code>（柔蓝）+ 背景 <code>#1E1E2E</code></li><li>&quot;复制主题&quot;功能可备份你的配色，换设备时一键导入</li></ul>
+<h2 id="62-快捷键速查">6.2 快捷键速查</h2>
+<table><thead><tr><th>快捷键</th><th>功能</th></tr></thead><tbody><tr><td>Cmd + K</td><td>命令菜单（万能钥匙，搜任何操作）</td></tr><tr><td>双击左右两个 Command</td><td><strong>Appshots</strong>：把当前窗口截图+全部文字喂给对话</td></tr><tr><td>Cmd + Shift + 4</td><td>系统普通截图（存桌面）</td></tr><tr><td>Cmd + Shift + S</td><td>隐藏侧边栏（极简模式）</td></tr></tbody></table>
+<p><strong>Appshots 使用要点</strong>：</p>
+<ul><li>它负责&quot;看&quot;（采集窗口上下文，含折叠内容），&quot;操作&quot;仍要靠 Computer Use</li><li>按快照前先激活目标对话（60 秒内活跃），快照会追加到该对话</li><li>需要屏幕录制 + 辅助功能权限</li></ul>
+<h2 id="63-语音聊天与全局听写">6.3 语音聊天与全局听写</h2>
+<h3 id="全局听写语音转文字输入">全局听写（语音转文字输入）</h3>
+<ul><li>开启：设置 → 通用 → 听写 → 勾选&quot;启用全域听写&quot;，设置快捷键</li><li>原理：Whisper 模型，中文识别良好</li><li>依赖：麦克风权限 + 输入监控权限</li><li>老版本可能需要 <code>~/.codex/config.toml</code> 里手动加 <code>voice_transcription = true</code></li></ul>
+<h3 id="语音聊天免提实时对话">语音聊天（免提实时对话）</h3>
+<ul><li>付费功能，点麦克风图标开始</li><li>可设置语音快捷键、开启&quot;屏幕上下文&quot;（让它看到你屏幕）</li><li>支持随时打断、持续对话</li></ul>
+<h3 id="常见问题排查">常见问题排查</h3>
+<table><thead><tr><th>现象</th><th>原因</th><th>解决</th></tr></thead><tbody><tr><td>无法加载语音设置</td><td>旧版代码签名缺麦克风权限声明</td><td>更新 Codex + 手动给麦克风权限 + 重启</td></tr><tr><td>听写快捷键没反应</td><td>没给&quot;输入监控&quot;权限</td><td>系统设置 → 输入监控 → 添加 Codex</td></tr><tr><td>给了权限还不行</td><td>没彻底重启</td><td>完全退出再打开</td></tr></tbody></table>
+<h2 id="64-自定义指令Custom-Instructions">6.4 自定义指令（Custom Instructions）</h2>
+<p>相当于给 Codex 一份&quot;永久备忘录&quot;：</p>
+<ul><li><strong>关于我</strong>：写你的背景（&quot;我是中山大学数字公共治理专业大一学生&quot;）</li><li><strong>如何回应</strong>：写回答规则（&quot;用通俗中文，先给结论再解释，多用表格&quot;）</li></ul>
+<p>字符限制：免费版约 1500 字符，付费版 5000。随时可改，只影响未来对话。</p>
+<h2 id="65-本地记忆Memories">6.5 本地记忆（Memories）</h2>
+<ul><li>开启后，Codex 会跨对话记住你的偏好（&quot;我喜欢用表格&quot;）</li><li>记忆存本地，隐私可控</li><li>多人共用电脑建议关闭；一个人用建议开启</li><li>不想要某条记忆时可在设置里手动删除</li></ul>
+<h2 id="66-AGENTSmd项目级规则比记忆更精确">6.6 AGENTS.md（项目级规则）——比记忆更精确</h2>
+<ul><li>放项目根目录，只对这个项目生效，可随项目共享</li><li>例子：项目里写 <code>AGENTS.md</code>，内容：&quot;本项目只用 Python 3.10；回答用中文；不要修改 data/ 目录&quot;</li><li>适合：不同项目有不同要求的场景</li></ul>
+<p><strong>三者分工</strong>：自定义指令 = 全局人设；记忆 = 跨对话偏好；AGENTS.md = 项目内规则。</p>
+<hr>
+<hr>
+<h1 id="第-7-章-模型路由DeepSeek-高性价比方案" class="chapter">第 7 章　模型路由：DeepSeek 高性价比方案</h1>
+<h2 id="71-你当前的链路图">7.1 你当前的链路图</h2>
+<pre><code>你 → Codex 桌面版
+      └─ 读 ~/.codex/config.toml（model=deepseek-v4-flash）
+           └─ CC Switch 本地代理 127.0.0.1:15721
+                └─ DeepSeek 官方 API（V4 Flash / V4 Pro，国内直连）</code></pre>
+<h2 id="72-DeepSeek-V4-Flash--Pro-选哪个">7.2 DeepSeek V4 Flash / Pro 选哪个</h2>
+<table><thead><tr><th></th><th>V4 Flash</th><th>V4 Pro</th></tr></thead><tbody><tr><td>定位</td><td>快、便宜、量大管饱</td><td>更强推理，接近顶尖</td></tr><tr><td>价格</td><td>约 $0.14 输入 / $0.28 输出（每百万 token）</td><td>稍贵</td></tr><tr><td>适合</td><td>日常开发、批量任务、高频迭代</td><td>复杂推理、长任务</td></tr></tbody></table>
+<p><strong>建议</strong>：日常用 Flash；遇到复杂长任务临时切 Pro。</p>
+<h2 id="73-性能与性价比与-GPT-对比">7.3 性能与性价比（与 GPT 对比）</h2>
+<table><thead><tr><th>维度</th><th>GPT 原生（如 GPT-5.x）</th><th>DeepSeek V4 Flash</th></tr></thead><tbody><tr><td>复杂长程任务</td><td>更稳更强</td><td>够用</td></tr><tr><td>多模态</td><td>原生支持</td><td>需外挂视觉</td></tr><tr><td>输入价格</td><td>约 $5/百万 token</td><td>约 $0.14/百万 token</td></tr><tr><td>输出价格</td><td>约 $30/百万 token</td><td>约 $0.28/百万 token</td></tr><tr><td>速度</td><td>较快</td><td>极快</td></tr></tbody></table>
+<p><strong>结论</strong>：不是&quot;谁更强&quot;，而是&quot;<strong>选择</strong>&quot;——关键任务用 GPT，批量/高频用 DeepSeek。</p>
+<h2 id="74-CC-Switch-使用要点">7.4 CC Switch 使用要点</h2>
+<ol><li><strong>切换供应商后必须彻底重启 Codex</strong>（只关窗口不够）</li><li>v3.19.1 已支持 DeepSeek V4 Flash Responses API 直连</li><li>会话历史按服务商分开显示，切回官方看不到 DeepSeek 老会话是<strong>正常的</strong>（数据在 <code>~/.codex/sessions/</code>，没丢）</li><li>跨服务商续聊报错：消息格式/加密不兼容，用切换工具或 repair 修复</li><li>插件&quot;消失&quot;：检查&quot;保留官方登录&quot;开关，或新建会话/重启</li></ol>
+<h2 id="75-多模态外挂纯文本模型的眼睛">7.5 多模态外挂（纯文本模型的&quot;眼睛&quot;）</h2>
+<table><thead><tr><th>方案</th><th>数据是否出本地</th><th>说明</th></tr></thead><tbody><tr><td>llm-vision MCP（已配）</td><td>出本地（智谱云端）</td><td>免费 GLM-4V-Flash，开箱即用</td></tr><tr><td>codex-vision MCP（已配）</td><td>出本地</td><td>Node 实现</td></tr><tr><td>Ollama 本地视觉</td><td><strong>完全不出本地</strong></td><td>qwen2.5vl:7b 需 6GB+ 显存，隐私最强</td></tr></tbody></table>
+<h2 id="76-主-Agent-GPT--DeepSeek-子代理省钱不降智">7.6 主 Agent GPT + DeepSeek 子代理（省钱不降智）</h2>
+<p><strong>原理</strong>：GPT 当&quot;大脑&quot;（规划/决策/验收），DeepSeek 当&quot;小兵&quot;（跑测试、翻日志、批量摘要），可省 80-90% token 成本。</p>
+<p><strong>实现方式</strong>：</p>
+<ol><li>Skill/Hook 启动 Sidecar（如 codex-deepseek-sidecar）</li><li>Subagent Router 把子任务路由到 DeepSeek</li><li>CC Switch 多供应商聚合</li></ol>
+<p><strong>已知坑</strong>：Multi-Agent V2 下 DeepSeek 子代理可能收不到任务（加密协议不兼容），社区补丁 codex-deepseek-subagent-fix 可修复。</p>
+<p><strong>重要</strong>：Codex 不会自动派生子代理，必须在提示词里明确说&quot;用两个并行 Agent……&quot;。</p>
+<hr>
+<hr>
+<h1 id="第-8-章-终极目标国内正规中转站接入-OpenAI-原生模型免注册-ChatGPT" class="chapter">第 8 章　终极目标：国内正规中转站接入 OpenAI 原生模型（免注册 ChatGPT）</h1>
+<h2 id="81-目标与原理">8.1 目标与原理</h2>
+<p><strong>目标</strong>：不注册 ChatGPT 账号、不绑定海外手机/信用卡，在国内直接用 OpenAI 原生大模型（GPT 系列）驱动 Codex。</p>
+<p><strong>原理（换芯不换壳）</strong>：Codex 默认连官方接口（国内受限）。把 config.toml 里的 <code>base_url</code> 改成国内可达的 OpenAI 兼容网关，Codex 以为自己还在和官方对话，实际请求由网关转发给 GPT 等模型。<strong>关键前提：网关必须支持 OpenAI Responses API 协议。</strong></p>
+<h2 id="82-渠道对比按可信度排序">8.2 渠道对比（按可信度排序）</h2>
+<table><thead><tr><th>渠道</th><th>能提供 GPT 吗</th><th>支付</th><th>特点</th></tr></thead><tbody><tr><td>阿里云百炼 / 火山方舟等官方云</td><td>否（国产模型）</td><td>实名+支付宝</td><td>最正规，但非 GPT</td></tr><tr><td>Fenno（api.fenno.ai）</td><td>✅ GPT/Claude/Gemini/DeepSeek</td><td>微信/支付宝</td><td>国内主流网关，原生支持 Responses API</td></tr><tr><td>其他第三方中转站</td><td>不一定</td><td>多样</td><td>需谨慎核验</td></tr></tbody></table>
+<blockquote>✅ 已实测：<code>api.fenno.ai</code> 从你的网络可直连，接口正常（返回 API_KEY_REQUIRED），只差 Key。</blockquote>
+<h2 id="83-三步接入法">8.3 三步接入法</h2>
+<h3 id="第一步注册拿-Key唯一需要你动手的步骤">第一步：注册拿 Key（唯一需要你动手的步骤）</h3>
+<ol><li>打开 https://api.fenno.ai → 注册（邮箱，或 GitHub/Google）</li><li>登录 → 左侧【API 密钥】→【+ 创建密钥】→ 命名 <code>codex</code>，分组选 code-plan/Mini</li><li>复制 <code>sk-</code> 开头的 Key（可先小额充值，支持支付宝/微信）</li></ol>
+<h3 id="第二步配置二选一">第二步：配置（二选一）</h3>
+<p><strong>方式 A：CC Switch 一键导入（推荐）</strong></p>
+<ul><li>Fenno 密钥列表有【导入 CCS】按钮 → 自动写入 CC Switch</li><li>CC Switch → 供应商列表选 Fenno → 启用 → 彻底重启 Codex</li></ul>
+<p><strong>方式 B：手动改 config.toml</strong></p>
+<pre><code class="language-toml">model = &quot;gpt-5.4&quot;              # 以 Fenno 控制台可用模型为准
+model_provider = &quot;fenno&quot;
+
+[model_providers.fenno]
+name = &quot;Fenno&quot;
+base_url = &quot;https://api.fenno.ai&quot;
+env_key = &quot;FENNO_API_KEY&quot;      # 系统环境变量，别明文写文件
+wire_api = &quot;responses&quot;         # 关键：Responses 协议
+requires_openai_auth = false   # 第三方网关</code></pre>
+<p>然后 <code>echo &#x27;export FENNO_API_KEY=&quot;sk-你的Key&quot;&#x27; &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc</code></p>
+<h3 id="第三步让-Codex-认识模型">第三步：让 Codex 认识模型</h3>
+<p>新版 Codex 默认只认官方模型，自定义模型要写进 <code>~/.codex/cc-switch-model-catalog.json</code>：</p>
+<pre><code class="language-json">{ &quot;models&quot;: [ { &quot;model&quot;: &quot;gpt-5.4&quot;, &quot;displayName&quot;: &quot;GPT-5.4 (Fenno)&quot;, &quot;contextWindow&quot;: 1000000 } ] }</code></pre>
+<h3 id="验证">验证</h3>
+<ol><li>彻底重启 Codex</li><li>模型菜单确认显示 GPT</li><li>发&quot;你是什么模型？&quot;验证</li><li>再测 @电脑 插件是否仍可用</li></ol>
+<h2 id="84-风险提示务必读">8.4 风险提示（务必读）</h2>
+<ul><li><strong>数据安全</strong>：请求经第三方转发，敏感代码/个人信息慎入</li><li><strong>稳定性</strong>：小站可能停服/倍率不透明/偷换模型</li><li><strong>协议</strong>：只支持 Chat Completions 的中转站需协议翻译，易出错</li><li><strong>合规</strong>：第三方转售 OpenAI 服务有灰色地带，建议小额、用于个人学习</li><li><strong>并存</strong>：接入后 CC Switch 可随时在 DeepSeek（便宜）和 GPT（更强）之间切换</li></ul>
+<hr>
+<hr>
+<h1 id="第-9-章-对话中的错误点与遗漏点纠正" class="chapter">第 9 章　对话中的错误点与遗漏点纠正</h1>
+<h2 id="91-错误点第-1-版已列此处合并更新">9.1 错误点（第 1 版已列，此处合并更新）</h2>
+<table><thead><tr><th>#</th><th>对话中的说法</th><th>实际纠正</th></tr></thead><tbody><tr><td>1</td><td>&quot;ChatGPT 26.80 3.41515 是 GPT-5.6 系列模型&quot;</td><td>❌ 那是<strong>应用版本号</strong>（26.803.41515），不是模型名</td></tr><tr><td>2</td><td>&quot;ChatGPT Work 不能操作电脑，架构不支持&quot;</td><td>⚠️ Work 也提供 Computer Use，只是默认更&quot;顾问化&quot;</td></tr><tr><td>3</td><td>&quot;按两下 Command 就能让 GPT 识别并操作页面&quot;</td><td>⚠️ Appshots 只负责&quot;看&quot;，&quot;操作&quot;仍需 Computer Use</td></tr><tr><td>4</td><td>&quot;Convex 能帮我登录微信发消息&quot;</td><td>❌ 微信是封闭系统，外部 AI 无法操控</td></tr><tr><td>5</td><td>&quot;本地项目 = 完全隐私&quot;</td><td>⚠️ 文件在本地，对话仍发云端</td></tr><tr><td>6</td><td>价格/基准数字</td><td>⚠️ 社区数据易过时，以官方为准</td></tr><tr><td>7</td><td>&quot;DeepSeek V4 Flash 原生支持 Responses API&quot;</td><td>✅ 基本属实（CC Switch v3.19.1 起可直连）</td></tr><tr><td>8</td><td>&quot;插件在 Work 和 Codex 模式通用&quot;</td><td>✅ 属实，但切换后需新建会话或彻底重启</td></tr><tr><td>9</td><td>（本手册第 1 版）&quot;约 2.5 万字&quot;</td><td>❌ 实际约 5000 字，本版已扩写</td></tr></tbody></table>
+<h2 id="92-遗漏点对话没讲到讲得不够本版已补">9.2 遗漏点（对话没讲到/讲得不够，本版已补）</h2>
+<ol><li><strong>AGENTS.md 项目级规则</strong>：第 6.6 节补全</li><li><strong>Custom Instructions vs Memories vs AGENTS.md 分工</strong>：第 6.6 节</li><li><strong>自建技能</strong>：第 10.1 节</li><li><strong>Automations 本地/云端模式选择</strong>：第 3.4 节</li><li><strong>配置备份与恢复</strong>：第 2.2 节</li><li><strong>MCP 安全审查</strong>：安装第三方 MCP/技能前先审阅（本次安装 goal-agent-team 前已逐行审阅）</li><li><strong>数据脱敏法律依据</strong>：第 4.4 节</li><li><strong>model_catalog_json</strong>：第 8.3 节</li><li><strong>网页搜索四档</strong>：第 4.3 节</li><li><strong>输出详细度四档</strong>：见附录 B</li><li><strong>梯子全局模式卡 Codex</strong>：第 4.5 节（你踩过的坑）</li><li><strong>Firecrawl 免 Key 免费档</strong>：第 5.14 节（本次发现的新方案）</li></ol>
+<hr>
+<hr>
+<h1 id="第-10-章-进阶玩法与拓展内容" class="chapter">第 10 章　进阶玩法与拓展内容</h1>
+<h2 id="101-自建技能手把手教程">10.1 自建技能（手把手教程）</h2>
+<p>技能 = 一个文件夹 + 一个 <code>SKILL.md</code> 文件。跟着做：</p>
+<p><strong>第 1 步：让 Codex 帮你建</strong></p>
+<p>在对话里说：</p>
+<pre><code>用 skill-creator 帮我创建一个技能，功能是&quot;处理班级表格时自动脱敏&quot;：
+把姓名列替换为学生1、学生2……，学号只保留后4位，身份证只留年份。</code></pre>
+<p><strong>第 2 步：它会生成类似结构</strong></p>
+<pre><code>~/.codex/skills/desensitize/
+  └── SKILL.md        # 技能说明书</code></pre>
+<p><strong>第 3 步：SKILL.md 长这样（示例）</strong></p>
+<pre><code class="language-markdown">---
+name: desensitize
+description: 处理含个人信息的表格时自动脱敏。当用户要求脱敏时使用。
+---
+
+# 数据脱敏
+1. 读取表格
+2. 姓名列 → 学生1、学生2……
+3. 学号列 → 只保留后4位
+4. 身份证 → 只保留出生年份
+5. 输出脱敏后的新表格（原文件不动）</code></pre>
+<p><strong>第 4 步：用起来</strong></p>
+<p>新开对话，说：&quot;用脱敏技能处理这份名单&quot;。</p>
+<p><strong>技巧</strong>：</p>
+<ul><li>description 写清楚&quot;什么时候用&quot;，Codex 才能自动匹配</li><li>步骤越明确，执行越稳定</li><li>做坏了随时可删文件夹</li></ul>
+<h2 id="102-并行工作流生产力翻倍">10.2 并行工作流（生产力翻倍）</h2>
+<p><strong>场景</strong>：同时开多个 Codex 对话，各干各的。</p>
+<ul><li>对话 A：整理政策 PDF</li><li>对话 B：做 PPT</li><li>对话 C：分析数据</li></ul>
+<p><strong>注意</strong>：并行时资源占用高；同改一批文件时不要并行写。</p>
+<h2 id="103-省钱架构GPT-主脑--DeepSeek-小兵">10.3 省钱架构：GPT 主脑 + DeepSeek 小兵</h2>
+<p>详见 7.6。落地三步：</p>
+<ol><li>CC Switch 里同时配置 DeepSeek 和 Fenno（GPT）</li><li>主对话用 GPT（关键任务）</li><li>提示词里明确说&quot;把 XX 交给 DeepSeek 子代理&quot;</li></ol>
+<h2 id="104-本地视觉隐私最强">10.4 本地视觉（隐私最强）</h2>
+<ul><li>安装 Ollama → <code>ollama pull qwen2.5vl:7b</code></li><li>需要 6GB+ 显存；显存小可换 <code>llava:7b</code></li><li>图片完全不出本机，适合处理敏感图表</li></ul>
+<h2 id="105-自动化日报你的第一个自动化项目">10.5 自动化日报（你的第一个自动化项目）</h2>
+<p><strong>目标</strong>：每天早上 8 点自动产出 <code>AI日报_YYYY-MM-DD.md</code> 存到本地。</p>
+<p><strong>完整提示词</strong>（直接复制到 Codex）：</p>
+<pre><code>请帮我把以下步骤设置成一个 Automations 自动化任务：
+1. 每天上午 8:00 运行
+2. 联网搜索&quot;人工智能行业&quot;最新动态，重点关注：AI技术突破、头部公司动态（OpenAI/Google/Anthropic）、政策监管
+3. 生成 Markdown 日报，格式：日期标题 + 今日头条(1-2条) + 行业动态(每条带来源链接) + 数据与观点
+4. 保存到 /Users/wuxuancheng/Documents/AI_Daily_Reports/AI日报_YYYY-MM-DD.md
+5. 任务必须在&quot;在你的电脑上运行&quot;（本地模式）
+6. 首次先手动运行一次验证
+7. 每条信息必须附来源网址，禁止编造</code></pre>
+<h2 id="106-学习路线建议结合数字公共治理专业">10.6 学习路线建议（结合数字公共治理专业）</h2>
+<table><thead><tr><th>阶段</th><th>目标</th><th>任务</th></tr></thead><tbody><tr><td>大一</td><td>会用工具</td><td>跟做第 11 章项目，掌握 @电脑/文档/表格</td></tr><tr><td>大二</td><td>会建流程</td><td>自建 2 个技能 + 自动化日报</td></tr><tr><td>大三</td><td>会管数据</td><td>数据库四件套 + 数据脱敏流水线 + API 批量处理</td></tr><tr><td>大四</td><td>会做研究</td><td>GPT 主脑 + DeepSeek 子代理 + 政策仿真</td></tr></tbody></table>
+<hr>
+<hr>
+<h1 id="第-11-章-新手实操项目边做边学" class="chapter">第 11 章　新手实操项目（边做边学）</h1>
+<blockquote>跟着做一遍，你就掌握了 80% 的核心操作。全程约 1 小时。</blockquote>
+<h2 id="项目给公共管理-2026-级新生做一份数据小调研">项目：给&quot;公共管理 2026 级新生&quot;做一份数据小调研</h2>
+<h3 id="第-1-步建项目文件夹">第 1 步：建项目文件夹</h3>
+<p>对 Codex 说：</p>
+<pre><code>在我的桌面建一个&quot;公共管理新生调研&quot;文件夹，里面再建 data 和 reports 两个子文件夹。</code></pre>
+<h3 id="第-2-步造一份模拟数据">第 2 步：造一份模拟数据</h3>
+<pre><code>用 Spreadsheets 生成一份模拟名单 data/名单.csv：
+30 名学生，列：学号、姓名、宿舍号、性别、是否使用AI工具（是/否）
+学号用 20260101~20260130，姓名用&quot;学生1~30&quot;（直接脱敏风格）。</code></pre>
+<h3 id="第-3-步让-Codex-分析">第 3 步：让 Codex 分析</h3>
+<pre><code>方式 A（有 Supabase 账号时）：
+帮我在 Supabase 里创建一个&quot;新生调研&quot;表，把 data/名单.csv 导入，
+然后统计：1) 男女比例 2) 各宿舍人数 3) 使用AI工具的比例。
+
+方式 B（没有账号，推荐先用）：
+用 Spreadsheets 直接分析 data/名单.csv：
+统计男女比例、各宿舍人数、使用AI工具的比例，输出统计表。</code></pre>
+<h3 id="第-4-步生成报告">第 4 步：生成报告</h3>
+<pre><code>用 Documents 生成一份调研报告初稿：标题&quot;公共管理2026级新生数字素养小调研&quot;，
+包含：背景、数据概况、三个统计结果、我的三个发现、下一步建议。
+存到 reports/调研报告.md。</code></pre>
+<h3 id="第-5-步做成-PPT">第 5 步：做成 PPT</h3>
+<pre><code>用 Presentations 把 reports/调研报告.md 转成 8 页 PPT 大纲。</code></pre>
+<h3 id="第-6-步自动化">第 6 步：自动化</h3>
+<pre><code>把以上流程做成 Automations：每周日晚 9 点自动生成一份&quot;本周AI行业动态周报&quot;，
+存到 /Users/wuxuancheng/Documents/AI_Daily_Reports/。</code></pre>
+<p><strong>做完这 6 步</strong>，你就体验了：电脑操作、表格处理、数据库、文档生成、PPT、自动化——全套核心能力。</p>
+<hr>
+<hr>
+<h1 id="第-12-章-常见问题-FAQ50-问速查" class="chapter">第 12 章　常见问题 FAQ（50 问速查）</h1>
+<h2 id="基础与认知">基础与认知</h2>
+<ol><li><strong>ChatGPT Work 和 Codex 到底什么关系？</strong> 同一个桌面应用里的两种模式；Work 偏规划，Codex 偏执行。</li><li><strong>我该用哪个？</strong> 干活用 Codex，出方案用 Work。</li><li><strong>Codex 需要编程基础吗？</strong> 不需要，说人话就行。</li><li><strong>为什么 AI 会编造内容？</strong> 模型是&quot;猜&quot;最合理的答案，不是查数据库；重要信息必须核验。</li><li><strong>AI 帮我写作业算学术不端吗？</strong> 看学校规定；建议注明 AI 辅助情况，且必须自己理解修改。</li></ol>
+<h2 id="安装与配置">安装与配置</h2>
+<ol><li><strong>为什么我打开 Codex 一直加载？</strong> 常见：梯子全局模式（见 4.5）或 CC Switch 没运行。</li><li><strong>为什么开梯子就卡？</strong> 模型后端 DeepSeek 是国内直连，全局代理绕道国外导致超时；切分流模式。</li><li><strong>改了 config.toml 不生效？</strong> 必须彻底重启 Codex（Cmd+Q 完全退出）。</li><li><strong>插件装完看不到？</strong> 新开对话；或检查 CC Switch&quot;保留官方登录&quot;；或彻底重启。</li><li><strong>CC Switch 是什么？</strong> 管理 API 供应商的工具，让 Codex 用 DeepSeek 等第三方模型。</li><li><strong>为什么模型菜单里没有 DeepSeek？</strong> model_catalog_json 里没加；用 CC Switch 管理会自动写好。</li></ol>
+<h2 id="权限与沙箱">权限与沙箱</h2>
+<ol><li><strong>Computer Use 没反应？</strong> 检查屏幕录制 + 辅助功能权限，给了后重启。</li><li><strong>Appshots 按了没反应？</strong> 同样要两个权限；先激活目标对话。</li><li><strong>沙箱选哪个？</strong> workspace-write + network_access=true 最平衡。</li><li><strong>为什么它删文件前要问我？</strong> 安全机制，正常。</li><li><strong>如何彻底关闭权限？</strong> 系统设置 → 隐私与安全性 → 对应权限取消。</li></ol>
+<h2 id="网络与代理">网络与代理</h2>
+<ol><li><strong>梯子怎么设置不卡 Codex？</strong> 啊哈加速器 → 分流模式；或把 deepseek.com 加直连。</li><li><strong>Firecrawl 需要注册吗？</strong> 免 Key 免费档可直接用（限速）；注册拿 Key 额度更高。</li><li><strong>Context7 收费吗？</strong> 免费。</li><li><strong>DeepSeek API 需要梯子吗？</strong> 不需要，国内直连。</li></ol>
+<h2 id="模型与-API">模型与 API</h2>
+<ol><li><strong>DeepSeek V4 Flash 和 Pro 区别？</strong> Flash 快便宜，Pro 更强。</li><li><strong>GPT 和 DeepSeek 差距大吗？</strong> 复杂长任务 GPT 更稳，日常 DeepSeek 够用。</li><li><strong>怎么在国内用 GPT？</strong> 走中转站（第 8 章），不注册 ChatGPT 也能用。</li><li><strong>中转站安全吗？</strong> 有风险；选有公司主体、小额充值、不传敏感数据。</li><li><strong>多模态插件是什么？</strong> 给纯文本模型外挂&quot;眼睛&quot;，图片转文字再分析。</li></ol>
+<h2 id="语音与界面">语音与界面</h2>
+<ol><li><strong>听写快捷键没反应？</strong> 给&quot;输入监控&quot;权限 + 重启。</li><li><strong>语音设置加载不出来？</strong> 更新 Codex + 给麦克风权限。</li><li><strong>主题怎么换？</strong> 设置 → 主题，或导入 JSON。</li><li><strong>怎么让回答更简洁/更详细？</strong> 输出详细度调档，或对话里临时说。</li></ol>
+<h2 id="插件使用">插件使用</h2>
+<ol><li><strong>@电脑 和 @Chrome 区别？</strong> 前者操作桌面应用，后者控制浏览器（继承登录态）。</li><li><strong>Database 插件找不到？</strong> 官方已拆成 Neon/Supabase/MotherDuck/Convex 四个。</li><li><strong>Convex 能操作微信吗？</strong> 绝对不能，微信封闭系统。</li><li><strong>Figma 插件干嘛的？</strong> 设计稿转代码。</li><li><strong>Build Web Apps 生成的网页能用吗？</strong> 能，保存为 .html 双击即用。</li><li><strong>Sentry 插件需要账号吗？</strong> 需要接 Sentry 项目。</li></ol>
+<h2 id="数据与隐私">数据与隐私</h2>
+<ol><li><strong>本地项目真的本地吗？</strong> 文件在本地，对话仍发云端。</li><li><strong>如何防止数据被训练？</strong> 设置里关&quot;改进模型&quot;和&quot;共享分析数据&quot;。</li><li><strong>能直接上传同学信息吗？</strong> 不行，先脱敏（姓名→学生A、学号→后4位）。</li><li><strong>脱敏后还能分析吗？</strong> 能，分析&quot;模式&quot;不需要真实姓名。</li><li><strong>《个人信息保护法》管学生吗？</strong> 管，处理他人信息需同意+告知用途。</li></ol>
+<h2 id="故障排查">故障排查</h2>
+<ol><li><strong>对话记录&quot;消失&quot;了？</strong> 切换服务商后历史分开显示；数据在 ~/.codex/sessions/。</li><li><strong>续聊老对话报错？</strong> 消息格式不兼容，用修复工具/repair。</li><li><strong>Codex 输出乱码/中断？</strong> 试试重新发送；长任务可分段问。</li><li><strong>内存占用高？</strong> 并行对话开太多，关掉不用的。</li><li><strong>更新后插件没了？</strong> 检查插件市场是否重新加载，重装一次。</li><li><strong>npm/npx 报错？</strong> Node 环境问题，检查 node -v 和 PATH。</li><li><strong>MCP 服务启动失败？</strong> 看 config.toml 语法（用 tomllib 验证），或 startup_timeout 调大。</li><li><strong>DeepSeek 余额不足？</strong> 去 DeepSeek 开放平台充值。</li><li><strong>Fenno 提示 model not supported？</strong> 改分组（选 Dedicated Pool）或改模型名。</li><li><strong>还有问题怎么办？</strong> 把报错截图发给 Codex，让它帮你排查——你现在就在用它 😄</li></ol>
+<hr>
+<hr>
+<h1 id="第-13-章-公共治理专业实战场景学以致用" class="chapter">第 13 章　公共治理专业实战场景（学以致用）</h1>
+<blockquote>这一章把 Codex 用在你的专业上。每个场景都给出&quot;完整工作流 + 可直接复制的提示词&quot;。做完一个场景，你就比班上 90% 的同学更会用 AI 了。</blockquote>
+<h2 id="131-场景一政策文本分析">13.1 场景一：政策文本分析</h2>
+<p><strong>目标</strong>：批量读懂政策文件，提取要点，形成对比表。</p>
+<p><strong>第 1 步：收集材料</strong></p>
+<p>把政策 PDF 放进项目文件夹（如 <code>政策库/</code>）。</p>
+<p><strong>第 2 步：批量转文本</strong></p>
+<p>对 Codex 说：</p>
+<pre><code>用 PDF 技能把 政策库/ 里所有 PDF 转成 Markdown 文本，存到 政策库/文本/。
+每个文件单独存一个 .md。</code></pre>
+<p><strong>第 3 步：逐篇提取要点</strong></p>
+<pre><code>用 Documents 技能，对 政策库/文本/ 里的每一篇，分别提取：
+1) 文件名称与发布机构 2) 发布时间 3) 核心目标（1-2句）
+4) 关键任务/措施（列点） 5) 涉及的部门 6) 数据或资金安排
+输出为一份&quot;政策要点汇总.md&quot;，每篇一节。</code></pre>
+<p><strong>第 4 步：做对比表</strong></p>
+<pre><code>把&quot;政策要点汇总.md&quot;整理成一张对比表：列为&quot;文件名/机构/时间/核心目标/关键措施/涉及部门&quot;，
+输出为 CSV，方便我导入 Excel。</code></pre>
+<p><strong>第 5 步：生成分析报告</strong></p>
+<pre><code>基于对比表，写一份 800 字分析：这组政策在目标上的共同点、差异点、可能的配套关系。
+注意：所有结论必须来自我给你的文本，不确定的标注&quot;原文未提及&quot;。</code></pre>
+<p><strong>避坑</strong>：政策文件有歧义时，让 Codex 引用原文段落（&quot;请引用原文支持你的判断&quot;），防止它脑补。</p>
+<h2 id="132-场景二舆情分析">13.2 场景二：舆情分析</h2>
+<p><strong>目标</strong>：把一段时期的舆情评论分类、看情绪、找热点。</p>
+<p><strong>提示词（批量版）</strong>：</p>
+<pre><code>这份 CSV 是某事件的网友评论（列：时间、平台、内容），共 200 条。
+请帮我：
+1. 按主题给每条评论打标签（如&quot;质疑&quot;&quot;支持&quot;&quot;中立&quot;&quot;情绪化&quot;&quot;谣言&quot;）
+2. 统计每个标签的数量和占比
+3. 挑出 5 条最能代表正面和负面情绪的评论
+4. 给出一段 300 字的舆情小结：主要情绪、争议焦点、建议回应方向
+输出：标签后的新 CSV + 小结文档。</code></pre>
+<p><strong>进阶（模拟&quot;数字治理&quot;场景）</strong>：</p>
+<pre><code>假设你是市政府数字治理部门的工作人员，收到这份舆情数据。
+请以&quot;如何回应公众关切、避免次生舆情&quot;为目标，给我 3 条回应策略，
+每条包含：回应口径（可直接发） + 理由 + 风险提示。</code></pre>
+<h2 id="133-场景三公共数据治理">13.3 场景三：公共数据治理</h2>
+<p><strong>目标</strong>：清洗、脱敏、分析一份真实感的数据表。</p>
+<p><strong>完整工作流</strong>：</p>
+<pre><code>1. 帮我把 数据/原始数据.csv 做质量检查：
+   哪些列有空值？哪些列格式不统一？有没有明显的重复行？
+2. 清洗后输出 数据/清洗后.csv（空值处理：数字列填 0，文本列标&quot;未知&quot;）
+3. 脱敏：姓名列→学生1/2/3，身份证→只留年份，手机号→只留前3后4位
+4. 做 3 个统计：总数、按类别分布、关键指标均值
+5. 生成一份&quot;数据治理报告.md&quot;：数据来源、清洗规则、脱敏规则、统计结果、局限性</code></pre>
+<p><strong>专业提醒</strong>：这个流程就是你在&quot;数字政府&quot;里会遇到的真实工作——数据质量、隐私保护、统计分析。做一次就懂。</p>
+<h2 id="134-场景四政策建议与仿真">13.4 场景四：政策建议与仿真</h2>
+<p><strong>目标</strong>：基于数据写政策建议，并做简单的&quot;如果……会怎样&quot;推演。</p>
+<p><strong>提示词</strong>：</p>
+<pre><code>背景：某社区 65 岁以上老人占 30%，数字化服务使用率只有 20%。
+请基于以下数据（粘贴数据），写一份 500 字的政策建议，包含：
+1) 问题诊断（用数据说话） 2) 三条建议（每条：做什么、怎么做、预期效果）
+3) 风险与配套措施
+要求：建议要具体可执行，不要空话。</code></pre>
+<p><strong>仿真推演</strong>：</p>
+<pre><code>假设建议 1（社区配备数字辅导员）实施后，使用率每月提升 3 个百分点。
+请帮我做一张 12 个月的推演表：月份、累计使用率、需要的辅导员人数（按每 50 个老人配 1 人估算）。</code></pre>
+<p><strong>注意</strong>：仿真结果是&quot;模型估算&quot;，不是真实数据，报告里要注明假设条件。</p>
+<h2 id="135-把四个场景串成一个学期项目">13.5 把四个场景串成一个学期项目</h2>
+<p><strong>期末大作业思路</strong>：</p>
+<ol><li>选一个公共议题（如&quot;校园垃圾分类&quot;）</li><li>用 13.1 分析相关政策文件</li><li>用 13.2 分析网上舆情</li><li>用 13.3 处理一份真实调研数据（脱敏后）</li><li>用 13.4 写政策建议 + 推演</li><li>用 Presentations 做成汇报 PPT</li></ol>
+<p>这就是一份完整的&quot;数字公共治理&quot;课程作业，而且每一步你都参与了判断与核验。</p>
+<hr>
+<hr>
+<h1 id="第-14-章-提示词工程进阶让-Codex-更懂你" class="chapter">第 14 章　提示词工程进阶（让 Codex 更懂你）</h1>
+<h2 id="141-写好提示词的五个要素">14.1 写好提示词的五个要素</h2>
+<table><thead><tr><th>要素</th><th>问题</th><th>例子</th></tr></thead><tbody><tr><td>角色</td><td>你是谁？</td><td>&quot;你是公共政策分析助手&quot;</td></tr><tr><td>任务</td><td>做什么？</td><td>&quot;提取这份文件的要点&quot;</td></tr><tr><td>对象</td><td>对什么做？</td><td>&quot;对 政策库/文本/ 里的每篇&quot;</td></tr><tr><td>格式</td><td>输出什么样？</td><td>&quot;输出为 Markdown 表格&quot;</td></tr><tr><td>约束</td><td>不许做什么？</td><td>&quot;不要编造，不确定就标注&quot;</td></tr></tbody></table>
+<p><strong>万能模板</strong>：</p>
+<pre><code>你是【角色】。请帮我【任务】，对象是【对象】。
+输出格式：【格式】。要求：【约束】。</code></pre>
+<h2 id="142-防止-AI-编造的五个技巧">14.2 防止 AI 编造的五个技巧</h2>
+<ol><li><strong>要求引用</strong>：&quot;所有结论必须引用原文，引用不到的标注&#x27;原文未提及&#x27;&quot;</li><li><strong>给材料</strong>：把材料直接贴给它，比让它&quot;回忆&quot;可靠</li><li><strong>少样本</strong>：给它 1~2 个正确例子再让它做（&quot;就像这样：……&quot;）</li><li><strong>分步走</strong>：大任务拆成小任务，每步核验</li><li><strong>交叉验证</strong>：重要数字让它用两种方法算一遍，对比结果</li></ol>
+<h2 id="143-让-Codex-按你的风格输出">14.3 让 Codex 按你的风格输出</h2>
+<pre><code>请用以下风格回答：
+- 先说结论，再解释
+- 多用表格和列表
+- 用通俗中文，避免术语
+- 控制在 500 字以内
+- 如果信息不确定，明确说&quot;不确定&quot;</code></pre>
+<p>这段&quot;风格指令&quot;可以放进<strong>自定义指令</strong>（全局生效）或每次对话开头贴一遍（单次生效）。</p>
+<h2 id="144-常见提示词错误对照纠正">14.4 常见提示词错误（对照纠正）</h2>
+<table><thead><tr><th>❌ 错误写法</th><th>✅ 正确写法</th></tr></thead><tbody><tr><td>&quot;帮我整理文件&quot;</td><td>&quot;把桌面所有 PDF 按课程名分类到对应文件夹，完成后列出数量&quot;</td></tr><tr><td>&quot;分析这个数据&quot;</td><td>&quot;分析 数据/名单.csv：30 名学生，统计男女比例、宿舍分布、AI 工具使用率，输出表格&quot;</td></tr><tr><td>&quot;写个报告&quot;</td><td>&quot;写 800 字调研报告，结构：背景/数据/发现/建议，存到 reports/调研报告.md&quot;</td></tr><tr><td>&quot;每天搜新闻&quot;</td><td>&quot;设置 Automations：每天 8:00 搜索 AI 行业动态，生成带来源链接的日报，存到本地文件夹&quot;</td></tr></tbody></table>
+<p><strong>核心原则</strong>：任务越具体（对象 + 步骤 + 格式 + 验收标准），结果越靠谱。</p>
+<h2 id="145-处理模糊需求的追问技巧">14.5 处理模糊需求的追问技巧</h2>
+<p>当 Codex 反问&quot;你指的是 A 还是 B？&quot;时，别嫌烦——它在确认边界。你也可以主动说清楚：</p>
+<ul><li>&quot;我指的是 X 场景，不包括 Y&quot;</li><li>&quot;预算/时间/规模是……&quot;</li><li>&quot;做到能演示的程度就行，不需要生产级&quot;</li></ul>
+<hr>
+<hr>
+<h1 id="第-15-章-故障排查手册报错对照速查" class="chapter">第 15 章　故障排查手册（报错对照速查）</h1>
+<h2 id="151-Codex-一直加载不回答">15.1 Codex 一直加载/不回答</h2>
+<table><thead><tr><th>可能原因</th><th>判断方法</th><th>解决</th></tr></thead><tbody><tr><td>梯子全局模式</td><td>关掉梯子立刻好</td><td>加速器切&quot;分流模式&quot;（见 4.5）</td></tr><tr><td>CC Switch 没运行</td><td>检查 127.0.0.1:15721 能否访问</td><td>打开 CC Switch</td></tr><tr><td>DeepSeek 余额不足</td><td>报错含 402/余额</td><td>去开放平台充值</td></tr><tr><td>网络波动</td><td>重试一次</td><td>稍等重发</td></tr><tr><td>对话太长</td><td>上下文超限</td><td>新开对话或精简</td></tr></tbody></table>
+<h2 id="152-插件相关报错">15.2 插件相关报错</h2>
+<table><thead><tr><th>现象</th><th>原因</th><th>解决</th></tr></thead><tbody><tr><td>@电脑 无反应</td><td>权限没给</td><td>屏幕录制+辅助功能，重启</td></tr><tr><td>插件列表里没有</td><td>需新对话</td><td>新建对话</td></tr><tr><td>插件&quot;消失&quot;</td><td>切换 API 覆盖登录态</td><td>CC Switch 开&quot;保留官方登录&quot;</td></tr><tr><td>插件加载失败</td><td>市场没更新</td><td>检查插件市场，重装</td></tr></tbody></table>
+<h2 id="153-模型API-报错">15.3 模型/API 报错</h2>
+<table><thead><tr><th>报错</th><th>含义</th><th>解决</th></tr></thead><tbody><tr><td>model not supported</td><td>模型名不对/分组不支持</td><td>改模型名或换分组</td></tr><tr><td>401 unauthorized</td><td>Key 无效</td><td>检查环境变量/CC Switch</td></tr><tr><td>429 rate limited</td><td>请求太频繁</td><td>等一下再试</td></tr><tr><td>402 insufficient balance</td><td>余额不足</td><td>充值</td></tr><tr><td>wire_api 相关</td><td>协议不匹配</td><td>确认 responses 协议</td></tr><tr><td>array too long</td><td>上下文超长</td><td>精简对话或修复</td></tr></tbody></table>
+<h2 id="154-环境类报错">15.4 环境类报错</h2>
+<table><thead><tr><th>报错</th><th>原因</th><th>解决</th></tr></thead><tbody><tr><td>npx ENOENT</td><td>Node 没装/不在 PATH</td><td>装 Node 18+</td></tr><tr><td>MCP startup timeout</td><td>服务启动慢</td><td>config 里 startup_timeout_ms 调大</td></tr><tr><td>TOML 解析失败</td><td>配置格式错</td><td>用 python tomllib 验证</td></tr><tr><td>磁盘空间不足</td><td>日志太大</td><td>清理 ~/.codex/logs 等</td></tr></tbody></table>
+<h2 id="155-通用恢复流程三连">15.5 通用恢复流程（三连）</h2>
+<p>遇到任何奇怪问题，按顺序试：</p>
+<ol><li><strong>彻底重启</strong>：Cmd+Q 退出 Codex 再打开（不是关窗口）</li><li><strong>新开对话</strong>：插件/技能变更需要新对话才加载</li><li><strong>检查配置</strong>：<code>cat ~/.codex/config.toml</code> 确认没被改坏（坏了用备份恢复）</li></ol>
+<p>80% 的问题这三步能解决。剩下 20% 把报错截图发给 Codex 排查。</p>
+<hr>
+<hr>
+<h1 id="第-16-章-零基础代码与命令行入门30-分钟够用" class="chapter">第 16 章　零基础代码与命令行入门（30 分钟够用）</h1>
+<blockquote>你不是程序员，但会用 Codex 后，懂一点点&quot;代码和命令行的底层逻辑&quot;，能让你少踩很多坑、更能看懂 Codex 在干嘛。</blockquote>
+<h2 id="161-代码是什么用生活比喻">16.1 代码是什么（用生活比喻）</h2>
+<p>代码就是<strong>写给电脑的&quot;菜谱&quot;</strong>。你做菜要写&quot;先洗菜、再切菜、下锅、调味&quot;，代码就是&quot;先读取文件、再处理数据、输出结果&quot;。Codex 负责写菜谱，你负责验收菜好不好吃。</p>
+<h2 id="162-常见文件后缀是什么意思">16.2 常见文件后缀是什么意思</h2>
+<table><thead><tr><th>后缀</th><th>是什么</th><th>你什么时候会碰到</th></tr></thead><tbody><tr><td>.py</td><td>Python 脚本（代码）</td><td>Codex 写批量处理脚本时</td></tr><tr><td>.md</td><td>Markdown 文档（纯文本排版）</td><td>你的日报、报告</td></tr><tr><td>.csv / .xlsx</td><td>表格数据</td><td>名单、成绩、问卷</td></tr><tr><td>.html</td><td>网页</td><td>Build Web Apps 生成的东西</td></tr><tr><td>.json</td><td>配置文件/数据</td><td>model_catalog、config</td></tr><tr><td>.toml</td><td>配置文件</td><td>Codex 的 config.toml</td></tr><tr><td>.pdf / .docx</td><td>文档</td><td>政策文件、作业</td></tr></tbody></table>
+<p><strong>不用会写，但要会认</strong>——看到文件后缀就知道它是什么，就不会乱动。</p>
+<h2 id="163-命令行是什么终端--Terminal">16.3 命令行是什么（终端 / Terminal）</h2>
+<p>命令行就是&quot;用打字代替点鼠标&quot;的操作方式。你不需要记住命令，<strong>让 Codex 帮你跑</strong>，但要知道几个最常用的（看 Codex 操作时心里有数）：</p>
+<table><thead><tr><th>命令</th><th>作用</th></tr></thead><tbody><tr><td><code>cd 文件夹</code></td><td>进入文件夹</td></tr><tr><td><code>ls</code></td><td>列出文件夹内容</td></tr><tr><td><code>cat 文件</code></td><td>查看文件内容</td></tr><tr><td><code>cp A B</code></td><td>复制文件</td></tr><tr><td><code>mv A B</code></td><td>移动/重命名</td></tr><tr><td><code>rm 文件</code></td><td>删除（<strong>危险，Codex 删前会问你</strong>）</td></tr><tr><td><code>python3 xx.py</code></td><td>运行 Python 脚本</td></tr><tr><td><code>node -v</code> / <code>npm -v</code></td><td>看 Node 版本</td></tr></tbody></table>
+<h2 id="164-怎么看懂报错不求甚解版">16.4 怎么看懂报错（不求甚解版）</h2>
+<p>报错一般长这样：<code>错误类型: 错误信息 at 位置</code>。你只需要关注三件事：</p>
+<ol><li><strong>哪个文件</strong>（红色路径）</li><li><strong>哪一行</strong>（<code>line 12</code>）</li><li><strong>什么类型</strong>（如 401=权限/Key 问题、404=找不到、超时=网络慢）</li></ol>
+<p><strong>不用自己修</strong>——把报错整段复制给 Codex：&quot;这个报错是什么意思？怎么解决？&quot;它会帮你分析。</p>
+<h2 id="165-让-Codex-帮你学代码">16.5 让 Codex 帮你学代码</h2>
+<pre><code>我是零基础，想学一点点 Python 用来处理数据。
+请用大白话给我讲：变量、列表、for 循环 是什么，各给一个生活化的例子。
+每讲完一个概念，出一道 10 秒能想明白的小题。</code></pre>
+<p>这样学 30 分钟，你就比&quot;完全不懂&quot;强很多了。</p>
+<hr>
+<hr>
+<h1 id="第-17-章-用-Codex-辅助英语学习与雅思备考" class="chapter">第 17 章　用 Codex 辅助英语学习与雅思备考</h1>
+<blockquote>你的知识库里已有雅思专区。Codex 可以当你的&quot;全天候英语教练&quot;。</blockquote>
+<h2 id="171-阅读与精读">17.1 阅读与精读</h2>
+<pre><code>请把这篇英文文章（粘贴）逐段精讲：
+1) 每段 1 句中文概括
+2) 标出 5 个值得背的词组，给中文释义和例句
+3) 找出 3 个复杂长句，拆解句子结构并翻译
+输出为 Markdown，方便我存到错题本。</code></pre>
+<h2 id="172-写作批改大作文小作文">17.2 写作批改（大作文/小作文）</h2>
+<pre><code>请按雅思评分标准（任务回应/连贯与衔接/词汇/语法）批改我这篇作文：
+（粘贴作文）
+1) 每项打分（1-9）并给一句理由
+2) 标出所有语法错误并给出修改
+3) 给出 3 个&quot;换词升级&quot;建议
+4) 给一篇 6.5 分示范（保留我的论点，优化表达）</code></pre>
+<h2 id="173-口语练习">17.3 口语练习</h2>
+<pre><code>你扮演雅思考官，用 Part 1 的流程问我 4 个关于&quot;家乡&quot;的问题。
+每个问题我用语音/文字回答后，你给：流利度点评 + 更好的回答示范 + 2 个高级表达。</code></pre>
+<h2 id="174-听力与单词">17.4 听力与单词</h2>
+<pre><code>把这 20 个雅思高频词做成闪卡（英文/音标/中文/例句），
+然后每次随机抽 5 个考我中文意思，我答完再抽下一轮。</code></pre>
+<h2 id="175-学习计划生成">17.5 学习计划生成</h2>
+<pre><code>我每天能学英语 1 小时，距离考试还有 3 个月。
+请给我生成一份每周计划表（听说读写各占多少），并告诉我每周日该做一次模考。</code></pre>
+<hr>
+<hr>
+<h1 id="第-18-章-数据备份恢复与迁移" class="chapter">第 18 章　数据备份、恢复与迁移</h1>
+<h2 id="181-需要备份什么">18.1 需要备份什么</h2>
+<table><thead><tr><th>内容</th><th>位置</th><th>重要程度</th></tr></thead><tbody><tr><td>Codex 配置</td><td>~/.codex/config.toml</td><td>⭐⭐⭐</td></tr><tr><td>CC Switch 配置</td><td>~/.cc-switch/ 目录</td><td>⭐⭐⭐</td></tr><tr><td>对话历史</td><td>~/.codex/sessions/</td><td>⭐⭐</td></tr><tr><td>技能</td><td>~/.codex/skills/</td><td>⭐⭐</td></tr><tr><td>手册/笔记</td><td>Documents/AI知识库、Obsidian</td><td>⭐⭐⭐</td></tr></tbody></table>
+<h2 id="182-手动备份一条命令">18.2 手动备份（一条命令）</h2>
+<pre><code class="language-bash">mkdir -p ~/Desktop/Codex备份_$(date +%Y%m%d)
+cp ~/.codex/config.toml ~/Desktop/Codex备份_$(date +%Y%m%d)/
+cp -R ~/.cc-switch ~/Desktop/Codex备份_$(date +%Y%m%d)/
+cp -R ~/.codex/skills ~/Desktop/Codex备份_$(date +%Y%m%d)/</code></pre>
+<p>或者直接对 Codex 说：</p>
+<pre><code>帮我把 ~/.codex/config.toml、~/.cc-switch、~/.codex/skills 备份到桌面&quot;Codex备份&quot;文件夹。</code></pre>
+<h2 id="183-让-Codex-定期自动备份">18.3 让 Codex 定期自动备份</h2>
+<pre><code>设置 Automations：每周日晚 9 点，把 ~/.codex/config.toml 和 ~/.codex/skills
+备份到 ~/Desktop/Codex备份/（按日期建子文件夹），保留最近 4 周。</code></pre>
+<h2 id="184-配置坏了怎么恢复">18.4 配置坏了怎么恢复</h2>
+<ol><li>找备份：<code>ls ~/.codex/config.toml.bak*</code></li><li>恢复：<code>cp ~/.codex/config.toml.bak-最新时间戳 ~/.codex/config.toml</code></li><li>或对 Codex 说：&quot;我的 config.toml 好像坏了，帮我用最近的备份恢复&quot;</li></ol>
+<h2 id="185-换电脑迁移清单">18.5 换电脑迁移清单</h2>
+<ol><li>备份上述 4 项</li><li>新电脑装 ChatGPT 桌面版 + CC Switch</li><li>把 config.toml、skills、.cc-switch 复制过去</li><li>重新登录各 API 服务商（Key 别泄露）</li><li>验证：<code>codex --version</code> + 发一条测试消息</li></ol>
+<hr>
+<hr>
+<h1 id="第-19-章-更多实用工作流复制即用" class="chapter">第 19 章　更多实用工作流（复制即用）</h1>
+<h2 id="191-会议纪要工作流">19.1 会议纪要工作流</h2>
+<pre><code>请按这个模板整理会议纪要（粘贴录音转写文字）：
+# 会议纪要
+- 时间/地点/参会人
+## 一、会议主题
+## 二、讨论要点（按议题分组，每条注明谁提出）
+## 三、共识
+## 四、待办事项（表格：事项/负责人/截止时间）
+## 五、风险与遗留问题
+完成后检查：待办是否完整？责任人是否明确？</code></pre>
+<h2 id="192-读书文献笔记工作流">19.2 读书/文献笔记工作流</h2>
+<pre><code>帮我按&quot;康奈尔笔记法&quot;整理这本书/这篇文献的笔记：
+- 线索栏：5 个关键词
+- 笔记区：每章 3 个要点（用自己的话）
+- 总结区：用 3 句话总结全书核心
+- 复习区：给自己出 3 个问题</code></pre>
+<h2 id="193-个人知识库整理工作流Obsidian-友好">19.3 个人知识库整理工作流（Obsidian 友好）</h2>
+<pre><code>帮我把这堆笔记（粘贴/给路径）整理进我的知识库：
+1. 按主题分类到对应文件夹
+2. 每篇开头加上 frontmatter（tags、date、source）
+3. 生成一个 index.md 索引页，链接所有笔记
+4. 重复内容合并，保留更完整的一篇
+注意：不要改动我标注了&quot;不要动&quot;的文件。</code></pre>
+<h2 id="194-汇报材料工作流">19.4 汇报材料工作流</h2>
+<pre><code>把这份报告（粘贴）改写成&quot;给老师/领导汇报&quot;的版本：
+1. 先给 1 段摘要（3 句话讲完结论）
+2. 用&quot;背景-做法-成效-下一步&quot;结构
+3. 把数据做成 2 张图表描述
+4. 控制在 1 页 A4 的阅读量</code></pre>
+<h2 id="195-数据可视化工作流">19.5 数据可视化工作流</h2>
+<pre><code>这份数据（粘贴 CSV）有 3 列：月份、访问量、转化率。
+请帮我：
+1. 分析适合什么图表（趋势线/柱状/饼图）
+2. 用 Python 生成 2 张图表，保存为 PNG 到 reports/ 文件夹
+3. 用一句话说明每张图的关键结论</code></pre>
+<h2 id="196-时间管理与计划工作流">19.6 时间管理与计划工作流</h2>
+<pre><code>帮我规划这周：
+- 我有这些固定时间：……
+- 这周要完成：作业A（约3小时）、复习B（约2小时）、社团C（周五下午）
+请生成一张&quot;本周时间表&quot;，并提示哪些天任务太满需要调整。</code></pre>
+<h2 id="197-邮件通知工作流">19.7 邮件/通知工作流</h2>
+<pre><code>帮我写一封邮件：
+- 收件人：辅导员
+- 事由：申请参加&quot;数字政府讲座&quot;
+- 语气：礼貌、简洁
+- 长度：150 字以内
+先给我一版，我再告诉你要不要调整。</code></pre>
+<hr>
+<hr>
+<h1 id="第-20-章-Codex-社区与生态找到更多能力" class="chapter">第 20 章　Codex 社区与生态（找到更多能力）</h1>
+<h2 id="201-技能从哪来">20.1 技能从哪来</h2>
+<ul><li><strong>官方技能库</strong>：openai/skills（GitHub），含 curated（精选）和 experimental（实验）两类</li><li><strong>社区技能</strong>：GitHub 上搜 <code>codex skill</code>，例如你已装的 goal-agent-team</li><li><strong>Awesome-Skills 网站</strong>：awesomeskills.dev，按功能分类展示 Codex/Claude 技能</li></ul>
+<h2 id="202-如何安全地装社区技能">20.2 如何安全地装社区技能</h2>
+<p><strong>安装前必须审阅</strong>（遵守你的安全准则）：</p>
+<ol><li>看仓库 Star 数和更新时间（活跃度）</li><li>读 SKILL.md 全文，确认没有&quot;删除文件&quot;&quot;上传数据&quot;等危险指令</li><li>优先 MIT 等开源协议</li><li>安装后先用小任务测试</li></ol>
+<p><strong>安装方式</strong>：</p>
+<pre><code>对 Codex 说：用 skill-installer 从 github.com/作者/仓库 安装这个技能</code></pre>
+<h2 id="203-值得关注的生态工具进阶玩家">20.3 值得关注的生态工具（进阶玩家）</h2>
+<table><thead><tr><th>工具</th><th>作用</th></tr></thead><tbody><tr><td>codex-deepseek-sidecar</td><td>GPT 主脑 + DeepSeek 子代理</td></tr><tr><td>codex-deepseek-subagent-fix</td><td>修复子代理收不到任务</td></tr><tr><td>subagent-router</td><td>子任务路由到不同后端</td></tr><tr><td>codex-computer-use-fix</td><td>修复 Computer Use 不可用</td></tr><tr><td>codex-skip-login</td><td>免登录配置工具（图形界面）</td></tr><tr><td>CCSwitchMulti</td><td>CC Switch 增强版，按模型分流</td></tr></tbody></table>
+<p><strong>原则</strong>：社区工具先审阅再装；修不好就回到&quot;官方功能 + 重启&quot;。</p>
+<h2 id="204-保持更新">20.4 保持更新</h2>
+<ul><li>Codex 桌面版：关注 ChatGPT 应用更新（很多 bug 靠更新修复）</li><li>CC Switch：GitHub Releases 看更新</li><li>本手册：每 1~2 个月让 Codex 重新核验你的配置，刷新本文档</li></ul>
+<hr>
+<hr>
+<h1 id="第-21-章-从大一到大四的-AI-成长路线图详细版" class="chapter">第 21 章　从大一到大四的 AI 成长路线图（详细版）</h1>
+<blockquote>结合你的专业（数字公共治理），给你一份 4 年渐进路线。核心思路：<strong>大一会用、大二会建、大三会管、大四会研</strong>。</blockquote>
+<h2 id="211-大一第-1-学期打基础会用工具">21.1 大一（第 1 学期）：打基础，会用工具</h2>
+<p><strong>目标</strong>：把 Codex 当&quot;全能助理&quot;用熟，建立数字素养。</p>
+<p><strong>本月就能做</strong>：</p>
+<ul class="todo"><li class="todo">完成本手册第 11 章实操项目（1 小时）</li><li class="todo">学会 @电脑、@Chrome、文档、表格四个核心能力</li><li class="todo">给自己的课程建一个本地项目文件夹，养成&quot;数据进文件夹&quot;习惯</li><li class="todo">做一次数据脱敏练习（班级名单→学生A/B）</li></ul>
+<p><strong>学期结束自测</strong>：</p>
+<ul><li>能否让 Codex 从&quot;给我资料&quot;做到&quot;给我整理好的表格+报告&quot;？</li><li>能否解释 Work 和 Codex 的区别？</li><li>是否知道哪些数据不能直接上传？</li></ul>
+<h2 id="212-大二会建流程自动化">21.2 大二：会建流程，自动化</h2>
+<p><strong>目标</strong>：把重复劳动变成自动化流水线。</p>
+<p><strong>可以做</strong>：</p>
+<ul class="todo"><li class="todo">自建 2 个技能（如&quot;数据脱敏技能&quot;&quot;周报生成技能&quot;）</li><li class="todo">设置自动化：AI 日报、课程表提醒、每周备份</li><li class="todo">学一点 Python 基础（用第 16 章 + Codex 陪练），能看懂脚本</li><li class="todo">用 13.1~13.4 完成一次完整的小调研（政策+舆情+数据+建议）</li></ul>
+<p><strong>学期结束自测</strong>：</p>
+<ul><li>能否让 Codex 每天自动产出日报，你只负责核验？</li><li>能否说清&quot;主任务/子任务&quot;并指挥一次并行 Agent？</li></ul>
+<h2 id="213-大三会管数据会用-API">21.3 大三：会管数据，会用 API</h2>
+<p><strong>目标</strong>：接触真实数据工作流，理解&quot;数字政府&quot;的技术底座。</p>
+<p><strong>可以做</strong>：</p>
+<ul class="todo"><li class="todo">用数据库四件套建一个个人项目（如&quot;宿舍楼报修系统&quot;原型）</li><li class="todo">用 DeepSeek API + Python 批量处理一批数据（学习 13.3 进阶）</li><li class="todo">掌握数据质量检查与脱敏的完整流程</li><li class="todo">尝试 Fenno 接入 GPT，体验&quot;关键任务 GPT + 批量任务 DeepSeek&quot;架构</li><li class="todo">给课程/社团做一个数据可视化看板</li></ul>
+<p><strong>学期结束自测</strong>：</p>
+<ul><li>能否独立完成&quot;原始数据 → 清洗脱敏 → 分析 → 可视化 → 报告&quot;？</li><li>能否解释《个人信息保护法》在 AI 场景下的红线？</li></ul>
+<h2 id="214-大四会做研究输出成果">21.4 大四：会做研究，输出成果</h2>
+<p><strong>目标</strong>：把 AI 用进毕业论文/科研，形成方法论。</p>
+<p><strong>可以做</strong>：</p>
+<ul class="todo"><li class="todo">用 13.1~13.5 的方法论做毕业论文研究（政策文本、舆情、数据、仿真）</li><li class="todo">建立&quot;研究助手&quot;技能库：文献综述、数据脱敏、图表生成</li><li class="todo">掌握提示词工程（第 14 章），能写出高质量研究指令</li><li class="todo">探索社区生态（第 20 章），找到适合研究场景的工具</li></ul>
+<p><strong>毕业自测</strong>：</p>
+<ul><li>能否用 AI 显著提升研究效率，同时保证数据合规与学术诚信？</li><li>能否向别人讲清楚你的 AI 工作流？</li></ul>
+<h2 id="215-贯穿四年的-5-条铁律">21.5 贯穿四年的 5 条铁律</h2>
+<ol><li><strong>核验</strong>：AI 输出必须核验，尤其是数据、政策条文、引用</li><li><strong>合规</strong>：涉及个人信息先脱敏；引用注明来源；AI 辅助按学校要求声明</li><li><strong>备份</strong>：重要配置和数据定期备份（第 18 章）</li><li><strong>更新</strong>：工具每月检查更新，手册每 1~2 个月刷新</li><li><strong>安全</strong>：第三方工具先审阅再装；不明来源的 Key/脚本不碰</li></ol>
+<hr>
+<hr>
+<h1 id="第-22-章-十类日常需求的完美说法" class="chapter">第 22 章　十类日常需求的&quot;完美说法&quot;</h1>
+<blockquote>同一件事，说法不同，Codex 的完成度天差地别。这一章给你 10 类高频需求的&quot;差的说法 vs 好的说法&quot;对照，直接抄&quot;好的&quot;。</blockquote>
+<h2 id="221-整理文件">22.1 整理文件</h2>
+<p>❌ 差的说法：帮我整理一下文件</p>
+<p>✅ 好的说法：</p>
+<pre><code>帮我把桌面上的所有文件整理一下：
+1. PDF 和 Word 放到&quot;文档&quot;文件夹
+2. 图片放到&quot;图片&quot;文件夹
+3. 安装包（.dmg）放到&quot;安装包&quot;文件夹
+4. 无法判断的列出来让我决定
+完成后告诉我每个文件夹里有多少个文件。</code></pre>
+<p><strong>为什么好</strong>：给了分类规则、例外处理、验收标准。</p>
+<h2 id="222-搜索资料">22.2 搜索资料</h2>
+<p>❌ 差的说法：帮我搜一下数字政府的资料</p>
+<p>✅ 好的说法：</p>
+<pre><code>用 firecrawl 搜索&quot;2026 数字政府 政策 数据要素&quot;，找 5 篇权威来源
+（政府官网、新华社、正规媒体优先）。
+每篇给我：标题、来源、发布时间、核心观点（1-2 句）、链接。
+按时间从新到旧排列，存成 Markdown 文件到 reports/资料收集.md。</code></pre>
+<h2 id="223-处理数据">22.3 处理数据</h2>
+<p>❌ 差的说法：分析一下这个表格</p>
+<p>✅ 好的说法：</p>
+<pre><code>这是 数据/问卷.csv（120 条，列：时间、年龄、满意度1-5、建议）。
+请帮我：
+1. 检查数据质量（空值、异常值）
+2. 统计：各年龄段的平均满意度、满意度分布
+3. 把建议列按主题归类（如&quot;流程&quot;&quot;态度&quot;&quot;技术&quot;）
+4. 输出：清洗后数据 + 统计表 + 主题归类结果
+所有统计用 Python 计算，不要口算。</code></pre>
+<h2 id="224-写文档">22.4 写文档</h2>
+<p>❌ 差的说法：帮我写个报告</p>
+<p>✅ 好的说法：</p>
+<pre><code>写一份 800 字的调研报告《大学生 AI 工具使用情况小调研》，结构：
+一、背景与目的（100字）
+二、数据来源与方法（150字）
+三、主要发现（300字，列3-4条，每条带一个数据）
+四、建议（200字，分3条）
+五、局限（50字）
+语言：通俗中文。结尾注明&quot;本报告基于模拟数据&quot;。
+存到 reports/调研报告.md。</code></pre>
+<h2 id="225-做-PPT">22.5 做 PPT</h2>
+<p>❌ 差的说法：帮我做个 PPT</p>
+<p>✅ 好的说法：</p>
+<pre><code>把 reports/调研报告.md 做成 8 页 PPT 大纲：
+第1页 封面（标题+姓名+日期）
+第2页 目录
+第3页 背景与目的
+第4-5页 主要发现（每页2条，配数据）
+第6页 建议
+第7页 局限与下一步
+第8页 谢谢
+每页写：标题 + 3 个要点 + 可配的图表建议。</code></pre>
+<h2 id="226-操作电脑">22.6 操作电脑</h2>
+<p>❌ 差的说法：帮我下载个软件</p>
+<p>✅ 好的说法：</p>
+<pre><code>@电脑 请帮我完成以下步骤，每一步做完告诉我结果：
+1. 打开 Safari，访问 https://xxx.com
+2. 找到 Mac 版下载按钮，下载 .dmg 文件到&quot;下载&quot;文件夹
+3. 打开下载的 .dmg，把应用拖进&quot;应用程序&quot;文件夹
+4. 打开应用确认能正常启动
+如果页面打不开或找不到下载按钮，停下来问我，不要乱点。</code></pre>
+<h2 id="227-学习一个概念">22.7 学习一个概念</h2>
+<p>❌ 差的说法：给我讲讲区块链</p>
+<p>✅ 好的说法：</p>
+<pre><code>请用&quot;给公共管理大一学生讲&quot;的方式解释区块链：
+1. 先用一个生活比喻
+2. 再说 3 个关键特征（每个配一个政务场景例子）
+3. 说清楚&quot;区块链在政务里能干嘛、不能干嘛&quot;
+4. 最后给我 3 个自查问题
+控制在 600 字以内，多用短句。</code></pre>
+<h2 id="228-解决报错">22.8 解决报错</h2>
+<p>❌ 差的说法：这个报错怎么回事</p>
+<p>✅ 好的说法：</p>
+<pre><code>我遇到这个报错（粘贴报错全文），请帮我：
+1. 用大白话解释问题出在哪
+2. 给 3 个排查步骤（从最简单开始）
+3. 给可能的修复方法
+4. 如果是配置问题，告诉我改哪个文件哪一行</code></pre>
+<p><strong>关键</strong>：一定要<strong>粘贴完整报错</strong>，别只截一半。</p>
+<h2 id="229-自动化任务">22.9 自动化任务</h2>
+<p>❌ 差的说法：以后每天帮我搜新闻</p>
+<p>✅ 好的说法：</p>
+<pre><code>帮我设置一个 Automations 自动化任务：
+- 每天上午 8:00 运行
+- 在&quot;你的电脑上运行&quot;（本地模式）
+- 用 firecrawl 搜索&quot;AI 行业动态&quot;
+- 按 H.1 日报模板生成 Markdown，每条必须带来源链接
+- 保存到 /Users/wuxuancheng/Documents/AI_Daily_Reports/AI日报_日期.md
+- 禁止编造，先手动运行一次验证</code></pre>
+<h2 id="2210-让-Codex-教我做事">22.10 让 Codex 教我做事</h2>
+<p>❌ 差的说法：我不知道怎么开始</p>
+<p>✅ 好的说法：</p>
+<pre><code>我对编程完全零基础，想做&quot;分析校园垃圾分类情况&quot;这个小项目。
+请：
+1. 先问我 3 个问题（数据从哪来、有多少、想得到什么结论）
+2. 然后给我一份分步骤计划（每步有目标和预估时间）
+3. 第 1 步先只做一件事：帮我把问卷模板生成出来
+一次只推进一步，不要一次全做完。</code></pre>
+<h2 id="2211-一句话总结好说法的公式">22.11 一句话总结：好说法的公式</h2>
+<pre><code>【角色/背景】+【具体任务】+【对象/材料】+【步骤或格式】+【约束/验收】+【遇到问题怎么处理】</code></pre>
+<p>写提示词时花 30 秒把这几样补全，Codex 的完成度能提升一倍。这也是你和大神之间的真正差距——不是工具，是<strong>把话说清楚的能力</strong>。</p>
+<hr>
+<hr>
+<h1 id="第-23-章-Skill-技能全览与使用教学48-技能整合" class="chapter">第 23 章　Skill 技能全览与使用教学（48 技能整合）</h1>
+<blockquote>本章内容由《Codex_Skills_使用手册》整合而来，并补充了每个技能的&quot;什么时候用 + 怎么用&quot;。技能清单会随手册自动刷新而更新（见 23.6）。</blockquote>
+<h2 id="231-怎么调用-Skill三种方式">23.1 怎么调用 Skill（三种方式）</h2>
+<table><thead><tr><th>方式</th><th>操作</th><th>适用</th></tr></thead><tbody><tr><td>显式调用（最准确）</td><td>输入框输入 <code>@</code>，弹出列表选择</td><td>桌面 App</td></tr><tr><td>显式调用（CLI）</td><td>输入 <code>$技能名</code>，或 <code>/skills</code> 查看</td><td>Codex CLI / IDE</td></tr><tr><td>隐式调用（自动）</td><td>任务描述和技能描述匹配时自动加载</td><td>任意环境</td></tr></tbody></table>
+<p><strong>技巧</strong>：记不住技能名字没关系——输入 <code>@</code> 就能看到当前可用列表。想装新技能就说&quot;用 skill-installer 列出可安装的 Skill&quot;。</p>
+<h2 id="232-当前可用的技能逐个教学">23.2 当前可用的技能（逐个教学）</h2>
+<h3 id="核心操作类">核心操作类</h3>
+<ol><li><strong>computer-use</strong>（@电脑）</li></ol>
+<ul><li>什么时候用：操作桌面应用（Safari、Finder、系统设置、Office）</li><li>示例：<code>@电脑 打开系统设置，把 Wi-Fi 关掉再打开</code></li><li>要求：屏幕录制 + 辅助功能权限</li></ul>
+<ol><li><strong>control-chrome</strong>（@Chrome）</li></ol>
+<ul><li>什么时候用：控制 Chrome 浏览器，继承你的登录态</li><li>示例：<code>@Chrome 打开 B 站收藏夹，把最新 3 个视频标题整理成表格</code></li></ul>
+<ol><li><strong>control-in-app-browser</strong>（@Browser）</li></ol>
+<ul><li>什么时候用：控制 Codex 内置浏览器（干净环境，不共享你的账号）</li><li>示例：<code>帮我在内置浏览器打开这个网页，提取主要内容</code></li></ul>
+<ol><li><strong>excel-live-control</strong></li></ol>
+<ul><li>什么时候用：<strong>正在打开的</strong> Excel 表格（通过 ChatGPT 插件连接）</li><li>示例：<code>@Excel 帮我把当前表格的 B 列求和</code></li><li>注意：独立的 .xlsx 文件用 Spreadsheets，不是这个</li></ul>
+<h3 id="文档办公类">文档办公类</h3>
+<ol><li><strong>documents</strong></li></ol>
+<ul><li>什么时候用：生成 Word 文档、PRD、会议纪要，且要排版精美的成品</li><li>示例：<code>用 documents 生成一份课程论文 Word 文档</code></li></ul>
+<ol><li><strong>pdf</strong></li></ol>
+<ul><li>什么时候用：读/做/合并/拆 PDF、提取文字、填表</li><li>示例：<code>用 pdf 把这 3 份 PDF 合并成一个</code></li></ul>
+<ol><li><strong>presentations</strong></li></ol>
+<ul><li>什么时候用：做 PowerPoint / Google Slides</li><li>示例：<code>用 presentations 把这份报告做成 8 页 PPT</code></li></ul>
+<ol><li><strong>spreadsheets</strong></li></ol>
+<ul><li>什么时候用：处理独立的 Excel/CSV 文件（创建、分析、图表）</li><li>示例：<code>用 spreadsheets 分析这份 CSV，按月份汇总</code></li></ul>
+<ol><li><strong>template-creator</strong></li></ol>
+<ul><li>什么时候用：把你常用的文档/表格/PPT 做成<strong>可复用模板技能</strong></li><li>示例：<code>用 template-creator 把这份周报模板做成技能，以后说&quot;生成周报&quot;就能用</code></li></ul>
+<h3 id="视觉与创意类">视觉与创意类</h3>
+<ol><li><strong>visualize</strong></li></ol>
+<ul><li>什么时候用：做图表、交互工具、模拟器、地图、UI 原型，直接在对话里展示</li><li>示例：<code>用 visualize 做一个可以调节参数的垃圾分类数据看板</code></li></ul>
+<ol><li><strong>imagegen</strong></li></ol>
+<ul><li>什么时候用：生成/编辑图片（海报、插图、概念图）</li><li>示例：<code>用 imagegen 生成一张&quot;数字政府&quot;主题的插画</code></li></ul>
+<h3 id="系统与开发类">系统与开发类</h3>
+<ol><li><strong>goal-agent-team</strong></li></ol>
+<ul><li>什么时候用：模糊目标 → 对齐需求写文档 → 自动规划执行</li><li>示例：<code>用 goal-agent-team 处理这个需求：把这周 7 天日报汇总成周报</code></li></ul>
+<ol><li><strong>goal-agent-team-auto</strong></li></ol>
+<ul><li>什么时候用：同上，但<strong>无人值守</strong>，几乎不问你</li><li>示例：<code>用 goal-agent-team-auto 无人值守处理：……</code></li></ul>
+<ol><li><strong>openai-docs</strong></li></ol>
+<ul><li>什么时候用：问 Codex/ChatGPT 自身功能、设置、模型、价格等官方问题</li><li>示例：<code>用 openai-docs 查一下 Codex 的自动化任务怎么设置</code></li></ul>
+<ol><li><strong>skill-creator</strong></li></ol>
+<ul><li>什么时候用：自建技能</li><li>示例：<code>用 skill-creator 帮我做一个&quot;数据脱敏&quot;技能</code></li></ul>
+<ol><li><strong>skill-installer</strong></li></ol>
+<ul><li>什么时候用：从 GitHub/精选列表安装技能</li><li>示例：<code>用 skill-installer 列出可安装的技能</code> / <code>用 skill-installer 安装 github.com/作者/仓库 的技能</code></li></ul>
+<ol><li><strong>plugin-creator</strong></li></ol>
+<ul><li>什么时候用：创建 Codex 插件（进阶开发）</li><li>示例：<code>用 plugin-creator 帮我搭一个插件的骨架</code></li></ul>
+<ol><li><strong>join-meeting</strong></li></ol>
+<ul><li>什么时候用：让 AI 机器人替你加入视频会议（Google Meet/Teams/Zoom）</li><li>示例：<code>用 join-meeting 加入这个会议链接</code></li></ul>
+<ol><li><strong>ski</strong></li></ol>
+<ul><li>什么时候用：本地语音对话小部件（SKI），对着电脑说话得到语音回复</li><li>示例：<code>启动 ski，用语音跟我对话</code></li></ul>
+<h3 id="开发与设计类个人技能2026-09-更新为-10-个">开发与设计类（个人技能，2026-09 更新为 10 个）</h3>
+<ol><li><strong>code-review</strong></li></ol>
+<ul><li>什么时候用：审查代码变更（分支/PR/未提交改动），从&quot;规范&quot;和&quot;需求&quot;两个维度并行审查</li><li>示例：<code>用 code-review 审查这个分支的改动</code></li></ul>
+<ol><li><strong>codebase-design</strong></li></ol>
+<ul><li>什么时候用：设计/改进模块接口、确定模块边界、让代码更易测试</li><li>示例：<code>用 codebase-design 帮我设计这个模块的接口</code></li></ul>
+<ol><li><strong>diagnosing-bugs</strong></li></ol>
+<ul><li>什么时候用：排查疑难 bug 和性能退化</li><li>示例：<code>用 diagnosing-bugs 诊断这个报错</code></li></ul>
+<ol><li><strong>domain-modeling</strong></li></ol>
+<ul><li>什么时候用：梳理项目领域模型、维护 CONTEXT.md / ADR</li><li>示例：<code>用 domain-modeling 帮我梳理这个项目的领域术语</code></li></ul>
+<ol><li><strong>hallmark</strong></li></ol>
+<ul><li>什么时候用：反&quot;AI 味&quot;的设计（新页面、审计、改版、从 URL/截图提取设计）</li><li>示例：<code>用 hallmark 帮我重新设计这个落地页</code></li></ul>
+<ol><li><strong>implement</strong></li></ol>
+<ul><li>什么时候用：按规格/任务单实现某块工作（多为其他技能内部调用）</li><li>示例：<code>按这个 spec 实现这个功能</code></li></ul>
+<ol><li><strong>prototype</strong></li></ol>
+<ul><li>什么时候用：做一个一次性原型来验证设计想法</li><li>示例：<code>用 prototype 快速验证这个交互逻辑</code></li></ul>
+<ol><li><strong>research</strong></li></ol>
+<ul><li>什么时候用：针对问题查权威一手资料并写成 Markdown 笔记</li><li>示例：<code>用 research 帮我调研&quot;数字政府&quot;的最新政策</code></li></ul>
+<ol><li><strong>resolving-merge-conflicts</strong></li></ol>
+<ul><li>什么时候用：解决 git 合并/变基冲突</li><li>示例：<code>用 resolving-merge-conflicts 帮我解决这个合并冲突</code></li></ul>
+<ol><li><strong>tdd</strong></li></ol>
+<ul><li>什么时候用：测试驱动开发（先写测试再实现）</li><li>示例：<code>用 tdd 来开发这个功能</code></li></ul>
+<blockquote>📌 已归档：frontend-design（2026-09 移入 .archive，界面视觉设计需求可改用 hallmark）</blockquote>
+<h2 id="233-磁盘缓存中有但当前配置未启用的技能">23.3 磁盘缓存中有、但当前配置未启用的技能</h2>
+<p>这些技能已经在你磁盘上（插件缓存里），但对应服务没登录/连接，所以当前会话未加载。<strong>登录对应服务后，开启新会话即可使用。</strong></p>
+<table><thead><tr><th>插件</th><th>包含技能</th><th>需要登录/连接</th></tr></thead><tbody><tr><td>Figma</td><td>figma、figma-implement-motion、figma-swiftui、figma-use、figma-use-figjam、figma-use-motion、figma-use-slides</td><td>Figma 账号</td></tr><tr><td>GitHub</td><td>github、gh-address-comments、yeet</td><td>GitHub 账号</td></tr><tr><td>Build Web Apps</td><td>frontend-app-builder、frontend-testing-debugging、shadcn、stripe-best-practices、supabase-postgres-best-practices</td><td>无需登录，但仅在网页开发任务触发</td></tr><tr><td>Linear</td><td>linear</td><td>Linear 账号</td></tr><tr><td>Sentry</td><td>sentry</td><td>Sentry Token</td></tr><tr><td>Supabase</td><td>supabase、supabase-postgres-best-practices</td><td>Supabase 账号</td></tr><tr><td>系统</td><td>review-agent</td><td>由其他 Agent 委托时使用</td></tr></tbody></table>
+<p><strong>激活方法</strong>：打开对应插件设置 → 登录/连接账号 → 完全退出并重开 Codex → 新对话中输 <code>@</code> 查看。</p>
+<h2 id="234-系统内置技能6-个随-Codex-自带">23.4 系统内置技能（6 个，随 Codex 自带）</h2>
+<p>imagegen、openai-docs、skill-creator、skill-installer、plugin-creator、review-agent。这些放在 <code>~/.codex/skills/.system/</code>，<strong>不要改动</strong>。</p>
+<h2 id="235-技能管理速查">23.5 技能管理速查</h2>
+<table><thead><tr><th>操作</th><th>方法</th></tr></thead><tbody><tr><td>查看已装技能</td><td>输入 <code>@</code>（桌面 App）</td></tr><tr><td>安装新技能</td><td><code>用 skill-installer 安装……</code></td></tr><tr><td>自建技能</td><td><code>用 skill-creator 帮我做……</code></td></tr><tr><td>删除个人技能</td><td>到 <code>~/.codex/skills/</code> 删除对应文件夹</td></tr><tr><td>管理插件技能</td><td>Codex 设置 → 插件 → 启用/停用</td></tr></tbody></table>
+<h2 id="236-技能自动刷新机制配合自动化">23.6 技能自动刷新机制（配合自动化）</h2>
+<ul><li>每周自动运行的&quot;手册刷新&quot;任务会：<strong>重新扫描 <code>~/.codex/skills/</code> 和插件缓存 → 更新本章技能清单 → 对比《Codex_Skills_使用手册》→ 把新增技能的分析整合进本手册</strong>（第 2 章、第 5 章、本章同步更新）。</li><li>手动触发：对 Codex 说&quot;用 manual-refresher 技能刷新手册&quot;。</li></ul>
+<hr>
+<h1 id="附录-A-常用命令速查" class="chapter">附录 A　常用命令速查</h1>
+<pre><code class="language-bash"># 版本与配置
+codex --version                          # 查看 Codex CLI 版本
+cat ~/.codex/config.toml                 # 查看配置
+cp ~/.codex/config.toml ~/.codex/config.toml.bak   # 备份配置
+
+# MCP 管理
+codex mcp list                           # 列出 MCP 服务
+codex mcp add context7 -- npx -y @upstash/context7-mcp   # 添加 Context7
+
+# 环境变量（zsh）
+echo &#x27;export FENNO_API_KEY=&quot;sk-xxx&quot;&#x27; &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc
+
+# 常用诊断
+scutil --proxy                           # 查看系统代理（排查梯子问题）
+curl -s -o /dev/null -w &quot;%{http_code} %{time_total}s\n&quot; https://api.deepseek.com   # 测 DeepSeek 连通
+node -v &amp;&amp; npm -v                        # 检查 Node 环境
+python3 -c &quot;import tomllib; print(tomllib.load(open(&#x27;/Users/wuxuancheng/.codex/config.toml&#x27;,&#x27;rb&#x27;)))&quot;   # 验证 config.toml</code></pre>
+<hr>
+<hr>
+<h1 id="附录-B-提示词模板库30-条可直接抄" class="chapter">附录 B　提示词模板库（30+ 条，可直接抄）</h1>
+<h2 id="电脑操作类">电脑操作类</h2>
+<ol><li><code>@电脑 帮我在桌面新建一个&quot;课程资料&quot;文件夹</code></li><li><code>@电脑 打开系统设置，把 Wi-Fi 关掉再打开</code></li><li><code>@电脑 打开 Safari 去教务处官网，下载最新课表存到桌面</code></li><li><code>@电脑 把桌面所有 PDF 按课程名分类到对应文件夹</code></li><li><code>@Chrome 打开我的 GitHub 仓库，把最近 5 个仓库名整理成表格</code></li><li><code>@Chrome 打开 B 站收藏夹，把最新 3 个视频标题和链接给我</code></li></ol>
+<h2 id="文档与表格类">文档与表格类</h2>
+<ol><li><code>帮我生成一份《数字政府概论》期末论文提纲，4 个章节</code></li><li><code>把这段会议录音文字稿整理成纪要：主题、要点、共识、待办</code></li><li><code>帮我把这份成绩表低于 60 分的标红，并算平均分</code></li><li><code>帮我把这份表格脱敏：姓名→学生1/2/3，学号只留后4位</code></li><li><code>把这份政策 PDF 转成 Markdown 文本</code></li><li><code>把这 10 页内容做成 8 页 PPT 大纲</code></li></ol>
+<h2 id="建站与设计类">建站与设计类</h2>
+<ol><li><code>做个倒计时网页：输入日期显示还剩多少天</code></li><li><code>做个随机点名轮盘：把名单输进去</code></li><li><code>按这张海报的配色生成一个读书笔记模板的 HTML</code></li></ol>
+<h2 id="数据库类">数据库类</h2>
+<ol><li><code>在 Supabase 建一个&quot;公共管理2026级新生&quot;表，含学号、姓名、宿舍号</code></li><li><code>往 Neon 插入两条模拟数据，查一下 401 宿舍有几个人</code></li><li><code>用 Convex 把这个待办清单改成多人实时同步版</code></li></ol>
+<h2 id="学习与研究类">学习与研究类</h2>
+<ol><li><code>用 goal-agent-team 处理这个需求：把这周 7 天日报汇总成周报</code></li><li><code>用 context7 查一下 Supabase 行级安全策略的写法</code></li><li><code>用 firecrawl 搜索 2026 数字政府最新政策，给我前 5 条带链接</code></li><li><code>帮我解释这个政策文件里&quot;数据要素×&quot;是什么意思，用大白话</code></li></ol>
+<h2 id="自动化类">自动化类</h2>
+<ol><li><code>设置 Automations：每天 8:00 生成 AI 行业日报存到本地</code></li><li><code>设置 Automations：每周日晚 9 点自动备份我的项目文件夹</code></li><li><code>用 goal-agent-team-auto 无人值守处理这个需求：……</code></li></ol>
+<h2 id="进阶调度类">进阶调度类</h2>
+<ol><li><code>用两个并行 Agent：一个检查代码安全性，一个检查测试覆盖率</code></li><li><code>把日志分析这部分交给子代理处理，主任务只做结论</code></li><li><code>/goal 帮我做一份&quot;中山大学校园公共数据开放情况&quot;调研报告并保存</code></li></ol>
+<h2 id="提问技巧类">提问技巧类</h2>
+<ol><li><code>请详细解释，给出完整代码</code>（临时调高详细度）</li><li><code>直接给结论，不要解释</code>（临时调低详细度）</li><li><code>如果答案不确定，请明确说&quot;不确定&quot;，不要编造</code></li><li><code>回答时先给结论，再用表格对比，最后给一个例子</code></li></ol>
+<h2 id="隐私与安全类">隐私与安全类</h2>
+<ol><li><code>帮我把这份名单脱敏后再做统计</code></li><li><code>处理敏感数据时不要上传云端，优先本地方案</code></li><li><code>我发你的数据只用于本次任务，不要写入记忆</code></li></ol>
+<hr>
+<hr>
+<h1 id="附录-C-安全准则与参考资料" class="chapter">附录 C　安全准则与参考资料</h1>
+<h2 id="C1-安装下载安全准则2026-08-05-生效必须遵守">C.1 安装下载安全准则（2026-08-05 生效，必须遵守）</h2>
+<ol><li><strong>来源可靠</strong>：只从官方官网/应用商店下载</li><li><strong>下载地址正规</strong>：核对域名，防仿冒钓鱼</li><li><strong>文件完整</strong>：核对校验值（checksum）</li><li><strong>版本兼容</strong>：确认适配芯片/系统版本</li><li><strong>安装规范</strong>：优先官方安装程序</li><li><strong>装后验证</strong>：能正常启动、核心功能正常</li><li><strong>权限最小化</strong>：只给任务所需最小权限</li></ol>
+<blockquote>最重要：无法验证安全性的操作，先停下来告知用户。</blockquote>
+<h2 id="C2-隐私红线公共治理专业">C.2 隐私红线（公共治理专业）</h2>
+<ul><li>涉及同学个人信息：先脱敏（姓名→学生A、学号→后4位、身份证→年份）</li><li>处理个人信息需本人同意 + 告知用途（《个人信息保护法》）</li><li>不向不可信第三方提交私密数据</li><li>中转站/Fenno 只用于个人学习、小额充值</li></ul>
+<h2 id="C3-参考资料">C.3 参考资料</h2>
+<ul><li>OpenAI Codex 官方文档：developers.openai.com/codex</li><li>Firecrawl：firecrawl.dev（免 Key 档：mcp.firecrawl.dev/v2/mcp）</li><li>Context7：context7.com</li><li>CC Switch：github.com/farion1231/cc-switch</li><li>goal-agent-team：github.com/uu-z/goal-agent-team</li><li>Fenno：api.fenno.ai</li><li>智谱 GLM-4V-Flash：open.bigmodel.cn</li></ul>
+<h2 id="C4-版本记录">C.4 版本记录</h2>
+<table><thead><tr><th>版本</th><th>日期</th><th>说明</th></tr></thead><tbody><tr><td>v1.0</td><td>2026-08-10</td><td>初版，约 5000 字</td></tr><tr><td>v2.0</td><td>2026-08-10</td><td>全面扩写：插件逐个详解、实操项目、FAQ 50 问、提示词 30+、配置逐行解读</td></tr><tr><td>v3.0</td><td>2026-08-10</td><td>结构重组（章节在前、附录在后）+ 修复实操问题（Supabase 无账号替代、数据库账号说明）+ 新增第 23 章技能教学 + 接入每周自动刷新机制</td></tr><tr><td>v3.1</td><td>2026-08-12</td><td>修正第 1 章认知框架：明确 Work 也能操作电脑，新增「轻量 vs 批量/长任务」分工表与判断口诀</td></tr><tr><td>v3.2</td><td>2026-08-30</td><td>自动刷新：技能清单更新至 58 个；第 23 章新增 11 个开发类个人技能；第 2 章更新配置核验（config.toml 精简，Context7/Firecrawl/视觉 MCP 等不在当前配置）</td></tr><tr><td>v3.3</td><td>2026-09-06</td><td>自动刷新：模型切换为 deepseek-v4-flash-vision-exp（带视觉）；context7/firecrawl MCP 恢复；插件恢复启用 documents/pdf/spreadsheets/presentations/template-creator；frontend-design 归档停用（第 23 章移除，技能 20-29）；技能清单更新至 57 个（跳过 .archive）</td></tr></tbody></table>
+<blockquote>最后提醒：<strong>工具是杠杆，判断力是根本。</strong> 所有 AI 生成的内容都要核验，尤其在公共治理这个&quot;数据即责任&quot;的专业里。祝学习顺利！</blockquote>
+<hr>
+<hr>
+<h1 id="附录-D-术语表Glossary" class="chapter">附录 D　术语表（Glossary）</h1>
+<table><thead><tr><th>术语</th><th>大白话解释</th></tr></thead><tbody><tr><td>Agent Loop</td><td>AI 自己&quot;想→做→看→再想&quot;直到完成任务的循环</td></tr><tr><td>沙箱（Sandbox）</td><td>限制 AI 能碰哪些文件/网络的安全圈</td></tr><tr><td>MCP</td><td>让 AI 连接外部工具的标准接口（万能 USB-C）</td></tr><tr><td>Skill</td><td>一套打包好的&quot;按流程做&quot;说明书（SKILL.md）</td></tr><tr><td>Plugin</td><td>Codex 里的功能插件（@电脑、@Chrome 等）</td></tr><tr><td>API Key</td><td>调用模型服务用的身份密钥（sk- 或 fc- 开头）</td></tr><tr><td>Token</td><td>AI 计费/上下文的最小单位，约等于半个到一个汉字</td></tr><tr><td>Responses API</td><td>OpenAI 新协议，Codex 用它和模型通信</td></tr><tr><td>CC Switch</td><td>管理 API 供应商的桌面工具</td></tr><tr><td>中转站</td><td>提供 OpenAI 兼容接口的第三方网关</td></tr><tr><td>分流模式</td><td>梯子的一种模式：国内直连、国外走代理</td></tr><tr><td>脱敏</td><td>把真实个人信息替换成代号，保护隐私</td></tr><tr><td>自动化（Automations）</td><td>定时自动执行的任务</td></tr><tr><td>/goal</td><td>把模糊目标变成自动执行的任务书</td></tr><tr><td>子代理</td><td>主任务派出去干具体活的小 Agent</td></tr></tbody></table>
+<hr>
+<h1 id="附录-E-每周练习计划30-分钟天" class="chapter">附录 E　每周练习计划（30 分钟/天）</h1>
+<table><thead><tr><th>星期</th><th>练习</th></tr></thead><tbody><tr><td>周一</td><td>用 @电脑 完成一个桌面操作（整理文件）</td></tr><tr><td>周二</td><td>用 Spreadsheets 处理一份数据并出统计</td></tr><tr><td>周三</td><td>用 Documents 生成一份文档/提纲</td></tr><tr><td>周四</td><td>用 firecrawl 搜索一个主题并整理来源</td></tr><tr><td>周五</td><td>复习一章手册 + 做一个 FAQ 里的操作</td></tr><tr><td>周六</td><td>自建一个小技能或改一个技能</td></tr><tr><td>周日</td><td>跑一遍第 11 章项目，或做一份 AI 周报</td></tr></tbody></table>
+<p><strong>一个月后</strong>：你就能独立用 Codex 完成&quot;数据收集→处理→分析→成文&quot;的完整闭环。</p>
+<hr>
+<hr>
+<h1 id="附录-F-常用网站与资源清单" class="chapter">附录 F　常用网站与资源清单</h1>
+<table><thead><tr><th>资源</th><th>网址</th><th>用途</th></tr></thead><tbody><tr><td>Codex 官方文档</td><td>developers.openai.com/codex</td><td>功能/配置权威说明</td></tr><tr><td>DeepSeek 开放平台</td><td>platform.deepseek.com</td><td>管理 DeepSeek API Key/余额</td></tr><tr><td>CC Switch 官网</td><td>github.com/farion1231/cc-switch</td><td>下载/更新 CC Switch</td></tr><tr><td>Firecrawl</td><td>firecrawl.dev</td><td>免费抓取/搜索（免 Key 档可用）</td></tr><tr><td>Context7</td><td>context7.com</td><td>查 API 文档</td></tr><tr><td>Fenno</td><td>api.fenno.ai</td><td>国内中转站（GPT 等）</td></tr><tr><td>智谱开放平台</td><td>open.bigmodel.cn</td><td>GLM 视觉 Key 管理</td></tr><tr><td>阿里云百炼</td><td>bailian.console.aliyun.com</td><td>国产模型官方渠道</td></tr><tr><td>啊哈加速器</td><td>官网</td><td>梯子设置（分流模式）</td></tr><tr><td>中山大学教务</td><td>校内网</td><td>选课/培养方案</td></tr></tbody></table>
+<p><strong>资源使用原则</strong>：凡是要注册的，先确认是官网；凡是要付款的，先小额测试；凡是提示异常权限的，先问 Codex 再点。</p>
+<hr>
+<blockquote><strong>本手册完。</strong> 记住三句话：
+1. 工具是杠杆，判断力是根本——AI 结果必须核验
+2. 数据即责任——脱敏、合规、保护隐私
+3. 用起来才是真的会——每周 30 分钟，一个月后你就是同学里的&quot;AI 高手&quot;</blockquote>
+<hr>
+<hr>
+<h1 id="附录-G-常见缩写对照" class="chapter">附录 G　常见缩写对照</h1>
+<table><thead><tr><th>缩写</th><th>全称</th><th>意思</th></tr></thead><tbody><tr><td>API</td><td>Application Programming Interface</td><td>程序调用接口</td></tr><tr><td>MCP</td><td>Model Context Protocol</td><td>模型上下文协议</td></tr><tr><td>SDK</td><td>Software Development Kit</td><td>开发工具包</td></tr><tr><td>CLI</td><td>Command Line Interface</td><td>命令行界面</td></tr><tr><td>GUI</td><td>Graphical User Interface</td><td>图形界面</td></tr><tr><td>TCC</td><td>Transparency, Consent, and Control</td><td>macOS 隐私权限系统</td></tr><tr><td>TUN</td><td>网络隧道设备</td><td>梯子用的虚拟网卡</td></tr><tr><td>OAuth</td><td>开放授权</td><td>第三方登录/授权</td></tr><tr><td>CSV</td><td>Comma-Separated Values</td><td>逗号分隔的表格文本</td></tr><tr><td>OCR</td><td>文字识别</td><td>图片转文字</td></tr><tr><td>RPA</td><td>机器人流程自动化</td><td>自动操作软件</td></tr><tr><td>BaaS</td><td>后端即服务</td><td>现成的云端后端</td></tr><tr><td>RLS</td><td>Row-Level Security</td><td>数据库行级安全</td></tr></tbody></table>
+<hr>
+<hr>
+<h1 id="附录-H-可直接复制的长模板完整版" class="chapter">附录 H　可直接复制的长模板（完整版）</h1>
+<h2 id="H1-AI-日报模板配合-Automations">H.1 AI 日报模板（配合 Automations）</h2>
+<pre><code class="language-markdown"># 📅 AI 行业日报 {{日期}}
+
+## 🔥 今日头条
+（最重要的 1-2 条，各 2 句）
+
+## 📰 行业动态
+- 【标题】（1 句摘要）— 来源链接
+- 【标题】（1 句摘要）— 来源链接
+
+## 📊 数据与观点
+（值得关注的行业数据或观点）
+
+&gt; 本日报由 Codex 自动生成，所有信息附来源链接，请人工核验。</code></pre>
+<h2 id="H2-周报模板">H.2 周报模板</h2>
+<pre><code class="language-markdown"># 🗓️ 本周周报（{{起}}-{{止}}）
+
+## 一、本周完成
+- 任务1（结果一句话）
+- 任务2（结果一句话）
+
+## 二、关键数据
+（表格：指标/本周/上周/变化）
+
+## 三、问题与风险
+- 问题1（影响/建议）
+
+## 四、下周计划
+- [ ] 任务A
+- [ ] 任务B
+
+## 五、需要支持
+（需要老师/同学/资源支持的事）</code></pre>
+<h2 id="H3-调研报告模板">H.3 调研报告模板</h2>
+<pre><code class="language-markdown"># {{标题}} 调研报告
+
+## 一、背景与目的
+（为什么做这个调研）
+
+## 二、数据来源与方法
+（数据怎么来的、处理规则、局限性）
+
+## 三、主要发现
+（3-5 条，每条配数据）
+
+## 四、分析与讨论
+（发现说明了什么）
+
+## 五、建议
+（每条：做什么/怎么做/预期效果）
+
+## 六、附录
+（原始数据位置、脱敏说明）</code></pre>
+<h2 id="H4-期末论文提纲模板">H.4 期末论文提纲模板</h2>
+<pre><code class="language-markdown">题目：《{{题目}}》
+一、引言（研究背景、问题、意义）
+二、文献综述（国内外研究现状）
+三、研究设计（方法、数据、范围）
+四、现状分析（发现与问题）
+五、对策建议（分点）
+六、结论与展望
+参考文献</code></pre>
+<hr>
+<blockquote><strong>使用提示</strong>：以上模板先复制给 Codex 让它&quot;按这个模板填&quot;，它会保留结构、填入内容。要改版式，直接说&quot;把第 X 部分改成……&quot;即可。</blockquote>
+<hr>
+<hr>
+<h1 id="附录-I-月度自我检查清单" class="chapter">附录 I　月度自我检查清单</h1>
+<blockquote>每月 1 号花 10 分钟过一遍。哪项没打勾就补哪项。</blockquote>
+<h2 id="环境与安全">环境与安全</h2>
+<ul class="todo"><li class="todo">Codex / CC Switch 已更新到最新版</li><li class="todo">DeepSeek 余额充足</li><li class="todo">config.toml 有最新备份</li><li class="todo">系统权限（屏幕录制/辅助功能）正常</li><li class="todo">啊哈加速器处于&quot;分流模式&quot;（避免卡 Codex）</li><li class="todo">没有把 API Key 明文存在聊天记录里</li></ul>
+<h2 id="技能与能力">技能与能力</h2>
+<ul class="todo"><li class="todo">本月用到了至少 3 个插件/技能</li><li class="todo">技能目录里没有多余/废弃的技能</li><li class="todo">新装技能都已审阅过 SKILL.md</li></ul>
+<h2 id="数据与隐私-2">数据与隐私</h2>
+<ul class="todo"><li class="todo">处理过含个人信息的文件都已脱敏</li><li class="todo">确认没把敏感数据上传到第三方</li><li class="todo">隐私设置（改进模型/共享数据）符合预期</li></ul>
+<h2 id="习惯与产出">习惯与产出</h2>
+<ul class="todo"><li class="todo">自动化任务正常运行（日报/备份）</li><li class="todo">本月的笔记/报告都有归档</li><li class="todo">知识库（AI知识库/Obsidian）结构清晰</li></ul>
+<hr>
+<hr>
+<h1 id="附录-J-一页速查卡打印贴墙版" class="chapter">附录 J　一页速查卡（打印贴墙版）</h1>
+<h2 id="常用指令速查">常用指令速查</h2>
+<table><thead><tr><th>想做什么</th><th>输入</th></tr></thead><tbody><tr><td>操作电脑</td><td><code>@电脑 帮我……</code></td></tr><tr><td>操作浏览器</td><td><code>@Chrome 帮我……</code></td></tr><tr><td>查最新文档</td><td><code>use context7 for ……</code></td></tr><tr><td>搜索/抓取网页</td><td><code>用 firecrawl ……</code></td></tr><tr><td>让 AI 看懂图片</td><td>直接把图片拖进对话框</td></tr><tr><td>定时任务</td><td>描述 + &quot;设置成 Automations&quot;</td></tr><tr><td>复杂目标</td><td><code>/goal 一句话目标</code></td></tr><tr><td>并行干活</td><td><code>用两个并行 Agent：……</code></td></tr><tr><td>目标+执行</td><td><code>用 goal-agent-team 处理：……</code></td></tr></tbody></table>
+<h2 id="卡住时怎么办三步">卡住时怎么办（三步）</h2>
+<ol><li>彻底重启 Codex（Cmd+Q 再开）</li><li>新开对话再试</li><li>检查 config.toml / 看报错截图问 Codex</li></ol>
+<h2 id="关键设置速查">关键设置速查</h2>
+<table><thead><tr><th>设置</th><th>当前值</th><th>位置</th></tr></thead><tbody><tr><td>沙箱</td><td>workspace-write + 网络开</td><td>Codex 设置/配置文件</td></tr><tr><td>网页搜索</td><td>indexed</td><td>Codex 设置</td></tr><tr><td>模型</td><td>DeepSeek V4 Flash</td><td>CC Switch</td></tr><tr><td>加速器</td><td>应切&quot;分流模式&quot;</td><td>啊哈加速器</td></tr><tr><td>记忆</td><td>开启</td><td>Codex 设置</td></tr></tbody></table>
+<hr>
+<blockquote><strong>本手册至此全部完成（v2.0）。</strong>
+任何工具都在快速进化，手册内容也会过时。最好的维护方式是：<strong>每月让 Codex 重新核验你的配置，并让它帮你更新这份手册</strong>——就像它最初帮你生成这份手册一样。</blockquote>
+<hr>
+<hr>
+<h1 id="附录-K-快速开局十句话不知道说什么时用" class="chapter">附录 K　快速开局十句话（不知道说什么时用）</h1>
+<table><thead><tr><th>场景</th><th>开场白</th></tr></thead><tbody><tr><td>想干活但不会说</td><td>&quot;帮我把这个任务拆成 5 步，我确认后你一步步做：……&quot;</td></tr><tr><td>想学东西</td><td>&quot;用给大一新生的方式给我讲：……，讲完出 3 道小题&quot;</td></tr><tr><td>材料很多</td><td>&quot;这些材料我发你（粘贴），先告诉我你理解了哪些、缺什么信息&quot;</td></tr><tr><td>报错看不懂</td><td>&quot;粘贴报错，给我解释+修复步骤&quot;</td></tr><tr><td>要写东西</td><td>&quot;按这个模板写：……，先给我提纲，我确认再写全文&quot;</td></tr><tr><td>要改东西</td><td>&quot;把这段改成……风格，只改表达，不改事实&quot;</td></tr><tr><td>要自动化</td><td>&quot;把这件事设置成每天/每周自动做：……&quot;</td></tr><tr><td>要对比</td><td>&quot;把 A 和 B 从……几个维度对比成表格&quot;</td></tr><tr><td>要决策</td><td>&quot;给我 3 个方案，每个列：优点/缺点/成本/风险，最后给推荐&quot;</td></tr><tr><td>完全没头绪</td><td>&quot;我对 XX 完全不了解，帮我从零规划这件事&quot;</td></tr></tbody></table>
+<hr>
+<h1 id="附录-L-给未来的自己手册维护说明" class="chapter">附录 L　给未来的自己（手册维护说明）</h1>
+<p>这本手册会过时——工具在快速进化，模型价格在变，插件在更新。目前已配置<strong>每周自动刷新自动化</strong>（见 23.6），它会自动核验配置、扫描技能、更新手册并同步 HTML。你也可以手动触发：</p>
+<ol><li><strong>手动刷新</strong>，对 Codex 说：</li></ol>
+<p>&quot;用 manual-refresher 技能刷新手册&quot;（核验 ~/.codex/config.toml、已装插件/技能，更新第 2/5/23 章与版本记录，重新生成 HTML 并同步到 AI知识库和 Obsidian）。</p>
+<ol><li><strong>每次新装重要工具后</strong>，对 Codex 说：</li></ol>
+<p>&quot;我刚装了 XX，请把它的用法写进手册第 5 章。&quot;</p>
+<ol><li><strong>每次踩坑解决后</strong>，对 Codex 说：</li></ol>
+<p>&quot;我把 XX 问题解决了（说明原因和步骤），请把它加进手册第 15 章故障排查。&quot;</p>
+<ol><li><strong>换电脑/重装系统后</strong>，先看第 18 章恢复配置，再让 Codex 校验环境。</li></ol>
+<p><strong>最后一句</strong>：工具只是外挂，真正的能力是你&quot;把问题想清楚、把话说清楚、把结果核验清楚&quot;的判断力。这本手册是你的起点，不是终点。祝你用 AI 越用越强，四年后成为数字公共治理领域里最会用工具的那个人。</p>
+<blockquote>—— 手册完，感谢阅读 ——</blockquote>
+</div>
+</body>
+</html>

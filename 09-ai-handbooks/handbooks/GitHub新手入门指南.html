@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub 新手入门指南</title>
+<style>
+body { max-width: 860px; margin: 0 auto; padding: 24px 20px; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; color: #1f2328; }
+h1 { font-size: 1.7em; border-bottom: 2px solid #d0d7de; padding-bottom: 8px; }
+h2 { font-size: 1.3em; margin-top: 1.6em; color: #0969da; }
+h3 { font-size: 1.1em; }
+blockquote { border-left: 4px solid #0969da; margin: 0; padding: 4px 14px; background: #f6f8fa; color: #57606a; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+th, td { border: 1px solid #d0d7de; padding: 8px 12px; text-align: left; }
+th { background: #f6f8fa; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
+pre { background: #0d1117; color: #c9d1d9; padding: 14px; border-radius: 8px; overflow-x: auto; }
+pre code { background: none; color: inherit; }
+hr { border: none; border-top: 1px solid #d0d7de; margin: 20px 0; }
+a { color: #0969da; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>GitHub 新手入门指南（从零开始）</h1>
+
+<blockquote>版本：v1.0 · 2026-08-12 · 写给纯新手：不需要任何基础，照着做就行</blockquote>
+
+<hr>
+
+<h2>一、GitHub 是什么？（大白话版）</h2>
+
+<p>GitHub 是<strong>全球最大的代码托管平台</strong>，你可以把它理解为：</p>
+
+<li><strong>代码版的"网盘"</strong>：把你的项目代码存到云端，电脑坏了也不怕丢</li>
+<li><strong>程序员的朋友圈</strong>：全世界的开发者在这里分享、收藏、交流代码</li>
+<li><strong>免费学习资料库</strong>：几百万个开源项目，随便看、随便学</li>
+<li><strong>求职作品集</strong>：你的 GitHub 主页就是最好的"技术简历"</li>
+
+<p>注册和使用<strong>完全免费</strong>，英文界面（习惯后很简单）。</p>
+
+<hr>
+
+<h2>二、为什么要用 GitHub？（给你的理由）</h2>
+
+<table><tr><th>场景</th><th>好处</th></tr><tr><td>---</td><td>---</td></tr><tr><td>备份项目</td><td>你的代码/作业/项目永不丢失，还能看历史版本</td></tr><tr><td>学习</td><td>看大佬的开源项目，读源码、抄思路（AI 工具也能直接"读"GitHub 代码）</td></tr><tr><td>协作</td><td>和同学一起写代码，各改各的不冲突</td></tr><tr><td>求职</td><td>面试官看你的 GitHub = 看你的真实水平</td></tr></table>
+<hr>
+
+<h2>三、注册账号（约 5 分钟）</h2>
+
+<p>1. 浏览器打开 <strong>https://github.com</strong> → 点 <strong>Sign up</strong></p>
+<p>2. 依次填：<strong>邮箱</strong> → <strong>密码</strong> → <strong>用户名</strong></p>
+<p>   - ⚠️ 用户名会出现在你的主页链接 <code>github.com/你的用户名</code>，选个正式、好记的</p>
+<p>3. 完成一个简单的拼图验证（防机器人）</p>
+<p>4. 去邮箱点验证链接 → 完成 🎉</p>
+
+<hr>
+
+<h2>四、核心概念（新手必懂的 8 个词）</h2>
+
+<table><tr><th>概念</th><th>大白话解释</th></tr><tr><td>---</td><td>---</td></tr><tr><td><strong>仓库 Repo</strong></td><td>一个项目 = 一个仓库（含全部代码和历史版本）</td></tr><tr><td><strong>提交 Commit</strong></td><td>给项目"存一次档"，附一句说明（"改了登录 bug"）</td></tr><tr><td><strong>推送 Push</strong></td><td>把本地的存档上传到 GitHub</td></tr><tr><td><strong>拉取 Pull</strong></td><td>把 GitHub 上的更新下载到本地</td></tr><tr><td><strong>分支 Branch</strong></td><td>主干旁边开一条"平行线"，随便改不碰主干</td></tr><tr><td><strong>合并请求 PR</strong></td><td>把分支的改动申请合并进主干（可审查、可讨论）</td></tr><tr><td><strong>克隆 Clone</strong></td><td>把别人的仓库完整复制到本地</td></tr><tr><td><strong>Star / Fork</strong></td><td>给项目点赞收藏 / 复制一份到自己名下</td></tr></table>
+<hr>
+
+<h2>五、第一次创建仓库并上传代码</h2>
+
+<h3>方式 A：纯网页操作（最简单，推荐新手先试）</h3>
+<p>1. 登录后点右上角 <strong>+</strong> → <strong>New repository</strong></p>
+<p>2. 填仓库名（如 <code>my-first-project</code>）→ 点 <strong>Create repository</strong></p>
+<p>3. 在新页面点 <strong>uploading an existing file</strong>，把文件拖进去 → <strong>Commit changes</strong></p>
+<p>4. 完成！你的项目已经在云端了 ✅</p>
+
+<h3>方式 B：命令行（正规做法，以后常用）</h3>
+<p>在你的项目文件夹打开终端：</p>
+
+<pre><code>cd 你的项目文件夹
+git init
+git add .
+git commit -m &quot;第一次提交&quot;
+git branch -M main
+git remote add origin https://github.com/你的用户名/仓库名.git
+git push -u origin main</code></pre>
+
+<blockquote>第一次 push 会让你输入 GitHub 用户名和 Token（不是密码，见第八节）。</blockquote>
+
+<hr>
+
+<h2>六、日常常用命令速查</h2>
+
+<table><tr><th>命令</th><th>作用</th></tr><tr><td>---</td><td>---</td></tr><tr><td><code>git status</code></td><td>看当前有哪些改动</td></tr><tr><td><code>git add .</code></td><td>把所有改动放入"待提交区"</td></tr><tr><td><code>git commit -m "说明"</code></td><td>提交存档（带说明）</td></tr><tr><td><code>git push</code></td><td>上传到 GitHub</td></tr><tr><td><code>git pull</code></td><td>拉取最新版本</td></tr><tr><td><code>git log --oneline</code></td><td>看提交历史</td></tr><tr><td><code>git clone 网址</code></td><td>克隆别人/自己的仓库到本地</td></tr></table>
+<blockquote>新手期不想记命令？装一个 <strong>GitHub Desktop</strong>（官网免费下载），所有操作都变成点按钮。</blockquote>
+
+<hr>
+
+<h2>七、安全须知（重要！）</h2>
+
+<p>1. <strong>Token 就是"钥匙"</strong>：只在可信的地方使用，别截图发群里；丢了随时去后台撤销重发</p>
+<p>2. <strong>不要把密码/API Key 提交进仓库</strong>：用 <code>.gitignore</code> 文件排除（<code>node_modules/</code>、<code>.env</code>、<code>*.key</code> 等）</p>
+<p>3. <strong>公共仓库 = 所有人都能看</strong>：别放隐私、作业答案、证件信息</p>
+<p>4. 好消息：你的 Claude Code 已配好「密钥入库检查」钩子，提交前会自动拦截疑似密钥 ✅</p>
+
+<hr>
+
+<h2>八、接上你的 AI 工具（Claude Code + Codex）—— 以后想用随时接</h2>
+
+<p>等你有账号、有仓库后，可以让 AI 直接操作 GitHub：</p>
+
+<p>1. GitHub → <strong>Settings</strong> → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Fine-grained tokens</strong></p>
+<p>2. <strong>Generate new token</strong>，勾选权限：</p>
+<p>   - <code>Contents</code> → Read and write</p>
+<p>   - <code>Pull requests</code> → Read and write</p>
+<p>   - <code>Issues</code> → Read and write</p>
+<p>3. 复制 <code>github_pat_</code> 开头的 Token</p>
+<p>4. 找 Codex 说一句：<strong>「帮我接 GitHub MCP」</strong>，2 分钟配好两边</p>
+<p>5. 之后就可以说：*"帮我把这个项目推上 GitHub"*、*"看看这个仓库的代码结构"*、*"帮我建个 Issue 记录这个 bug"*</p>
+
+<hr>
+
+<h2>九、新手学习路径建议</h2>
+
+<p>1. <strong>今天</strong>：注册账号 + 用网页版建第一个仓库（放个笔记/小项目都行）</p>
+<p>2. <strong>本周</strong>：装 GitHub Desktop，把日常文件传上去练手</p>
+<p>3. <strong>本月</strong>：逛 3-5 个热门仓库，读 README（比如你用的工具的官方仓库）</p>
+<p>4. <strong>进阶</strong>：学命令行 git（上面第六节）、学分支和 PR 协作</p>
+<p>5. <strong>高阶</strong>：把 GitHub MCP 接上，让 Claude Code / Codex 帮你管理仓库</p>
+
+<hr>
+
+<h2>十、资源</h2>
+
+<li>GitHub 注册：https://github.com</li>
+<li>GitHub Desktop 下载：https://desktop.github.com</li>
+<li>GitHub 官方文档（中文）：https://docs.github.com/zh</li>
+<li>你的 AI 知识库手册：<code>VSCode+ClaudeCode接DeepSeekV4指南.md</code>（含 GitHub MCP 接入步骤）</li>
+</body>
+</html>

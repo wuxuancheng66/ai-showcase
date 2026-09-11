@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPT 自动生成器 · 吴宣澄的项目</title>
+<style>
+:root{--bg:#0a0b0d;--panel:#121317;--line:#26272e;--ink:#e9ebee;--dim:#9aa0ab;--acc:#E17055;--code:#1c1e24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif;line-height:1.85;font-size:16px}
+main{max-width:860px;margin:0 auto;padding:56px 24px 90px}
+a.back{display:inline-flex;align-items:center;gap:6px;color:var(--dim);text-decoration:none;font-size:14px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;transition:.2s}
+a.back:hover{color:var(--acc);border-color:var(--acc)}
+h1{font-size:34px;font-weight:900;margin:26px 0 18px;letter-spacing:-.5px}
+h2{font-size:23px;font-weight:800;margin:44px 0 14px;padding-left:14px;border-left:4px solid var(--acc)}
+h3{font-size:18px;font-weight:700;margin:28px 0 10px}
+p{margin:12px 0;color:#c9cdd4}
+ul,ol{margin:12px 0 12px 22px}li{margin:6px 0;color:#c9cdd4}
+code{font-family:"SF Mono","JetBrains Mono",monospace;font-size:.88em;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:#f0a58e}
+pre{background:var(--code);border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:13.5px;line-height:1.7}
+pre.mermaid{border-color:rgba(119,104,174,.5)}pre.mermaid code{color:#b9aee6}
+pre .cap{display:block;font-size:12px;color:var(--dim);margin-bottom:10px;font-family:Inter,"Noto Sans SC",sans-serif}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+th{background:var(--panel);color:var(--ink);font-weight:700}td{color:#c9cdd4}
+blockquote{margin:16px 0;padding:12px 18px;border-left:3px solid var(--acc3,#7768AE);background:var(--panel);border-radius:0 12px 12px 0;color:var(--dim)}
+hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+img{max-width:100%;vertical-align:middle}
+a{color:var(--acc)}
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">← 返回项目展示</a>
+<h1>PPT 自动生成器 · python-pptx 构建流水线</h1>
+<p><img alt="Python" src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&amp;logoColor=white"> <img alt="Lib" src="https://img.shields.io/badge/python--pptx-%20-Python?logo=python&amp;logoColor=white"> <img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></p>
+<p><strong>代码即幻灯片</strong>：用 python-pptx + PIL 以纯代码批量生成分模块 PPT——版式、配色、图片裁切、 中英混排全部程序化控制，一次编写、秒级重建整套演示文稿。</p>
+<blockquote>实战产出：已用于生成真实课堂演示文件（作业数据出于隐私未随仓库分发，见下方"数据接口"）。</blockquote>
+<h2>✨ 亮点</h2>
+<ul><li><strong>确定性排版</strong>：相较手动拖拽，代码生成的版式 100% 一致、可版本管理；</li><li><strong>图片自动处理</strong>：PIL 预处理（裁切/缩放）后嵌入，不再手动调图；</li><li><strong>原生 pptx 输出</strong>：生成的文件可继续用 PowerPoint/WPS/Keynote 手工微调。</li></ul>
+<h2>🚀 使用</h2>
+<pre class=""><code>pip install python-pptx pillow
+python build_ppt.py</code></pre>
+<h2>📁 数据接口</h2>
+<p>脚本从 <code>data/</code> 目录读取图片与文本素材（本仓库未附带数据，目录结构见 <code>构建说明.md</code>）。 接入你自己的素材后即可一键重建。</p>
+<hr>
+<p>作者：吴宣澄 · 2026-09</p>
+<footer><span>吴宣澄 · AI 项目合集 © 2026</span><span><a href="../index.html">index.html</a> · 全部项目</span></footer>
+</main>
+</body>
+</html>

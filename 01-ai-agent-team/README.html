@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Team · 吴宣澄的项目</title>
+<style>
+:root{--bg:#0a0b0d;--panel:#121317;--line:#26272e;--ink:#e9ebee;--dim:#9aa0ab;--acc:#E17055;--code:#1c1e24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif;line-height:1.85;font-size:16px}
+main{max-width:860px;margin:0 auto;padding:56px 24px 90px}
+a.back{display:inline-flex;align-items:center;gap:6px;color:var(--dim);text-decoration:none;font-size:14px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;transition:.2s}
+a.back:hover{color:var(--acc);border-color:var(--acc)}
+h1{font-size:34px;font-weight:900;margin:26px 0 18px;letter-spacing:-.5px}
+h2{font-size:23px;font-weight:800;margin:44px 0 14px;padding-left:14px;border-left:4px solid var(--acc)}
+h3{font-size:18px;font-weight:700;margin:28px 0 10px}
+p{margin:12px 0;color:#c9cdd4}
+ul,ol{margin:12px 0 12px 22px}li{margin:6px 0;color:#c9cdd4}
+code{font-family:"SF Mono","JetBrains Mono",monospace;font-size:.88em;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:#f0a58e}
+pre{background:var(--code);border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:13.5px;line-height:1.7}
+pre.mermaid{border-color:rgba(119,104,174,.5)}pre.mermaid code{color:#b9aee6}
+pre .cap{display:block;font-size:12px;color:var(--dim);margin-bottom:10px;font-family:Inter,"Noto Sans SC",sans-serif}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+th{background:var(--panel);color:var(--ink);font-weight:700}td{color:#c9cdd4}
+blockquote{margin:16px 0;padding:12px 18px;border-left:3px solid var(--acc3,#7768AE);background:var(--panel);border-radius:0 12px 12px 0;color:var(--dim)}
+hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+img{max-width:100%;vertical-align:middle}
+a{color:var(--acc)}
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">← 返回项目展示</a>
+<p><img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&amp;logoColor=white"> <img alt="LangGraph" src="https://img.shields.io/badge/LangGraph-状态机编排-7768AE"> <img alt="Tests" src="https://img.shields.io/badge/Tests-4%2F4%20通过-brightgreen"> <img alt="Lines" src="https://img.shields.io/badge/代码-2400%2B行-blue"> <img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></p>
+<h1>AI Agent Team · 生产级多智能体协作系统</h1>
+<p>五个专家角色（研究员 / 写手 / 审校员 / 代码助手 / 数据分析师）在总控调度器的指挥下 接力完成复杂任务：任务分解 → 逐步执行 → 自动审校 → 不通过自动重做 → 产物落盘。</p>
+<p>技术栈：<strong>LangChain（模型与消息）+ LangGraph（状态机编排）</strong>。</p>
+<blockquote>框架选型说明：原需求提到 LangChain + AutoGen 双框架；生产环境中同时引入两个 编排内核会带来依赖冲突与行为不可预测性，因此采用同属 LangChain 生态、专为 "接力 + 回流"式流水线设计的 LangGraph 作为唯一编排内核，更安全稳定。</blockquote>
+<hr>
+<h2>1. 系统架构</h2>
+<pre class="mermaid"><span class="cap">架构图 · Mermaid 源码（在 GitHub 上渲染为流程图）</span><code>flowchart TD
+    U[用户输入任务 / 选择工作流] --&gt; O[Orchestrator 总控调度器]
+
+    O --&gt; P{任务来源}
+    P --&gt;|预置工作流 A/B/C| S[确定性步骤模板]
+    P --&gt;|自定义任务| LLM[LLM 动态分解&lt;br/&gt;失败回退默认流水线]
+
+    S --&gt; D
+    LLM --&gt; D[dispatcher 分发器]
+
+    D --&gt;|步骤1| R[🔍 Researcher 研究员&lt;br/&gt;联网搜索 · 网页抓取 · PDF解析]
+    D --&gt;|步骤n| W[✍️ Writer 写手&lt;br/&gt;Markdown成稿 · 引用校验 · CSV导出]
+    D --&gt;|步骤n| C[💻 Coder 代码助手&lt;br/&gt;架构设计 · 编码 · 单元测试]
+    D --&gt;|步骤n| A[📊 Analyst 数据分析师&lt;br/&gt;CSV统计 · 思维导图 · 洞察]
+
+    R --&gt; RV{🕵️ Reviewer 审校员&lt;br/&gt;事实核查 · 逻辑检测}
+    W --&gt; RV
+    C --&gt; RV
+    A --&gt; RV
+
+    RV --&gt;|fail 且未超重试上限| D
+    RV --&gt;|pass| NEXT{还有下一步?}
+    NEXT --&gt;|是| D
+    NEXT --&gt;|否| F[📦 finalize&lt;br/&gt;产物落盘 outputs/&lt;时间戳&gt;/]
+
+    subgraph 共享设施
+        M[(SharedMemory 共享记忆&lt;br/&gt;ChromaDB / 本地JSON)]
+        T[ToolRegistry 工具注册表&lt;br/&gt;web_search · url_fetch · file_read · file_write · pdf_read]
+        K[TokenTracker 计量与预算&lt;br/&gt;logs/usage.jsonl]
+    end
+    R &amp; W &amp; C &amp; A -.-&gt; M
+    R &amp; W &amp; C &amp; A -.-&gt; T
+    R &amp; W &amp; C &amp; A &amp; RV -.-&gt; K</code></pre>
+<h3>记忆（Memory）接口规范</h3>
+<table><thead><tr><th>层级</th><th>实现</th><th>说明</th></tr></thead><tbody><tr><td>短期记忆</td><td><code>core/state.py</code> AgentState</td><td>一次任务内所有节点共享（LangGraph 状态）</td></tr><tr><td>长期记忆</td><td><code>core/memory.py</code> SharedMemory</td><td>跨任务沉淀；<code>write/read/search/snapshot</code> 四个方法</td></tr><tr><td>后端</td><td>ChromaDB（配置 <code>CHROMA_HOST</code>）/ 本地 JSON（默认降级）</td><td>未装 chromadb 也能跑</td></tr></tbody></table>
+<h3>工具（Tools）接口规范</h3>
+<p>所有工具继承 <code>core/base.py::BaseTool</code>：输入为基本类型参数， 输出统一为 <code>ToolResult(ok, text, meta)</code>，<strong>失败不抛异常</strong>（<code>ok=False</code> + 说明文本）， 保证流水线永不因工具故障中断。注册到 <code>ToolRegistry</code> 后按名字调用。</p>
+<hr>
+<h2>2. 快速开始（3 条命令）</h2>
+<pre class=""><code>./startup.sh                  # 创建虚拟环境 + 安装依赖 + 生成 .env
+vi .env                       # 填写 OPENAI_API_KEY（必填）；TAVILY_API_KEY（可选，开联网搜索）
+source .venv/bin/activate &amp;&amp; python main.py</code></pre>
+<blockquote><code>.env</code> 示例默认指向 DeepSeek（<code>https://api.deepseek.com/v1</code> + <code>deepseek-chat</code>）， 也可换成通义千问 / 智谱GLM / OpenAI 等任何 OpenAI 兼容接口。</blockquote>
+<h2>3. 使用方法</h2>
+<h3>交互式（推荐第一次用）</h3>
+<pre class=""><code>python main.py          # 菜单选择：A 知识萃取 / B 代码开发 / C 内容创作 / T 自定义</code></pre>
+<h3>命令行直跑</h3>
+<pre class=""><code># 工作流 A：知识萃取（输入 URL / PDF 路径 / 主题均可）
+python main.py --workflow A --input &quot;https://example.com/article&quot;
+
+# 工作流 B：代码开发
+python main.py --workflow B --input &quot;做一个命令行TODO应用，支持优先级与到期提醒&quot;
+
+# 工作流 C：内容创作
+python main.py --workflow C --input &quot;AI Agent 在中小企业的落地实践&quot;
+
+# 自定义任务（规划器自动分解流水线）
+python main.py --task &quot;调研 LangGraph 最新特性，对比 AutoGen，输出选型报告&quot;</code></pre>
+<h3>三条预置工作流</h3>
+<table><thead><tr><th>工作流</th><th>流水线</th><th>产物</th></tr></thead><tbody><tr><td><strong>A 知识萃取</strong></td><td>研究员(URL/PDF/搜索) → 分析师(思维导图+洞察) → 写手(速览+Anki卡片)</td><td><code>research_notes.md</code>、<code>mindmap.md</code>、<code>anki_cards.md</code> + <code>anki_cards.csv</code>（可直接导入 Anki）</td></tr><tr><td><strong>B 代码开发</strong></td><td>代码助手(架构) → 代码助手(实现+pytest) → 写手(README)</td><td><code>architecture.md</code>、<code>implementation.md</code> + <code>code/</code> 下真实代码文件、<code>readme.md</code></td></tr><tr><td><strong>C 内容创作</strong></td><td>研究员(素材) → 写手(初稿) → 写手(终稿+配图建议+发布文案)</td><td><code>material.md</code>、<code>draft.md</code>、<code>publish_pack.md</code></td></tr></tbody></table>
+<p>每个步骤完成后 <strong>reviewer 自动审校</strong>：fail 且未超 <code>defaults.max_retries</code>（默认2次） 会自动带着审校意见重做该步骤；通过则推进下一步。</p>
+<h3>产物与日志</h3>
+<pre class=""><code>outputs/&lt;时间戳&gt;_&lt;工作流&gt;/
+├── artifacts/          # 每个步骤的 Markdown 产物
+├── code/               # 工作流B产出的真实代码文件
+├── anki_cards.csv      # 工作流A的 Anki 导入文件
+└── summary.json        # 任务摘要（计划/审校结论/token消耗）
+
+logs/usage.jsonl        # 每次 LLM 调用的 token 记账（monitor 数据源）
+logs/tasks.jsonl        # 任务/阶段/审校/重试事件流水</code></pre>
+<h3>监控</h3>
+<pre class=""><code>python monitor.py             # 输出一次当前状态
+python monitor.py --watch     # 每 5 秒自动刷新</code></pre>
+<p>展示：各 Agent 的调用次数 / 输入输出 token / 合计，<code>TOKEN_BUDGET</code> 预算进度条， 以及最近的任务事件流水（含审校裁决与重试）。</p>
+<h2>4. 自定义 Agent 教程（3 步）</h2>
+<p>以新增"翻译官 translator"为例：</p>
+<p><strong>第 1 步</strong> —— 在 <code>agent_config.yaml</code> 添加角色配置：</p>
+<pre class=""><code>agents:
+  translator:
+    temperature: 0.2
+    system_prompt: |
+      你是&quot;翻译官&quot;，在中英互译间保持术语一致、语气自然。
+      输出仅含译文，保留原文的 Markdown 结构与引用编号。</code></pre>
+<p><strong>第 2 步</strong> —— 新建 <code>agents/translator.py</code> 并继承 <code>BaseAgent</code>：</p>
+<pre class=""><code>from typing import Any, Dict
+from agents.base_agent import BaseAgent
+from core.state import AgentState
+
+class TranslatorAgent(BaseAgent):
+    name = &quot;translator&quot;
+    description = &quot;中英互译，保留格式与引用&quot;
+
+    def run(self, state: AgentState, step: Dict[str, Any]) -&gt; Dict[str, Any]:
+        context = self.build_context(state.get(&quot;artifacts&quot;, {}), step.get(&quot;input_from&quot;))
+        text = self.client.invoke(self.system_prompt,
+                                  f&quot;## 任务\n{step.get(&#x27;task&#x27;)}\n\n## 原文\n{context}&quot;)
+        self.memory.write(self.name, step.get(&quot;output_key&quot;, &quot;translation&quot;), text)
+        return {&quot;artifact&quot;: text, &quot;files&quot;: []}</code></pre>
+<p><strong>第 3 步</strong> —— 在 <code>agents/__init__.py</code> 注册：</p>
+<pre class=""><code>from agents.translator import TranslatorAgent
+AGENT_REGISTRY[&quot;translator&quot;] = TranslatorAgent</code></pre>
+<p>之后即可在工作流步骤或自定义任务中使用 <code>"agent": "translator"</code>。 （自定义工具同理：继承 <code>tools/base</code> 的 <code>BaseTool</code>，在 <code>tools/__init__.py</code> 注册。）</p>
+<h2>5. Docker 部署（可选基础设施）</h2>
+<pre class=""><code>./startup.sh --with-docker     # 或：docker compose up -d</code></pre>
+<ul><li><strong>Redis</strong>（缓存扩展位）：<code>127.0.0.1:6379</code>，healthcheck 齐全；</li><li><strong>ChromaDB</strong>（向量记忆）：<code>127.0.0.1:8000</code>；</li></ul>
+<p>  启用后编辑 <code>.env</code> 设置 <code>CHROMA_HOST=127.0.0.1</code>，重启任务即可自动切换语义检索记忆。</p>
+<p>两个端口都只绑定 <code>127.0.0.1</code>，不暴露到局域网；不启动容器系统也能跑 （记忆自动降级为本地 JSON 文件）。</p>
+<h2>6. 配置参考（agent_config.yaml / .env）</h2>
+<table><thead><tr><th>配置</th><th>位置</th><th>说明</th></tr></thead><tbody><tr><td>每角色 model / temperature / system_prompt</td><td><code>agent_config.yaml</code></td><td>独立调优；未指定 model 时用 <code>defaults.model</code></td></tr><tr><td><code>DEFAULT_MODEL</code></td><td><code>.env</code></td><td>覆盖 <code>defaults.model</code>，换模型最方便的入口</td></tr><tr><td><code>OPENAI_BASE_URL</code></td><td><code>.env</code></td><td>任意 OpenAI 兼容端点</td></tr><tr><td><code>TAVILY_API_KEY</code> / <code>SERPAPI_API_KEY</code></td><td><code>.env</code></td><td>联网搜索；都不配则降级为离线模式</td></tr><tr><td><code>TOKEN_BUDGET</code></td><td><code>.env</code></td><td>token 总预算，超出自动终止（默认 0 = 不限）</td></tr><tr><td><code>CHROMA_HOST</code> / <code>CHROMA_PORT</code></td><td><code>.env</code></td><td>向量记忆后端</td></tr><tr><td><code>max_retries</code> / <code>max_steps</code></td><td><code>agent_config.yaml</code></td><td>审校重试上限 / 步骤数上限</td></tr></tbody></table>
+<h2>7. 安全与隐私设计</h2>
+<ul><li><strong>密钥安全</strong>：API Key 只存在于 <code>.env</code>（已被 <code>.gitignore</code> 排除），代码与日志零硬编码；</li><li><strong>文件沙箱</strong>：文件工具只能读写项目目录内路径，<code>.env</code>、<code>*.key</code>、<code>id_rsa</code>、<code>.git</code>、<code>.ssh</code></li></ul>
+<p>  等敏感路径被黑名单拦截，密钥不可能被读进提示词外泄；</p>
+<ul><li><strong>SSRF 防护</strong>：<code>url_fetch</code> 拒绝 localhost / 内网段 / 云元数据地址；</li><li><strong>Token 预算</strong>：<code>TOKEN_BUDGET</code> 超限立即熔断，防止失控消耗；</li><li><strong>遥测默认关闭</strong>：<code>LANGCHAIN_TRACING_V2=false</code>，数据全部留在本机</li></ul>
+<p>  （<code>outputs/</code> 与 <code>logs/</code>）；唯一外发请求是 LLM 推理与（配置后的）搜索 API。</p>
+<h2>8. 常见问题</h2>
+<p><strong>Q: 不配置搜索 Key 能跑吗？</strong> 能。研究员会注明"内容未经联网核实"，流水线照常完成。</p>
+<p><strong>Q: 审校一直 fail 会死循环吗？</strong> 不会。每步最多重做 <code>defaults.max_retries</code>（默认 2）次，之后放行并记录问题； LLM 审校输出无法解析时默认放行（fail-open），保证流水线永不错锁。</p>
+<p><strong>Q: 怎么换模型？</strong> 改 <code>.env</code> 的 <code>DEFAULT_MODEL</code> 与 <code>OPENAI_BASE_URL</code> 即可全局部署； 或在 <code>agent_config.yaml</code> 里给单个角色配不同模型（如规划器用强模型、写手用快模型）。</p>
+<p><strong>Q: 测试怎么跑？</strong> <code>python -m pytest tests -q</code>——离线假模型冒烟测试，不需要任何 API Key。</p>
+<footer><span>吴宣澄 · AI 项目合集 © 2026</span><span><a href="../index.html">index.html</a> · 全部项目</span></footer>
+</main>
+</body>
+</html>

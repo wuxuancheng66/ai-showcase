@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>吴宣澄 | 个人作品集</title>
+  <meta name="description" content="吴宣澄的个人作品集网站，展示项目、技能与联系方式。一名热爱编程与设计的大一学生。">
+  <meta name="keywords" content="吴宣澄,作品集,前端开发,学生,portfolio">
+  <meta name="author" content="吴宣澄">
+  <meta name="theme-color" content="#0a0b0d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'SF Mono', 'monospace'],
+          },
+          colors: {
+            primary: {
+              50:'#fef5f0',100:'#fde8db',200:'#fad1b7',300:'#f6b393',
+              400:'#f08c66',500:'#E17055',600:'#d45a40',700:'#b84530',
+              800:'#963525',900:'#742a1e',
+            },
+            dark: {
+              50:'#f0f0f2',100:'#d5d5db',200:'#b0b0bb',300:'#888899',400:'#636377',
+              500:'#4a4a5a',600:'#3a3a48',700:'#2D3436',800:'#1e2024',900:'#121316',950:'#0a0b0d',
+            },
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'float-delayed': 'float 6s ease-in-out 2s infinite',
+            'float-slow': 'float 8s ease-in-out 1s infinite',
+            'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+            'fade-in-up': 'fadeInUp 0.7s ease forwards',
+            'shimmer': 'shimmer 2.5s ease-in-out infinite',
+            'spin-slow': 'spin 20s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%,100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '33%': { transform: 'translateY(-12px) rotate(1deg)' },
+              '66%': { transform: 'translateY(6px) rotate(-1deg)' },
+            },
+            pulseSoft: { '0%,100%': { opacity:'0.7' }, '50%': { opacity:'1' } },
+            fadeInUp: {
+              from: { opacity:'0', transform:'translateY(40px)' },
+              to:   { opacity:'1', transform:'translateY(0)' },
+            },
+            shimmer: { '0%': { backgroundPosition:'-200% 0' }, '100%': { backgroundPosition:'200% 0' } },
+            spin: { '0%': { transform:'rotate(0deg)' }, '100%': { transform:'rotate(360deg)' } },
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ================================================================
+       GLOBAL — 噪声纹理 / 光标 / 预加载 / 进度条
+       ================================================================ */
+
+    /* ---- 噪声纹理叠加层 ---- */
+    .noise-overlay {
+      position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      opacity: .035; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ---- 自定义光标 ---- */
+    .cursor-dot, .cursor-ring {
+      position: fixed; z-index: 10000; pointer-events: none; border-radius: 50%;
+      transform: translate(-50%, -50%); transition: width .25s, height .25s, background .25s;
+    }
+    .cursor-dot  { width: 5px;  height: 5px;  background: #E17055; }
+    .cursor-ring { width: 28px; height: 28px; border: 1.5px solid rgba(225,112,85,.45); }
+    .cursor-ring.hover { width: 52px; height: 52px; border-color: rgba(225,112,85,.7); background: rgba(225,112,85,.08); }
+
+    /* ---- 预加载器 ---- */
+    #preloader {
+      position: fixed; inset: 0; z-index: 10001; background: #0a0b0d;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity .5s ease, visibility .5s ease;
+    }
+    #preloader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+    .preloader-logo {
+      font-size: 3rem; font-weight: 900; color: #E17055;
+      animation: prePulse 1s ease-in-out infinite;
+    }
+    @keyframes prePulse { 0%,100%{transform:scale(1);opacity:.8} 50%{transform:scale(1.08);opacity:1} }
+
+    /* ---- 滚动进度条 ---- */
+    #progressBar {
+      position: fixed; top: 0; left: 0; height: 2.5px; z-index: 10002;
+      background: linear-gradient(90deg, #E17055, #f08c66, #f6b393);
+      width: 0%; transition: width .15s linear; border-radius: 0 2px 2px 0;
+    }
+
+    /* ---- 回到顶部 ---- */
+    #backToTop {
+      position: fixed; bottom: 32px; right: 32px; z-index: 9998;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(225,112,85,.15); border: 1px solid rgba(225,112,85,.3);
+      color: #E17055; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; visibility: hidden; transform: translateY(12px);
+      transition: all .35s cubic-bezier(.34,1.56,.64,1);
+      backdrop-filter: blur(8px);
+    }
+    #backToTop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+    #backToTop:hover { background: rgba(225,112,85,.3); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(225,112,85,.25); }
+
+    /* ================================================================
+       TYPOGRAPHY & UTILITIES
+       ================================================================ */
+    .text-gradient {
+      background: linear-gradient(135deg, #E17055 0%, #f08c66 40%, #f6b393 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .section-number {
+      position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+      font-size: clamp(5rem, 12vw, 10rem); font-weight: 900;
+      color: rgba(255,255,255,.018); pointer-events: none; line-height: 1;
+      user-select: none; white-space: nowrap;
+    }
+
+    /* ================================================================
+       THREE.JS 背景
+       ================================================================ */
+    #bg-canvas { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
+
+    /* ================================================================
+       打字光标
+       ================================================================ */
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .cursor-blink { animation: blink 1s step-end infinite; }
+    .cursor-stop  { animation: blink 1s step-end 3 forwards; }
+    .typing-cursor { display:inline-block; width:3px; height:1.1em; background:#E17055; margin-left:2px; vertical-align:text-bottom; border-radius:1px; }
+
+    /* ================================================================
+       导航
+       ================================================================ */
+    .nav-transparent { background:transparent; border-bottom:1px solid transparent; transition:background .45s ease,border-color .45s ease,backdrop-filter .45s ease; }
+    .nav-glass { background:rgba(10,11,13,.8)!important; backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%); border-bottom:1px solid rgba(255,255,255,.07)!important; }
+    .nav-link { position:relative; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+      background: #E17055; border-radius: 1px; transition: width .3s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+    .nav-link.active { color: #E17055 !important; }
+
+    /* ================================================================
+       按钮
+       ================================================================ */
+    .btn-hover-scale { transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease; }
+    .btn-hover-scale:hover { transform: scale(1.06); }
+    .btn-primary {
+      background: linear-gradient(135deg, #E17055, #f08c66);
+      transition: all .4s cubic-bezier(.34,1.56,.64,1);
+      box-shadow: 0 4px 20px -4px rgba(225,112,85,.35);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #d45a40, #E17055);
+      box-shadow: 0 10px 32px -6px rgba(225,112,85,.5);
+      transform: scale(1.06);
+    }
+
+    /* ================================================================
+       卡片悬浮
+       ================================================================ */
+    .card-lift {
+      transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease, border-color .45s ease;
+    }
+    .card-lift:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 48px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(225,112,85,.18)!important;
+      border-color: rgba(225,112,85,.25)!important;
+    }
+
+    /* ================================================================
+       3D 翻转卡片（技能）
+       ================================================================ */
+    .flip-card { perspective: 1000px; }
+    .flip-card-inner { position:relative; width:100%; height:100%; transition:transform .7s cubic-bezier(.22,.61,.36,1); transform-style:preserve-3d; }
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-front, .flip-card-back { backface-visibility:hidden; border-radius:16px; }
+    .flip-card-back { position:absolute; inset:0; transform:rotateY(180deg); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+
+    /* ================================================================
+       3D 环形轮播 — 卡片绕 Y 轴排列，旋转切换无穿插
+       ================================================================ */
+    .carousel-stage { perspective: 1000px; }
+    .carousel-track {
+      transform-style: preserve-3d;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    /*
+      每张卡片 top/left 统一居中 → translate(-50%,-50%) 把卡片自身中心对齐原点
+      → rotateY(angle) 旋转 → translateZ(r) 推出到环上。
+      backface-visibility:hidden 自动隐藏 |angle|>90° 的卡片。
+    */
+    .carousel-card {
+      position: absolute;
+      top: 50%; left: 50%;
+      backface-visibility: hidden;
+      transform: translate(-50%, -50%) rotateY(var(--a)) translateZ(420px);
+      transition: transform .65s cubic-bezier(.4,0,.2,1);
+      will-change: transform;
+      pointer-events: none;
+      background: rgba(20,22,26,.85) !important;
+      border: 1px solid rgba(255,255,255,.08) !important;
+    }
+    /* 正对观众 — 高亮 */
+    .carousel-card[data-pos="center"] {
+      background: linear-gradient(145deg, rgba(38,30,26,.96) 0%, rgba(26,24,28,.96) 100%) !important;
+      border-color: rgba(225,112,85,.35) !important;
+      box-shadow: 0 20px 60px -12px rgba(0,0,0,.7), 0 0 0 1px rgba(225,112,85,.15), 0 0 80px -20px rgba(225,112,85,.08) !important;
+      backdrop-filter: blur(12px);
+      pointer-events: auto;
+    }
+    /* 侧面卡片 */
+    .carousel-card[data-pos="left"],
+    .carousel-card[data-pos="right"] {
+      opacity: .55;
+    }
+
+    /* ================================================================
+       区块入场
+       ================================================================ */
+    .section-reveal { opacity:0; transform:translateY(40px); transition:opacity .8s ease, transform .8s cubic-bezier(.22,.61,.36,1); }
+    .section-reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ================================================================
+       表单
+       ================================================================ */
+    .input-dark { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); color:#e0e0e0; transition:border-color .3s ease, box-shadow .3s ease, background .3s ease; }
+    .input-dark:focus { outline:none; border-color:#E17055; box-shadow:0 0 0 3px rgba(225,112,85,.15); background:rgba(255,255,255,.07); }
+    .input-dark::placeholder { color:#636377; }
+
+    /* ================================================================
+       Hero 光斑
+       ================================================================ */
+    .hero-orb { position:absolute; border-radius:50%; filter:blur(100px); opacity:.18; animation:float 10s ease-in-out infinite; pointer-events:none; }
+
+    /* ================================================================
+       滚动条 / 选中 / 图片容器
+       ================================================================ */
+    ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:#0a0b0d} ::-webkit-scrollbar-thumb{background:#3a3a48;border-radius:3px} ::-webkit-scrollbar-thumb:hover{background:#E17055}
+    ::selection{background:rgba(225,112,85,.35);color:#fff}
+    .project-img-wrap{overflow:hidden}
+    .project-img-wrap img{transition:transform .6s cubic-bezier(.22,.61,.36,1)}
+    .carousel-card.center:hover .project-img-wrap img{transform:scale(1.06)}
+
+    /* ================================================================
+       技能标签
+       ================================================================ */
+    .skill-tag{transition:all .3s ease}
+    .skill-tag:hover{transform:translateY(-3px);background:rgba(225,112,85,.2)!important;border-color:rgba(225,112,85,.4)!important;color:#f08c66!important;box-shadow:0 6px 16px -6px rgba(225,112,85,.25)}
+
+    /* ================================================================
+       移动端
+       ================================================================ */
+    @media(max-width:768px){
+      .cursor-dot,.cursor-ring{display:none!important}
+      .hero-orb{filter:blur(60px);opacity:.1}
+      .carousel-card[data-pos="center"]{background:linear-gradient(145deg,rgba(38,30,26,.96) 0%,rgba(26,24,28,.96) 100%)!important;border-color:rgba(225,112,85,.35)!important;pointer-events:auto}
+      .carousel-card[data-pos="left"],.carousel-card[data-pos="right"]{opacity:.45}
+      .section-number{font-size:4rem;top:-16px}
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-200 bg-dark-950 antialiased">
+
+  <!-- ================================================================
+       预加载器
+       ================================================================ -->
+  <div id="preloader"><span class="preloader-logo">XC.</span></div>
+
+  <!-- ================================================================
+       噪声纹理
+       ================================================================ -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- ================================================================
+       自定义光标（桌面端）
+       ================================================================ -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- ================================================================
+       滚动进度条
+       ================================================================ -->
+  <div id="progressBar" aria-hidden="true"></div>
+
+  <!-- ================================================================
+       回到顶部
+       ================================================================ -->
+  <button id="backToTop" aria-label="回到顶部" title="回到顶部">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <!-- ================================================================
+       Three.js 3D 背景
+       ================================================================ -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ================================================================
+       主内容层
+       ================================================================ -->
+  <div class="relative z-10">
+
+    <!-- ==================== 导航 ==================== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-transparent">
+      <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="#hero" class="text-xl font-bold tracking-tight text-white hover:text-primary-400 transition-colors">XC<span class="text-primary-500">.</span></a>
+        <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
+          <li><a href="#about"    class="nav-link text-slate-300 hover:text-primary-400 transition-colors">关于</a></li>
+          <li><a href="#skills"   class="nav-link text-slate-300 hover:text-primary-400 transition-colors">技能</a></li>
+          <li><a href="#projects" class="nav-link text-slate-300 hover:text-primary-400 transition-colors">项目</a></li>
+          <li><a href="#contact"  class="nav-link text-slate-300 hover:text-primary-400 transition-colors">联系</a></li>
+        </ul>
+        <button id="menuBtn" class="md:hidden text-slate-300 hover:text-primary-400 transition-colors p-2" aria-label="菜单">
+          <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </nav>
+      <div id="mobileMenu" class="md:hidden hidden border-t border-white/5 bg-dark-900/95 backdrop-blur-xl">
+        <div class="px-6 py-4 flex flex-col gap-3">
+          <a href="#about"    class="mobile-link block py-2 text-slate-300 hover:text-primary-400 font-medium transition-colors">关于</a>
+          <a href="#skills"   class="mobile-link block py-2 text-slate-300 hover:text-primary-400 font-medium transition-colors">技能</a>
+          <a href="#projects" class="mobile-link block py-2 text-slate-300 hover:text-primary-400 font-medium transition-colors">项目</a>
+          <a href="#contact"  class="mobile-link block py-2 text-slate-300 hover:text-primary-400 font-medium transition-colors">联系</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== Hero ==================== -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden z-0 pointer-events-none">
+        <div class="hero-orb w-[500px] h-[500px] bg-primary-500 -top-20 -left-20"></div>
+        <div class="hero-orb w-[350px] h-[350px] bg-primary-400 bottom-0 right-0" style="animation-delay:3s;animation-duration:12s;"></div>
+        <div class="hero-orb w-[220px] h-[220px] bg-amber-400 top-1/2 right-1/4" style="animation-delay:6s;animation-duration:9s;"></div>
+      </div>
+      <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <div class="mb-10 min-h-[160px] md:min-h-[200px] flex flex-col items-center justify-center gap-4 md:gap-6">
+          <div class="flex items-center justify-center"><span id="typeEn" class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white"></span></div>
+          <div class="flex items-center justify-center"><span id="typeZh" class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-white"></span></div>
+        </div>
+        <div id="heroContent" class="opacity-0 transition-all duration-1000 ease-out transform translate-y-6">
+          <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">我是 <span class="text-gradient">吴宣澄</span></h1>
+          <p class="text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-4 leading-relaxed">一名热爱编程与设计的大一学生，正在探索 Web 开发、人工智能与开源世界的无限可能。</p>
+          <p class="text-sm text-slate-500 font-mono mb-10">「 保持好奇，持续创造 」</p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#projects" class="btn-primary btn-hover-scale text-white px-8 py-3.5 rounded-xl font-semibold text-base inline-flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>查看作品</a>
+            <a href="#contact" class="btn-hover-scale px-8 py-3.5 rounded-xl font-semibold text-base border border-white/15 text-slate-300 hover:text-white hover:border-primary-500/50 transition-all duration-300 inline-flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>联系我</a>
+          </div>
+        </div>
+        <div id="scrollHint" class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 transition-opacity duration-700">
+          <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center"><div class="w-1.5 h-3 bg-primary-500 rounded-full mt-2 animate-bounce"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 关于我 ==================== -->
+    <section id="about" class="relative py-24 md:py-32 px-6 section-reveal">
+      <div class="max-w-5xl mx-auto relative">
+        <div class="section-number">01</div>
+        <div class="text-center mb-16 relative">
+          <span class="text-xs font-bold tracking-widest text-primary-400 uppercase bg-primary-500/10 px-3 py-1 rounded-full border border-primary-500/20">About</span>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mt-4">关于我</h2>
+          <div class="w-16 h-1 bg-gradient-to-r from-primary-500 to-primary-300 rounded-full mx-auto mt-4"></div>
+        </div>
+        <div class="grid md:grid-cols-5 gap-12 items-start">
+          <div class="md:col-span-2 flex flex-col items-center gap-6">
+            <div class="relative group">
+              <div class="absolute -inset-2 bg-gradient-to-br from-primary-500 to-amber-500 rounded-2xl blur-xl opacity-25 group-hover:opacity-45 transition-opacity duration-500"></div>
+              <!-- TODO: 替换照片 -->
+              <img src="https://placehold.co/320x400/1a1d24/E17055?text=吴宣澄" alt="吴宣澄的照片" class="relative w-64 h-80 md:w-72 md:h-96 object-cover rounded-2xl border border-white/10">
+            </div>
+            <div class="grid grid-cols-2 gap-3 w-full max-w-xs">
+              <div class="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 text-center card-lift"><div class="text-xl font-bold text-primary-400">18</div><div class="text-xs text-slate-500">岁</div></div>
+              <div class="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 text-center card-lift"><div class="text-xl font-bold text-primary-400">大一</div><div class="text-xs text-slate-500">年级</div></div>
+              <div class="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 text-center card-lift"><div class="text-xl font-bold text-primary-400">CS</div><div class="text-xs text-slate-500">专业</div></div>
+              <div class="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 text-center card-lift"><div class="text-xl font-bold text-primary-400">5+</div><div class="text-xs text-slate-500">项目</div></div>
+            </div>
+          </div>
+          <div class="md:col-span-3 space-y-6">
+            <h3 class="text-2xl font-bold text-white">你好，我是 <span class="text-primary-400">吴宣澄</span> 👋</h3>
+            <p class="text-slate-400 leading-relaxed">我目前是一名大一学生，就读于计算机科学与技术专业。从高中第一次接触 Python 开始，我便被编程的创造力深深吸引。进入大学后，我开始系统性地学习前端开发、数据结构和算法，并积极参与校内的 Hackathon 和技术社团活动。</p>
+            <p class="text-slate-400 leading-relaxed">我相信技术的力量在于解决问题和创造价值。课余时间，我喜欢钻研开源项目，在 GitHub 上学习优秀工程师的代码，也会写一些技术博客来记录自己的学习历程。目前正在深入学习 React 生态与 Node.js 后端开发，目标是成为一名全栈工程师。</p>
+            <p class="text-slate-400 leading-relaxed">除了写代码，我也热爱跑步、摄影和阅读科幻小说。这些爱好让我保持对世界的好奇心，也不断提醒我——最好的代码，往往诞生于清晰的头脑和充沛的体力。</p>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">📍</span> 所在地：中国</div>
+              <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">🎓</span> 学历：本科在读</div>
+              <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">💻</span> 方向：全栈开发</div>
+              <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">📧</span><!-- TODO: 替换邮箱 --><a href="mailto:wu.xuancheng@example.com" class="text-primary-400 hover:underline">wu.xuancheng@example.com</a></div>
+            </div>
+            <div class="pt-2">
+              <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">🌟 兴趣与爱好</h4>
+              <div class="flex flex-wrap gap-3">
+                <div class="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 card-lift"><span class="text-xl">🏃</span><div><div class="text-sm font-medium text-white">跑步</div><div class="text-xs text-slate-500">坚持每日 5km</div></div></div>
+                <div class="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 card-lift"><span class="text-xl">📷</span><div><div class="text-sm font-medium text-white">摄影</div><div class="text-xs text-slate-500">街拍 & 风光</div></div></div>
+                <div class="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 card-lift"><span class="text-xl">📚</span><div><div class="text-sm font-medium text-white">阅读</div><div class="text-xs text-slate-500">科幻 & 技术</div></div></div>
+                <div class="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 card-lift"><span class="text-xl">🎮</span><div><div class="text-sm font-medium text-white">独立游戏</div><div class="text-xs text-slate-500">设计 & 开发</div></div></div>
+                <div class="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 card-lift"><span class="text-xl">🎵</span><div><div class="text-sm font-medium text-white">音乐</div><div class="text-xs text-slate-500">吉他指弹</div></div></div>
+                <div class="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 card-lift"><span class="text-xl">🚀</span><div><div class="text-sm font-medium text-white">开源贡献</div><div class="text-xs text-slate-500">GitHub 爱好者</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 技能 ==================== -->
+    <section id="skills" class="relative py-24 md:py-32 px-6 section-reveal">
+      <div class="max-w-5xl mx-auto relative">
+        <div class="section-number">02</div>
+        <div class="text-center mb-16 relative">
+          <span class="text-xs font-bold tracking-widest text-primary-400 uppercase bg-primary-500/10 px-3 py-1 rounded-full border border-primary-500/20">Skills</span>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mt-4">技能 & 技术栈</h2>
+          <div class="w-16 h-1 bg-gradient-to-r from-primary-500 to-primary-300 rounded-full mx-auto mt-4"></div>
+          <p class="text-slate-500 mt-4 text-sm">悬停卡片查看详情</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- 前端 翻转卡片 -->
+          <div class="flip-card h-[300px] cursor-pointer">
+            <div class="flip-card-inner h-full">
+              <div class="flip-card-front bg-white/[0.03] border border-white/[0.08] rounded-2xl p-8 flex flex-col items-center justify-center text-center h-full">
+                <div class="w-16 h-16 bg-primary-500/15 rounded-2xl flex items-center justify-center mb-5 text-3xl">🎨</div>
+                <h3 class="text-xl font-bold text-white mb-2">前端开发</h3>
+                <p class="text-sm text-slate-500">HTML/CSS · JavaScript · React · Tailwind</p>
+                <div class="mt-4 text-xs text-slate-600">👆 翻转查看详情</div>
+              </div>
+              <div class="flip-card-back bg-dark-800 border border-primary-500/20 rounded-2xl">
+                <h3 class="text-lg font-bold text-primary-400 mb-4">前端技能详情</h3>
+                <div class="space-y-3 w-full text-left">
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">React/Vue</span><span class="text-primary-400 font-mono">80%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:80%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">JavaScript/TS</span><span class="text-primary-400 font-mono">75%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:75%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">CSS/Tailwind</span><span class="text-primary-400 font-mono">85%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:85%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">HTML5/语义化</span><span class="text-primary-400 font-mono">90%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:90%"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 后端 翻转卡片 -->
+          <div class="flip-card h-[300px] cursor-pointer">
+            <div class="flip-card-inner h-full">
+              <div class="flip-card-front bg-white/[0.03] border border-white/[0.08] rounded-2xl p-8 flex flex-col items-center justify-center text-center h-full">
+                <div class="w-16 h-16 bg-primary-500/15 rounded-2xl flex items-center justify-center mb-5 text-3xl">⚙️</div>
+                <h3 class="text-xl font-bold text-white mb-2">后端 & 数据库</h3>
+                <p class="text-sm text-slate-500">Python · Node.js · MySQL · API</p>
+                <div class="mt-4 text-xs text-slate-600">👆 翻转查看详情</div>
+              </div>
+              <div class="flip-card-back bg-dark-800 border border-primary-500/20 rounded-2xl">
+                <h3 class="text-lg font-bold text-primary-400 mb-4">后端技能详情</h3>
+                <div class="space-y-3 w-full text-left">
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">Python</span><span class="text-primary-400 font-mono">70%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:70%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">Node.js</span><span class="text-primary-400 font-mono">65%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:65%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">MySQL/MongoDB</span><span class="text-primary-400 font-mono">60%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:60%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">REST API</span><span class="text-primary-400 font-mono">70%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:70%"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 工具 翻转卡片 -->
+          <div class="flip-card h-[300px] cursor-pointer">
+            <div class="flip-card-inner h-full">
+              <div class="flip-card-front bg-white/[0.03] border border-white/[0.08] rounded-2xl p-8 flex flex-col items-center justify-center text-center h-full">
+                <div class="w-16 h-16 bg-primary-500/15 rounded-2xl flex items-center justify-center mb-5 text-3xl">🛠️</div>
+                <h3 class="text-xl font-bold text-white mb-2">工具 & 工作流</h3>
+                <p class="text-sm text-slate-500">Git · Linux · Figma · VS Code</p>
+                <div class="mt-4 text-xs text-slate-600">👆 翻转查看详情</div>
+              </div>
+              <div class="flip-card-back bg-dark-800 border border-primary-500/20 rounded-2xl">
+                <h3 class="text-lg font-bold text-primary-400 mb-4">工具能力详情</h3>
+                <div class="space-y-3 w-full text-left">
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">Git/GitHub</span><span class="text-primary-400 font-mono">80%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:80%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">Linux/命令行</span><span class="text-primary-400 font-mono">65%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:65%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">Figma/设计</span><span class="text-primary-400 font-mono">55%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:55%"></div></div></div>
+                  <div><div class="flex justify-between text-sm mb-1"><span class="text-slate-300">Docker</span><span class="text-primary-400 font-mono">45%</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-500 to-primary-300 rounded-full" style="width:45%"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 项目作品 ==================== -->
+    <section id="projects" class="relative py-24 md:py-32 px-6 section-reveal overflow-hidden">
+      <div class="max-w-5xl mx-auto relative">
+        <div class="section-number">03</div>
+        <div class="text-center mb-16 relative">
+          <span class="text-xs font-bold tracking-widest text-primary-400 uppercase bg-primary-500/10 px-3 py-1 rounded-full border border-primary-500/20">Projects</span>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mt-4">项目作品</h2>
+          <div class="w-16 h-1 bg-gradient-to-r from-primary-500 to-primary-300 rounded-full mx-auto mt-4"></div>
+          <p class="text-slate-500 mt-4 text-sm">🖱️ 点击左右箭头或拖拽切换 · 3D 轮播视角</p>
+        </div>
+        <div class="carousel-stage relative">
+          <button id="carPrev" class="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/[0.05] border border-white/15 text-white hover:bg-primary-500/20 hover:border-primary-500/40 transition-all duration-300 flex items-center justify-center text-xl btn-hover-scale">←</button>
+          <button id="carNext" class="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/[0.05] border border-white/15 text-white hover:bg-primary-500/20 hover:border-primary-500/40 transition-all duration-300 flex items-center justify-center text-xl btn-hover-scale">→</button>
+          <div id="carTrack" class="carousel-track flex items-center justify-center min-h-[420px] relative"></div>
+          <div id="carDots" class="flex justify-center gap-3 mt-8"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 联系 ==================== -->
+    <section id="contact" class="relative py-24 md:py-32 px-6 section-reveal">
+      <div class="max-w-2xl mx-auto relative">
+        <div class="section-number">04</div>
+        <div class="text-center mb-16 relative">
+          <span class="text-xs font-bold tracking-widest text-primary-400 uppercase bg-primary-500/10 px-3 py-1 rounded-full border border-primary-500/20">Contact</span>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mt-4">联系我</h2>
+          <div class="w-16 h-1 bg-gradient-to-r from-primary-500 to-primary-300 rounded-full mx-auto mt-4"></div>
+          <p class="text-slate-500 mt-4">有任何问题或合作想法，欢迎随时交流 ✉️</p>
+        </div>
+        <form id="contactForm" class="space-y-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 md:p-10 backdrop-blur-sm">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div><label for="name" class="block text-sm font-semibold text-slate-300 mb-2">姓名</label><input type="text" id="name" name="name" required placeholder="请输入你的姓名" class="input-dark w-full px-4 py-3 rounded-xl text-sm"><p id="nameError" class="text-red-400 text-xs mt-1 hidden">请输入姓名</p></div>
+            <div><label for="email" class="block text-sm font-semibold text-slate-300 mb-2">邮箱</label><input type="email" id="email" name="email" required placeholder="your@email.com" class="input-dark w-full px-4 py-3 rounded-xl text-sm"><p id="emailError" class="text-red-400 text-xs mt-1 hidden">请输入有效的邮箱地址</p></div>
+          </div>
+          <div><label for="subject" class="block text-sm font-semibold text-slate-300 mb-2">主题</label><input type="text" id="subject" name="subject" required placeholder="想聊点什么？" class="input-dark w-full px-4 py-3 rounded-xl text-sm"><p id="subjectError" class="text-red-400 text-xs mt-1 hidden">请输入主题</p></div>
+          <div><label for="message" class="block text-sm font-semibold text-slate-300 mb-2">留言</label><textarea id="message" name="message" required rows="5" placeholder="写下你想说的话..." class="input-dark w-full px-4 py-3 rounded-xl text-sm resize-none"></textarea><p id="messageError" class="text-red-400 text-xs mt-1 hidden">请输入留言内容</p></div>
+          <button type="submit" class="btn-primary btn-hover-scale w-full text-white font-semibold py-3.5 rounded-xl text-base flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>发送消息</button>
+          <div id="formSuccess" class="hidden bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-xl p-4 text-center text-sm font-medium">✅ 消息已发送成功！感谢你的留言，我会尽快回复。</div>
+          <!-- TODO: 替换 fetch URL 为真实后端接口 -->
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="py-12 px-6 border-t border-white/[0.06]">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-2 text-slate-500 text-sm"><span>© 2024 吴宣澄</span><span class="text-slate-700">·</span><span>用 ❤️ 和代码构建</span></div>
+        <div class="flex items-center gap-6">
+          <!-- TODO: 替换社交链接 -->
+          <a href="https://github.com/wuxuancheng" target="_blank" rel="noopener" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="GitHub"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+          <a href="mailto:wu.xuancheng@example.com" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="Email"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+          <a href="#" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="Twitter/X"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /content-layer -->
+
+  <!-- ================================================================
+       Three.js Import Map
+       ================================================================ -->
+  <script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+  </script>
+
+  <!-- ================================================================
+       Three.js 3D 场景
+       ================================================================ -->
+  <script type="module">
+    import * as THREE from 'three';
+
+    const canvas = document.getElementById('bg-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 60);
+    camera.position.set(0, 0.3, 9);
+    scene.add(new THREE.AmbientLight(0x442222, 0.5));
+
+    // ---- Torus Knot ----
+    const torusKnot = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(2.0, 0.25, 128, 16, 2, 3),
+      new THREE.MeshBasicMaterial({ color: 0xE17055, wireframe: true, transparent: true, opacity: 0.16 })
+    ); scene.add(torusKnot);
+
+    // ---- Torus ----
+    const torus = new THREE.Mesh(
+      new THREE.TorusGeometry(3.5, 0.08, 64, 128),
+      new THREE.MeshBasicMaterial({ color: 0xf08c66, wireframe: true, transparent: true, opacity: 0.10 })
+    ); torus.rotation.set(Math.PI/3, Math.PI/4, 0); scene.add(torus);
+
+    // ---- Icosahedrons ----
+    const ico1 = new THREE.Mesh(new THREE.IcosahedronGeometry(0.6, 0), new THREE.MeshBasicMaterial({ color: 0xE17055, wireframe: true, transparent: true, opacity: 0.35 }));
+    ico1.position.set(3.5, 1.5, -2); scene.add(ico1);
+    const ico2 = new THREE.Mesh(new THREE.IcosahedronGeometry(0.4, 0), new THREE.MeshBasicMaterial({ color: 0xf6b393, wireframe: true, transparent: true, opacity: 0.30 }));
+    ico2.position.set(-3.2, -1.8, -1.5); scene.add(ico2);
+
+    // ---- Particles ----
+    const PC = window.innerWidth < 768 ? 150 : 300;
+    const pGeom = new THREE.BufferGeometry();
+    const pPos = new Float32Array(PC * 3);
+    for (let i = 0; i < PC; i++) { const th = Math.random()*Math.PI*2, ph = Math.acos(2*Math.random()-1), r = 4.5+Math.random()*8; pPos[i*3]=r*Math.sin(ph)*Math.cos(th); pPos[i*3+1]=r*Math.sin(ph)*Math.sin(th); pPos[i*3+2]=r*Math.cos(ph); }
+    pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const particles = new THREE.Points(pGeom, new THREE.PointsMaterial({ size:0.035, color:0xE17055, transparent:true, opacity:0.5, blending:THREE.AdditiveBlending, depthWrite:false }));
+    scene.add(particles);
+
+    const aCnt = Math.floor(PC*0.25);
+    const aGeom = new THREE.BufferGeometry();
+    const aPos = new Float32Array(aCnt*3);
+    for (let i=0;i<aCnt;i++){const th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=5+Math.random()*6;aPos[i*3]=r*Math.sin(ph)*Math.cos(th);aPos[i*3+1]=r*Math.sin(ph)*Math.sin(th);aPos[i*3+2]=r*Math.cos(ph);}
+    aGeom.setAttribute('position', new THREE.BufferAttribute(aPos,3));
+    const ambP = new THREE.Points(aGeom, new THREE.PointsMaterial({ size:0.04, color:0xf6b393, transparent:true, opacity:0.35, blending:THREE.AdditiveBlending, depthWrite:false }));
+    scene.add(ambP);
+
+    // ---- Shooting Stars ----
+    const stars = [];
+    class Star {
+      constructor() {
+        const sa = Math.random()*Math.PI*2, sp = Math.random()*Math.PI*.5, sr = 6+Math.random()*4;
+        this.start = new THREE.Vector3(sr*Math.sin(sp)*Math.cos(sa), sr*Math.cos(sp)+2, sr*Math.sin(sp)*Math.sin(sa));
+        this.dir = new THREE.Vector3((Math.random()-.5)*3, -4-Math.random()*3, (Math.random()-.5)*4).normalize();
+        this.len = 1+Math.random()*2.5; this.spd = 4+Math.random()*6; this.age = 0; this.alive = true;
+        this.geom = new THREE.BufferGeometry(); this.updGeom();
+        this.mat = new THREE.LineBasicMaterial({ color: new THREE.Color().setHSL(.08+Math.random()*.06,.9,.5+Math.random()*.4), transparent:true, opacity:.85, blending:THREE.AdditiveBlending, depthWrite:false });
+        this.line = new THREE.Line(this.geom, this.mat); scene.add(this.line);
+      }
+      updGeom() { const e = this.start.clone().add(this.dir.clone().multiplyScalar(-this.len)); this.geom.setFromPoints([this.start, e]); }
+      update(dt) {
+        this.age+=dt; this.start.add(this.dir.clone().multiplyScalar(this.spd*dt)); this.updGeom();
+        const fi=Math.min(this.age/.25,1), fo=Math.max(0,1-(this.age-1.0)/.8);
+        this.mat.opacity=.85*fi*fo; if(this.age>1.8)this.alive=false;
+      }
+      dispose(){scene.remove(this.line);this.geom.dispose();this.mat.dispose();}
+    }
+    function spawnStar(){stars.push(new Star())}
+
+    // ---- Orbit Crafts (远处低透明) ----
+    const crafts = [];
+    for (let i=0;i<6;i++) {
+      const g = new THREE.Group();
+      const bGeom = new THREE.OctahedronGeometry(.12); bGeom.scale(1,2,1);
+      g.add(new THREE.Mesh(bGeom, new THREE.MeshBasicMaterial({color:0xE17055,wireframe:true,transparent:true,opacity:.2})));
+      g.add(new THREE.Mesh(new THREE.TorusGeometry(.18,.02,8,16), new THREE.MeshBasicMaterial({color:0xf6b393,wireframe:true,transparent:true,opacity:.15})));
+      const t = new THREE.Mesh(new THREE.SphereGeometry(.05,4,4), new THREE.MeshBasicMaterial({color:0xf08c66,transparent:true,opacity:.25}));
+      t.position.y=-.3; g.add(t);
+      const a = (i/6)*Math.PI*2, oR = 6.5+Math.random()*4;
+      g.position.set(Math.cos(a)*oR, (Math.random()-.5)*2.5, Math.sin(a)*oR-2.5);
+      g.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+      g.userData = { oR, oSp:.12+Math.random()*.25, oPh:Math.random()*Math.PI*2, vAmp:.4+Math.random()*.8, vFreq:.25+Math.random()*.4, tSp:.3+Math.random() };
+      scene.add(g); crafts.push(g);
+    }
+
+    // ---- Mouse ----
+    const mouse = { x:0,y:0,tx:0,ty:0 };
+    window.addEventListener('mousemove', e => { mouse.tx=(e.clientX/window.innerWidth)*2-1; mouse.ty=-(e.clientY/window.innerHeight)*2+1; });
+
+    // ---- Loop ----
+    const clock = new THREE.Clock(); let starTimer = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), .1), t = clock.elapsedTime;
+      mouse.x += (mouse.tx-mouse.x)*.04; mouse.y += (mouse.ty-mouse.y)*.04;
+      torusKnot.rotation.x+=.0015; torusKnot.rotation.y+=.002;
+      torus.rotation.z+=.0008; torus.rotation.x+=.0005;
+      ico1.rotation.x+=.01; ico1.rotation.y+=.015;
+      ico2.rotation.x-=.012; ico2.rotation.z+=.01;
+      particles.rotation.y+=.00025; particles.rotation.x+=.0001;
+      ambP.rotation.y-=.0002;
+      particles.material.opacity=.4+Math.sin(t*.6)*.1;
+      ambP.material.opacity=.25+Math.cos(t*.5)*.1;
+      starTimer+=dt;
+      if(starTimer>1.2+Math.random()*2.5){starTimer=0;if(stars.length<5)spawnStar()}
+      for(let i=stars.length-1;i>=0;i--){stars[i].update(dt);if(!stars[i].alive){stars[i].dispose();stars.splice(i,1)}}
+      crafts.forEach(c=>{const d=c.userData;const oA=d.oPh+t*d.oSp;c.position.x=Math.cos(oA)*d.oR;c.position.z=Math.sin(oA)*d.oR;c.position.y=Math.sin(t*d.vFreq)*d.vAmp;c.rotation.y=-oA+Math.PI/2;c.rotation.z+=d.tSp*dt;c.children[0].rotation.x+=.03});
+      camera.position.x+=(mouse.x*.7-camera.position.x)*.03;
+      camera.position.y+=(mouse.y*.35-camera.position.y)*.03;
+      camera.lookAt(0,0,0);
+      renderer.render(scene, camera);
+    }
+    animate();
+    window.addEventListener('resize', () => { camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+  </script>
+
+  <!-- ================================================================
+       页面交互
+       ================================================================ -->
+  <script>
+    (function() {
+
+      // ==================== 0. 预加载器 ====================
+      const preloader = document.getElementById('preloader');
+      let preloaderDone = false;
+
+      function hidePreloader() {
+        if (preloaderDone) return;
+        preloaderDone = true;
+        preloader.classList.add('hide');
+        // 预加载隐藏后启动打字动画
+        startTypingAnimation();
+      }
+
+      window.addEventListener('load', () => {
+        setTimeout(hidePreloader, 600);
+      });
+      // 兜底：1.5s 后强制隐藏
+      setTimeout(hidePreloader, 1500);
+
+      // ==================== 1. 自定义光标 ====================
+      const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
+      if (dot && ring && !('ontouchstart' in window)) {
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+        function follow() { rx += (mx - rx) * .15; ry += (my - ry) * .15; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(follow); }
+        follow();
+        // 交互元素 hover 时放大环
+        const hoverTargets = document.querySelectorAll('a, button, .carousel-card.center, .flip-card, .card-lift, input, textarea');
+        hoverTargets.forEach(el => {
+          el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+          el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+        });
+      }
+
+      // ==================== 2. 滚动进度条 ====================
+      const progressBar = document.getElementById('progressBar');
+      function updateProgress() {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.width = h > 0 ? `${(window.scrollY / h) * 100}%` : '0%';
+      }
+      window.addEventListener('scroll', updateProgress, { passive: true });
+
+      // ==================== 3. 回到顶部 ====================
+      const backBtn = document.getElementById('backToTop');
+      function toggleBackBtn() { backBtn.classList.toggle('show', window.scrollY > 600); }
+      window.addEventListener('scroll', toggleBackBtn, { passive: true });
+      backBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+      // ==================== 4. 打字动画（预加载完成后触发） ====================
+      const elEn = document.getElementById('typeEn'), elZh = document.getElementById('typeZh');
+      const heroContent = document.getElementById('heroContent'), scrollHint = document.getElementById('scrollHint');
+      let typingStarted = false;
+
+      function startTypingAnimation() {
+        if (typingStarted) return;
+        typingStarted = true;
+        let enDone = false, zhDone = false;
+        function typeText(el, text, speed, cb) {
+          el.textContent = ''; const c = document.createElement('span'); c.className = 'typing-cursor cursor-blink'; el.appendChild(c);
+          let i = 0;
+          function t() { if (i < text.length) { el.insertBefore(document.createTextNode(text[i]), c); i++; setTimeout(t, speed + (Math.random() - .5) * 40); } else cb(); }
+          setTimeout(t, 300);
+        }
+        function onDone() {
+          document.querySelectorAll('.typing-cursor').forEach(c => { c.classList.remove('cursor-blink'); c.classList.add('cursor-stop'); });
+          setTimeout(() => { document.querySelectorAll('.typing-cursor').forEach(c => c.remove()); heroContent.classList.remove('opacity-0', 'translate-y-6'); scrollHint.classList.remove('opacity-0'); }, 1500);
+        }
+        typeText(elEn, 'Hello!', 120, () => { enDone = true; if (zhDone) onDone(); });
+        typeText(elZh, '你好！', 180, () => { zhDone = true; if (enDone) onDone(); });
+      }
+
+      // ==================== 5. 导航 ====================
+      const navbar = document.getElementById('navbar');
+      function updateNav() { navbar.classList.toggle('nav-glass', window.scrollY > 60); }
+      window.addEventListener('scroll', updateNav, { passive: true }); updateNav();
+
+      // 导航高亮
+      const sections = document.querySelectorAll('section[id]'), navLinks = document.querySelectorAll('.nav-link');
+      function highlightNav() {
+        let cur = '';
+        sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.getAttribute('id'); });
+        navLinks.forEach(l => { l.classList.remove('active'); if (l.getAttribute('href') === '#' + cur) l.classList.add('active'); });
+      }
+      window.addEventListener('scroll', highlightNav, { passive: true });
+
+      // 移动端菜单
+      const menuBtn = document.getElementById('menuBtn'), mobileMenu = document.getElementById('mobileMenu'), menuIcon = document.getElementById('menuIcon');
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+          const o = !mobileMenu.classList.contains('hidden'); mobileMenu.classList.toggle('hidden');
+          menuIcon.innerHTML = o ? '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>' : '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>';
+        });
+        document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => { mobileMenu.classList.add('hidden'); menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>'; }));
+      }
+
+      // ==================== 6. 区块入场 ====================
+      const revealObs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } }); }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.section-reveal').forEach(el => revealObs.observe(el));
+
+      // ==================== 7. 3D 环形项目轮播 ====================
+      const carTrack = document.getElementById('carTrack'), carDots = document.getElementById('carDots');
+      const carPrev = document.getElementById('carPrev'), carNext = document.getElementById('carNext');
+
+      // TODO: 替换为你的真实项目数据
+      const projects = [
+        { title:'个人博客系统', desc:'基于 React + Markdown 的静态博客，支持标签分类、全文搜索与暗黑模式切换。', tags:['React','Markdown','CSS Modules'], img:'https://placehold.co/600x400/2a2025/E17055?text=Blog', preview:'#', source:'#' },
+        { title:'校园二手交易平台', desc:'Node.js + Express 构建的 RESTful API，MongoDB 存储，JWT 鉴权，支持图片上传与实时聊天。', tags:['Node.js','Express','MongoDB'], img:'https://placehold.co/600x400/2a2228/E17055?text=Market', preview:'#', source:'#' },
+        { title:'天气预报 PWA', desc:'调用 OpenWeather API，支持城市搜索、5 日预报、地理定位，可离线访问。', tags:['JavaScript','PWA','API'], img:'https://placehold.co/600x400/262220/E17055?text=Weather', preview:'#', source:'#' },
+        { title:'LeetCode 题解仓库', desc:'整理 200+ 道算法题解，包含详细注释与多种解法对比，持续更新中。', tags:['Python','Algorithms','Docs'], img:'https://placehold.co/600x400/252228/E17055?text=Algo', preview:'#', source:'#' },
+        { title:'ToDo 协作应用', desc:'Vue3 + Firebase 实时同步的团队待办工具，支持看板视图与任务分配。', tags:['Vue','Firebase','协作'], img:'https://placehold.co/600x400/2a2425/E17055?text=Todo', preview:'#', source:'#' },
+      ];
+
+      const total = projects.length;
+      const ANGLE_STEP = 50;       // 相邻卡片角距（度），±100° 被 backface 隐藏
+      let currentIdx = 0;
+      let isAnimating = false;
+      let settleTimer = null;
+
+      function renderCarousel() {
+        carTrack.innerHTML = ''; carDots.innerHTML = '';
+        projects.forEach((proj, idx) => {
+          const card = document.createElement('div');
+          card.className = 'carousel-card absolute w-[300px] md:w-[360px] rounded-2xl overflow-hidden flex flex-col';
+          card.dataset.index = idx;
+          card.innerHTML = `
+            <div class="project-img-wrap h-44 bg-dark-800 flex items-center justify-center overflow-hidden"><img src="${proj.img}" alt="${proj.title}" class="w-full h-full object-cover"></div>
+            <div class="p-5 flex-1 flex flex-col gap-2">
+              <h3 class="font-bold text-lg text-white">${proj.title}</h3>
+              <p class="text-sm text-slate-400 leading-relaxed flex-1">${proj.desc}</p>
+              <div class="flex flex-wrap gap-2">${proj.tags.map(t=>`<span class="text-xs px-2.5 py-1 bg-white/[0.06] rounded-md text-slate-300 font-mono">${t}</span>`).join('')}</div>
+              <div class="flex gap-3 mt-2"><a href="${proj.preview}" class="text-sm text-primary-400 hover:text-primary-300 font-medium transition-colors">🔗 预览</a><a href="${proj.source}" class="text-sm text-slate-500 hover:text-slate-300 font-medium transition-colors">📂 源码</a></div>
+            </div>`;
+          // 3D 鼠标倾斜 — 仅 center，保留居中 transform 前缀
+          card.addEventListener('mousemove', e => {
+            if (card.dataset.pos !== 'center') return;
+            const r = card.getBoundingClientRect();
+            const rx = ((e.clientX-r.left)/r.width-.5)*10;
+            const ry = -((e.clientY-r.top)/r.height-.5)*10;
+            card.style.transform = `translate(-50%,-50%) rotateY(${rx}deg) rotateX(${ry}deg) translateZ(420px)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            if (card.dataset.pos === 'center') updateCardAngle(card, 0);
+          });
+          carTrack.appendChild(card);
+
+          const dot = document.createElement('button');
+          dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx===currentIdx?'bg-primary-500 scale-125':'bg-white/20 hover:bg-white/40'}`;
+          dot.addEventListener('click', () => { if (idx === currentIdx || isAnimating) return; currentIdx = idx; rotateRing(); });
+          carDots.appendChild(dot);
+        });
+        // 初始就位（无动画）
+        applyAnglesInstant();
+      }
+
+      /** 给定索引和 currentIdx，返回该卡的角度（度） */
+      function calcAngle(idx) {
+        let diff = idx - currentIdx;
+        if (Math.abs(diff) > total/2) diff = diff>0 ? diff-total : diff+total;
+        return diff * ANGLE_STEP;
+      }
+
+      /** 给定角度返回位置标签 */
+      function posLabel(angle) {
+        if (angle === 0) return 'center';
+        if (angle === -ANGLE_STEP || angle === (total-1)*ANGLE_STEP) return 'left';
+        if (angle === ANGLE_STEP || angle === -(total-1)*ANGLE_STEP) return 'right';
+        return 'hidden';
+      }
+
+      /** 更新单张卡的角度 CSS 变量 + data-pos。若跨可见区则瞬间跳转避免闪光 */
+      function updateCardAngle(card, newAngle) {
+        const oldVal = card.style.getPropertyValue('--a');
+        const oldAngle = oldVal ? parseFloat(oldVal) : newAngle;
+        const wasHidden = Math.abs(oldAngle) >= 85;
+        const willBeHidden = Math.abs(newAngle) >= 85;
+        // 从一侧隐藏区跳到另一侧隐藏区 → 瞬间切换，不穿过可见区
+        const crossSnap = wasHidden && willBeHidden && (oldAngle * newAngle < 0);
+
+        if (crossSnap) card.style.transition = 'none';
+
+        card.style.setProperty('--a', newAngle + 'deg');
+        card.dataset.pos = posLabel(newAngle);
+        const absA = Math.abs(newAngle);
+        card.style.zIndex = absA === 0 ? '3' : absA <= ANGLE_STEP ? '2' : '1';
+
+        if (crossSnap) {
+          card.offsetHeight;           // 强制回流
+          card.style.transition = '';  // 恢复过渡
+        }
+      }
+
+      /** 瞬间就位（无动画）— 初始加载 */
+      function applyAnglesInstant() {
+        const cards = carTrack.querySelectorAll('.carousel-card');
+        cards.forEach(card => {
+          card.style.transition = 'none';
+          updateCardAngle(card, calcAngle(parseInt(card.dataset.index)));
+        });
+        requestAnimationFrame(() => {
+          cards.forEach(c => { c.style.transition = ''; });
+        });
+        updateDots();
+      }
+
+      /** 旋转整圈 — 所有卡片同时改变角度，CSS transition 产生转动感 */
+      function rotateRing() {
+        if (isAnimating) return;
+        isAnimating = true;
+        if (settleTimer) { clearTimeout(settleTimer); settleTimer = null; }
+
+        const cards = carTrack.querySelectorAll('.carousel-card');
+        cards.forEach(card => {
+          updateCardAngle(card, calcAngle(parseInt(card.dataset.index)));
+        });
+        updateDots();
+
+        settleTimer = setTimeout(() => {
+          isAnimating = false;
+          settleTimer = null;
+        }, 700); // > CSS transition 0.65s
+      }
+
+      function updateDots() {
+        const dots = carDots.querySelectorAll('button');
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('bg-primary-500', idx===currentIdx);
+          dot.classList.toggle('scale-125', idx===currentIdx);
+          dot.classList.toggle('bg-white/20', idx!==currentIdx);
+        });
+      }
+
+      // ---- 事件 ----
+      if (carTrack && carDots) {
+        renderCarousel();
+
+        carPrev.addEventListener('click', () => {
+          if (isAnimating) return;
+          currentIdx = (currentIdx - 1 + total) % total;
+          rotateRing();
+        });
+        carNext.addEventListener('click', () => {
+          if (isAnimating) return;
+          currentIdx = (currentIdx + 1) % total;
+          rotateRing();
+        });
+
+        document.addEventListener('keydown', e => {
+          if (isAnimating) return;
+          if (e.key === 'ArrowLeft')  { currentIdx = (currentIdx - 1 + total) % total; rotateRing(); }
+          if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % total; rotateRing(); }
+        });
+
+        let tx = 0;
+        carTrack.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+        carTrack.addEventListener('touchend', e => {
+          if (isAnimating) return;
+          if (tx - e.changedTouches[0].clientX > 50)       { currentIdx = (currentIdx + 1) % total; rotateRing(); }
+          else if (tx - e.changedTouches[0].clientX < -50) { currentIdx = (currentIdx - 1 + total) % total; rotateRing(); }
+        });
+
+        // 点击卡片跳转
+        carTrack.addEventListener('click', e => {
+          if (isAnimating) return;
+          const card = e.target.closest('.carousel-card');
+          if (!card || e.target.closest('a')) return;
+          const idx = parseInt(card.dataset.index);
+          if (!isNaN(idx) && idx !== currentIdx) {
+            currentIdx = idx;
+            rotateRing();
+          }
+        });
+      }
+
+      // ==================== 8. 表单 ====================
+      const form = document.getElementById('contactForm'), successMsg = document.getElementById('formSuccess');
+      const errs = { name: document.getElementById('nameError'), email: document.getElementById('emailError'), subject: document.getElementById('subjectError'), message: document.getElementById('messageError') };
+      const showE = f => { if (errs[f]) errs[f].classList.remove('hidden'); };
+      const hideE = f => { if (errs[f]) errs[f].classList.add('hidden'); };
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault(); successMsg.classList.add('hidden'); let v = true;
+          if (!document.getElementById('name').value.trim()) { showE('name'); v = false; } else hideE('name');
+          const em = document.getElementById('email').value.trim();
+          if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { showE('email'); v = false; } else hideE('email');
+          if (!document.getElementById('subject').value.trim()) { showE('subject'); v = false; } else hideE('subject');
+          if (!document.getElementById('message').value.trim()) { showE('message'); v = false; } else hideE('message');
+          if (!v) return;
+          // TODO: fetch('https://your-api.com/contact', { method:'POST', body: new FormData(form) })
+          successMsg.classList.remove('hidden'); form.reset();
+          setTimeout(() => successMsg.classList.add('hidden'), 5000);
+        });
+        ['name','email','subject','message'].forEach(f => { const el = document.getElementById(f); if (el) el.addEventListener('input', () => hideE(f)); });
+      }
+
+      // ==================== 9. 平滑滚动 ====================
+      document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', function(e) { if (this.getAttribute('href')==='#') return; e.preventDefault(); const t = document.querySelector(this.getAttribute('href')); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); }); });
+
+      console.log('✨ 吴宣澄 · 作品集 v4 — 全功能升级版');
+      console.log('🎯 预加载 · 自定义光标 · 进度条 · 噪声纹理 · 区块编号 · 3D 轮播');
+      console.log('💡 搜索 "TODO" 快速定位占位内容');
+    })();
+  </script>
+
+</body>
+</html>

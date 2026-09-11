@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw 🦞 使用指南</title>
+<style>
+  :root{
+    --bg:#0e1015; --card:#171b23; --card2:#1d222c; --line:#2a3140;
+    --txt:#e8ebf0; --sub:#9aa4b2; --accent:#f4a261; --accent2:#7fd4c1;
+    --blue:#6ea8fe; --red:#f28b82; --warn:#fdd663;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--txt); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; padding:0 0 80px;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px;}
+  header{background:linear-gradient(135deg,#17202e 0%,#1d2333 55%,#2a2030 100%); border-bottom:1px solid var(--line); padding:56px 0 40px; margin-bottom:40px;}
+  header .wrap{display:flex; flex-direction:column; gap:10px;}
+  .badge{display:inline-block; background:rgba(244,162,97,.15); color:var(--accent); border:1px solid rgba(244,162,97,.4); border-radius:20px; padding:3px 14px; font-size:13px; width:fit-content;}
+  h1{font-size:34px; letter-spacing:.5px;}
+  header p{color:var(--sub); max-width:760px; font-size:16px;}
+  .status{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:28px 0 8px;}
+  .status .item{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 16px;}
+  .status .k{font-size:12px; color:var(--sub);}
+  .status .v{font-size:15px; font-weight:600; margin-top:2px; word-break:break-all;}
+  .status .v.g{color:var(--accent2);}
+  h2{font-size:24px; margin:52px 0 16px; padding-left:12px; border-left:4px solid var(--accent);}
+  h3{font-size:18px; margin:26px 0 10px; color:var(--accent);}
+  p,li{color:var(--txt);}
+  ul,ol{margin:8px 0 16px 22px;}
+  li{margin:6px 0; color:var(--sub);}
+  li strong, p strong{color:var(--txt);}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin:18px 0;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; transition:transform .15s ease, border-color .15s ease;}
+  .card:hover{transform:translateY(-3px); border-color:var(--accent);}
+  .card .ico{font-size:26px;}
+  .card h4{font-size:16px; margin:10px 0 6px; color:var(--accent);}
+  .card p{font-size:14px; color:var(--sub);}
+  code{background:var(--card2); border:1px solid var(--line); border-radius:6px; padding:2px 8px; font-size:13px; font-family:"SF Mono",Menlo,Consolas,monospace; color:var(--accent2);}
+  pre{background:#0a0d12; border:1px solid var(--line); border-radius:10px; padding:14px 16px; overflow-x:auto; margin:12px 0; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0; color:var(--txt);}
+  table{width:100%; border-collapse:collapse; margin:16px 0 24px; font-size:14px;}
+  th,td{border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--card2); color:var(--accent); white-space:nowrap;}
+  tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+  .tip{background:rgba(127,212,193,.08); border:1px solid rgba(127,212,193,.35); border-radius:10px; padding:12px 16px; margin:14px 0; font-size:14px; color:var(--sub);}
+  .tip b{color:var(--accent2);}
+  .warn{background:rgba(253,214,99,.07); border:1px solid rgba(253,214,99,.35); border-radius:10px; padding:12px 16px; margin:14px 0; font-size:14px; color:var(--sub);}
+  .warn b{color:var(--warn);}
+  .danger{background:rgba(242,139,130,.07); border:1px solid rgba(242,139,130,.35); border-radius:10px; padding:12px 16px; margin:14px 0; font-size:14px; color:var(--sub);}
+  .danger b{color:var(--red);}
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:20px 0 8px;}
+  .toc a{color:var(--blue); text-decoration:none; display:block; padding:3px 0; font-size:14px;}
+  .toc a:hover{text-decoration:underline;}
+  footer{margin-top:70px; border-top:1px solid var(--line); padding-top:20px; color:var(--sub); font-size:13px; text-align:center;}
+  .cmdtable td:first-child{white-space:nowrap;}
+  @media (max-width:640px){ h1{font-size:26px;} .wrap{padding:0 16px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="badge">🦞 本地优先 · 开源免费 · 24/7 常驻</span>
+    <h1>OpenClaw 使用指南</h1>
+    <p>OpenClaw 是运行在你自己设备上的"数字员工"：它不只是聊天，而是把 AI 大模型接到你的文件、命令、浏览器和聊天软件上，替你真正动手干活。</p>
+    <div class="status">
+      <div class="item"><div class="k">你的版本</div><div class="v g">2026.8.1（2.0 大版本）</div></div>
+      <div class="item"><div class="k">运行方式</div><div class="v">LaunchAgent 常驻服务</div></div>
+      <div class="item"><div class="k">控制面板</div><div class="v">http://127.0.0.1:18789/</div></div>
+      <div class="item"><div class="k">已接入渠道</div><div class="v">Raft（团队聊天）</div></div>
+      <div class="item"><div class="k">配置 / 数据目录</div><div class="v">~/.openclaw</div></div>
+      <div class="item"><div class="k">监听范围</div><div class="v g">仅本机回环（安全）</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="toc">
+  <b>目录</b>
+  <a href="#what">一、OpenClaw 是什么</a>
+  <a href="#features">二、核心功能</a>
+  <a href="#how">三、如何使用它</a>
+  <a href="#value">四、独特优势与价值</a>
+  <a href="#security">五、安全注意事项</a>
+  <a href="#tts">七、TTS 语音回复</a>
+  <a href="#sleep">八、合盖休眠与 24/7 常驻</a>
+  <a href="#next">六、给你的上手建议</a>
+  <a href="#cheatsheet">附：常用命令速查</a>
+</div>
+
+<h2 id="what">一、OpenClaw 是什么</h2>
+<p>OpenClaw（前身 Moltbot / Clawdbot，社区昵称"龙虾 🦞"）是一个 <strong>开源、自托管的个人 AI 智能体框架</strong>，由 PSPDFKit 创始人 Peter Steinberger 发起，OpenClaw Foundation 维护，MIT 协议免费开源。它由 Peter Steinberger 发起，OpenClaw Foundation 维护，MIT 协议免费开源（GitHub 已超过 6.8 万 star，是最快爆火的开源 AI 项目之一）。</p>
+<p>它的定位可以一句话概括：<strong>给大模型装上"双手"的执行引擎 + 24 小时待命的本地管家</strong>。传统 ChatGPT 只能"说"，OpenClaw 能"做"——读写文件、跑命令、控制浏览器、定时执行任务，并通过你已经在用的聊天软件与你对话。</p>
+
+<h2 id="features">二、核心功能</h2>
+<div class="cards">
+  <div class="card"><div class="ico">🧠</div><h4>本地网关 Gateway</h4><p>统一控制中枢：管理会话、工具、事件和渠道连接。一个网关同时服务个人和团队，模型、工具、权限都在这里集中调度。</p></div>
+  <div class="card"><div class="ico">🖥️</div><h4>Control UI 控制面板</h4><p>浏览器里的可视化界面（就是你现在打开的 127.0.0.1:18789）：聊天对话、实时观看智能体干活、搜索历史会话、管理配置与工具。</p></div>
+  <div class="card"><div class="ico">💬</div><h4>多渠道接入</h4><p>把助手接进你已有的聊天软件：Raft、WhatsApp、Telegram、Discord、Slack、Signal、iMessage、Google Chat、Microsoft Teams、Matrix、Zalo 等。手机也能随时指挥。</p></div>
+  <div class="card"><div class="ico">🛠️</div><h4>工具系统（真能动手）</h4><p>读写本地文件、执行 Shell 命令、运行脚本、控制浏览器（填表单、抓网页数据）、连接 MCP 服务器扩展能力。</p></div>
+  <div class="card"><div class="ico">📚</div><h4>Skills 技能库</h4><p>100+ 现成技能可直接安装；还能用 /learn 让它根据你的对话自动起草新技能，实现"自我进化"。</p></div>
+  <div class="card"><div class="ico">🧩</div><h4>插件生态 ClawHub</h4><p>插件 SDK + 官方插件市场，支持从 ClawHub / npm / git 安装插件，持续扩展新能力。</p></div>
+  <div class="card"><div class="ico">🧠</div><h4>持久记忆</h4><p>记忆以本地 Markdown 文件存储（身份、用户偏好、长期记忆），透明可读、可手动编辑，跨会话个性化。</p></div>
+  <div class="card"><div class="ico">⏰</div><h4>自动化与定时任务</h4><p>内置 cron 定时任务、Webhook 触发、事件驱动 hooks——你睡觉时它也能替你干活。</p></div>
+  <div class="card"><div class="ico">🔌</div><h4>模型中立 BYOK</h4><p>不绑定任何一家：可用 OpenAI、Claude、Gemini、智谱等云端模型，也可接 Ollama 本地模型，自己带 Key、自己选性价比。</p></div>
+  <div class="card"><div class="ico">👥</div><h4>子智能体与团队协作</h4><p>支持 subagents 子任务路由、隔离工作区；2.0 起支持共享会话，团队成员可加入同一会话接力干活。</p></div>
+  <div class="card"><div class="ico">🗣️</div><h4>语音与多模态</h4><p>TTS 语音回复、Talk 模式、手机节点调用摄像头/屏幕/定位等设备能力。</p></div>
+  <div class="card"><div class="ico">🔐</div><h4>安全与审批</h4><p>陌生私信默认需配对审批、高危操作需 Exec 审批、可配置沙箱隔离、按角色最小权限授权。</p></div>
+</div>
+
+<h3>2.0 版本新增亮点（2026.8.1）</h3>
+<ul>
+  <li><strong>全新控制面板：</strong>聊天置顶、可观看智能体实时干活，界面更像主流 AI 产品。</li>
+  <li><strong>小组件与事件看板：</strong>widgets 可钉到仪表盘、绑定事件触发动作。</li>
+  <li><strong>共享会话（多人协作）：</strong>团队可加入同一会话继续未完成的工作、带上下文交接任务。</li>
+  <li><strong>历史会话搜索：</strong>按精确文本/关键词检索过往对话，一键回到上下文。</li>
+  <li><strong>安装更省心：</strong>自动探测已有模型订阅、API Key 与本地模型，默认配置即可开聊。</li>
+  <li><strong>安全强化：</strong>明确信任边界、最小权限、更强的提示词滥用防护。</li>
+</ul>
+
+<h2 id="how">三、如何使用它</h2>
+
+<h3>3.1 用控制面板聊天（你现在的位置）</h3>
+<ul>
+  <li>打开 <code>http://127.0.0.1:18789/</code>，进入 <code>/chat/main</code> 即可直接对话。</li>
+  <li>像用 ChatGPT 一样发消息；它会自动调用工具执行任务，并在界面上显示运行过程。</li>
+  <li>输入 <code>/</code> 可看到全部斜杠命令；<code>/new</code> 新建会话、<code>/model</code> 切换模型、<code>/help</code> 查看帮助、<code>/tools</code> 查看当前可用工具、<code>/skill</code> 运行技能。</li>
+</ul>
+
+<h3>3.2 在聊天软件里指挥它（渠道）</h3>
+<ul>
+  <li>你的实例已接入 <strong>Raft</strong> 团队聊天：在 Raft 里直接给它发消息即可，手机上也能用。</li>
+  <li>想加更多渠道（Telegram/WhatsApp/Discord 等）：终端运行 <code>openclaw channels add</code> 按向导添加。</li>
+  <li>陌生人私信默认需配对：<code>openclaw pairing approve &lt;渠道&gt; &lt;码&gt;</code> 审批后才可对话。</li>
+</ul>
+
+<h3>3.3 常用 CLI 命令</h3>
+<pre><code>openclaw status              # 查看网关/渠道/模型健康状况
+openclaw dashboard           # 打开控制面板
+openclaw doctor --fix        # 一键诊断并修复常见问题
+openclaw configure           # 交互式修改模型/渠道/插件配置
+openclaw channels status     # 查看已连接的聊天账号
+openclaw models status       # 查看模型供应商鉴权状态
+openclaw gateway status      # 查看网关运行详情
+openclaw sessions list       # 查看历史会话
+openclaw memory search &lt;词&gt;  # 搜索长期记忆
+openclaw update              # 更新到最新版</code></pre>
+
+<h3>3.4 配置与数据</h3>
+<ul>
+  <li>主配置在 <code>~/.openclaw/openclaw.json</code>；工作区（记忆/技能/文件）在 <code>~/.openclaw/workspace</code>。</li>
+  <li>修改配置建议用 <code>openclaw configure</code> 或 <code>openclaw config set ...</code>，自动校验，避免手改出错。</li>
+</ul>
+
+<h3>3.5 让它干活（几个示范）</h3>
+<ul>
+  <li>"帮我把这份 PDF 的重点整理成一份周报" —— 文件读写 + 生成文档</li>
+  <li>"每天早上 8 点把最新 AI 资讯摘要发到 Raft" —— 定时任务 + 渠道</li>
+  <li>"登录这个网站，把表单填好提交" —— 浏览器自动化</li>
+  <li>"把刚才这个工作流保存成一个技能" —— <code>/learn</code> 自我进化</li>
+</ul>
+
+<h2 id="value">四、独特优势与价值</h2>
+<table>
+  <tr><th>维度</th><th>OpenClaw</th><th>传统 ChatGPT 等聊天机器人</th></tr>
+  <tr><td>能力</td><td>能"动手"执行任务（文件/命令/浏览器/定时）</td><td>基本只能"说话"回答</td></tr>
+  <tr><td>数据</td><td>本地优先，文件/记忆/密钥在自己设备，仅模型调用走 API</td><td>数据上传到云端服务</td></tr>
+  <tr><td>主动性</td><td>24/7 常驻，定时任务/事件触发，主动汇报</td><td>被动等待提问</td></tr>
+  <tr><td>模型</td><td>任意模型（BYOK），可接本地模型，灵活控成本</td><td>绑定厂商模型</td></tr>
+  <tr><td>费用</td><td>软件免费（MIT 开源），只付模型 API 费用</td><td>订阅制或按量付费</td></tr>
+  <tr><td>入口</td><td>你已有的聊天软件 + 控制面板 + CLI</td><td>浏览器/App 单独入口</td></tr>
+  <tr><td>可定制</td><td>技能/插件/记忆 Markdown 全可改，能自我进化</td><td>黑盒，几乎不可定制</td></tr>
+  <tr><td>团队</td><td>支持共享会话多人协作</td><td>一般单人使用</td></tr>
+</table>
+
+<h3>一句话价值</h3>
+<p><strong>"把 AI 从'回答问题的聊天框'变成'替你打工的 24 小时数字员工'，而且数据、模型、规则都由你自己掌控。"</strong> 对个人是贴身管家，对团队是共享的自动化生产力，对开发者是可编程、可扩展的开源底座。</p>
+
+<h2 id="security">五、安全注意事项</h2>
+<div class="danger"><b>高危：</b>OpenClaw 有执行 Shell、读写文件、控制浏览器的能力，等于"能动手的钥匙"。请遵守以下安全底线：</div>
+<ul>
+  <li><strong>保持仅本机监听：</strong>你当前是 loopback（127.0.0.1）模式，很安全。不要随意把网关暴露到公网；确需远程访问优先用 Tailscale 等内网方案。</li>
+  <li><strong>陌生人私信先配对：</strong>默认 DM 渠道陌生人不配对不可对话，收到配对请求用 <code>openclaw pairing approve</code> 审批。</li>
+  <li><strong>高危操作审批：</strong>Shell 等敏感工具建议走 <code>exec 审批</code>，需要时再批准，不要长期放开。</li>
+  <li><strong>插件来源谨慎：</strong>优先用 ClawHub 官方目录和受信插件；第三方插件安装前先看来源。</li>
+  <li><strong>定期体检：</strong>跑 <code>openclaw doctor</code> 和 <code>openclaw security</code> 检查常见安全配置隐患。</li>
+</ul>
+
+<h2 id="next">六、给你的上手建议</h2>
+<div class="tip"><b>小提醒：</b>你的网关提示有 1 个官方插件版本与 2026.8.1 不同步，可运行 <code>openclaw gateway status --deep</code> 查看并修复，或直接 <code>openclaw update</code> 更新。</div>
+<ol>
+  <li><strong>先聊起来：</strong>在控制面板或 Raft 里多让它执行几个真实任务（整理文件、总结网页、跑个脚本），感受"动手"能力。</li>
+  <li><strong>把重复工作自动化：</strong>让它用 cron 定时做日报/资讯汇总/文件整理，实现"你睡觉它干活"。</li>
+  <li><strong>沉淀技能：</strong>发现常用流程就用 <code>/learn</code> 让它固化成技能，越用越聪明。</li>
+  <li><strong>与 Obsidian 打通：</strong>OpenClaw 能读写本地文件，可让技能把总结/笔记直接写入你的 Obsidian 知识库目录，实现"AI 自动归档"。</li>
+  <li><strong>按需加渠道：</strong>想用手机随时指挥，加一个 Telegram/WhatsApp 渠道最方便。</li>
+  <li><strong>控制成本：</strong>日常简单任务用便宜的模型（如 DeepSeek/智谱/本地模型），复杂任务才切旗舰模型——<code>/model</code> 随时切换。</li>
+</ol>
+
+
+<h2 id="tts">七、TTS 语音回复（你的机器尚未配置）</h2>
+<div class="tip"><b>当前状态：</b>你的 OpenClaw 还没有配置 TTS（配置里无 <code>tts</code> 块，也没有本地偏好文件），需要先启用才能用。好消息是：有免费方案，不需要任何 API Key。</div>
+<h3>它能做什么</h3>
+<ul>
+  <li>把助手的回复转成<strong>语音</strong>：在 Telegram / WhatsApp / 飞书 / Matrix 上是原生"语音留言"，其他渠道（包括 Raft）以 <strong>音频附件（MP3）</strong> 形式发送。</li>
+  <li>支持 <strong>14 个语音提供商</strong>：OpenAI、ElevenLabs、Google Gemini、Azure、MiniMax、火山引擎、小米 MiMo 等；Microsoft 和"本地 CLI"两种<strong>无需 API Key</strong>。</li>
+  <li>可固定"人设声音"（persona）、中文自动切换（Microsoft 对中文回复自动用 zh-CN-XiaoxiaoNeural）、长回复自动摘要后再朗读、模型可在回复里内联 [[tts:...]] 指令自己控制语气。</li>
+</ul>
+<h3>三种开启方式（按推荐排序）</h3>
+<ol>
+  <li><strong>免费立刻体验（Microsoft）</strong>：无需任何 Key。编辑 <code>~/.openclaw/openclaw.json</code> 加 <code>tts: { auto: "always", provider: "microsoft" }</code>，或先跑 <code>openclaw doctor --fix</code> 后直接在聊天里 <code>/tts on</code> 试。</li>
+  <li><strong>复用你已有的模型 Key（OpenAI）</strong>：若模型用的是 OpenAI，配置 <code>tts: { provider: "openai" }</code>，即可用 <code>gpt-4o-mini-tts</code>，声音可选 alloy / cedar / coral 等。</li>
+  <li><strong>进阶（ElevenLabs）</strong>：声音最自然、支持克隆声音、多语言，需要 <code>ELEVENLABS_API_KEY</code>。</li>
+</ol>
+<h3>斜杠命令速查</h3>
+<table>
+  <tr><th>命令</th><th>作用</th></tr>
+  <tr><td>/tts on | off</td><td>打开 / 关闭自动语音回复</td></tr>
+  <tr><td>/tts status</td><td>查看当前 TTS 状态、提供商与回退诊断</td></tr>
+  <tr><td>/tts audio &lt;文字&gt;</td><td>把这段文字生成一次性语音</td></tr>
+  <tr><td>/tts latest</td><td>把上一条回复转成语音发一次</td></tr>
+  <tr><td>/tts chat on</td><td>只对当前这个聊天开启自动语音</td></tr>
+  <tr><td>/tts provider &lt;id&gt;</td><td>切换语音提供商</td></tr>
+  <tr><td>/tts persona &lt;id&gt; | off</td><td>设置 / 清除人设声音</td></tr>
+  <tr><td>/tts limit &lt;100-4096&gt;</td><td>设置朗读长度上限（默认摘要阈值 1500 字符）</td></tr>
+  <tr><td>/tts summary off</td><td>长回复不摘要、直接截断朗读</td></tr>
+</table>
+<div class="warn"><b>注意：</b>语音合成需要网关在线运行——电脑休眠时它既不能生成也不能发送语音，和下面的"常驻"问题直接相关。</div>
+
+<h2 id="sleep">八、合盖休眠后 OpenClaw 还能常驻工作吗？</h2>
+<h3>直接结论</h3>
+<ul>
+  <li><strong>合盖进入睡眠后，OpenClaw 会暂停：</strong>不回复消息、不执行定时任务、浏览器/文件等工具全部不可用（整个系统都睡了）。</li>
+  <li><strong>唤醒后自动恢复：</strong>你的网关是 LaunchAgent（KeepAlive=true、登录自启），系统一醒它就接着工作；只是睡眠期间错过的 cron 任务不会补跑（社区已知限制）。</li>
+  <li><strong>所以想让它 24/7 真正常驻，核心是"让电脑不睡"。</strong></li>
+</ul>
+<h3>你机器目前的实际情况（已检测）</h3>
+<table>
+  <tr><th>项目</th><th>状态</th><th>含义</th></tr>
+  <tr><td>防睡眠服务</td><td>✅ 有 <code>com.user.openclaw-keepawake</code>（caffeinate -s，已运行 3 天+）</td><td>插电时能阻止"空闲睡眠"，放着不动不会睡</td></tr>
+  <tr><td>外接显示器</td><td>❌ 当前无（仅内置屏）</td><td>没有外接屏时，MacBook 合盖仍会强制睡眠</td></tr>
+  <tr><td>网关服务</td><td>✅ LaunchAgent 常驻 + KeepAlive</td><td>进程崩溃自动重启、登录自启</td></tr>
+  <tr><td>系统睡眠定时</td><td>sleep=1（已被 caffeinate 按住）</td><td>空闲 1 分钟即睡，但当前被防睡眠断言阻止</td></tr>
+</table>
+<h3>想要"合盖常驻"，三种可行方案</h3>
+<ol>
+  <li><strong>合盖模式（Clamshell）— 最接近你想要的：</strong>给 MacBook 接上电源 + 外接显示器（+ 外接键鼠），合盖后系统会继续运行，OpenClaw 照常工作。缺点：必须有外接屏，且建议插电。</li>
+  <li><strong>换/加一台常开设备 — 社区主流做法：</strong>Mac mini、旧笔记本（开盖插电 + 系统设置永不睡眠）、云服务器、NAS 跑网关。一劳永逸，还不用每天背着"笔记本当服务器"。</li>
+  <li><strong>保持开盖使用：</strong>外接键鼠 + 显示器，把系统"锁定屏幕/电池"的睡眠都设为"永不"（仅插电时），配合你现有的 caffeinate 即可 24/7 运行。</li>
+</ol>
+<div class="danger"><b>别指望纯软件：</b>MacBook 合盖睡眠优先级高于任何软件（caffeinate、Amphetamine 都挡不住），<strong>没有外接显示器时合盖必睡</strong>。OpenClaw 官方目前也没有内置防睡眠功能（社区已提 feature 请求 #15444）。</div>
+<div class="tip"><b>顺带提醒：</b>如果你主要依赖定时任务（日报、自动归档），请务必让网关所在设备保持不睡；否则睡眠期间的定时任务会错过，醒来也不会补跑。</div>
+
+<h3>这个 keep-awake 服务耗电吗？（已实测评估）</h3>
+<ul>
+  <li><strong>进程本身可忽略：</strong><code>caffeinate -s</code> 只占 32KB 内存、0.0% CPU（实测已连跑 3 天+），成本趋近于零。</li>
+  <li><strong>真正的"耗电"是让电脑保持不睡：</strong>插电时黑屏待机约 5–15W，一天约 0.1–0.3 度电，按居民电价折合约 0.1–0.2 元/天，可忽略。</li>
+  <li><strong>电池模式下它完全不生效：</strong><code>-s</code> 仅在插电（AC）时有效，所以拔电用笔记本时续航不受影响，系统照样空闲 1 分钟后休眠——代价是电池模式下 OpenClaw 不会常驻。</li>
+</ul>
+
+<h2 id="cheatsheet">附：常用命令速查</h2>
+<table class="cmdtable">
+  <tr><th>命令</th><th>作用</th></tr>
+  <tr><td>/new [模型]</td><td>归档当前会话，开启新会话</td></tr>
+  <tr><td>/reset</td><td>原地重置当前会话</td></tr>
+  <tr><td>/model /models</td><td>查看/切换/列出模型（/model list）</td></tr>
+  <tr><td>/help /commands</td><td>查看帮助与全部命令</td></tr>
+  <tr><td>/tools</td><td>查看当前智能体可用工具</td></tr>
+  <tr><td>/status</td><td>查看运行状态、插件健康、用量配额</td></tr>
+  <tr><td>/skill &lt;名称&gt; [输入]</td><td>按名称运行技能</td></tr>
+  <tr><td>/learn [需求]</td><td>根据对话起草一个新技能（Skill Workshop）</td></tr>
+  <tr><td>/compact</td><td>压缩会话上下文，省 token</td></tr>
+  <tr><td>/btw &lt;问题&gt;</td><td>顺带问一句，不污染主对话上下文</td></tr>
+  <tr><td>/steer &lt;消息&gt;</td><td>运行中给智能体实时注入指令</td></tr>
+  <tr><td>/subagents</td><td>查看子智能体运行情况</td></tr>
+  <tr><td>/export-session</td><td>把会话导出为 HTML 存档</td></tr>
+  <tr><td>/usage</td><td>显示/重置每次回复的 token 与成本</td></tr>
+  <tr><td>/tts</td><td>控制语音回复：on/off、status、audio、latest、chat、provider、persona、limit、summary</td></tr>
+  <tr><td>! 或 /bash &lt;命令&gt;</td><td>在主机执行 Shell 命令（需启用并授权）</td></tr>
+</table>
+
+<footer>OpenClaw 🦞 使用指南 · 基于你的本机实例（2026.8.1 / 127.0.0.1:18789）与官方文档整理 · 2026-09-01（含 TTS 与休眠常驻补充）</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.svg">
+<title>课程地图 · 99门课 - 数智治途</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="kecheng-ditu.html">
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">数智治途</div>
+      <div class="sub">吴宣澄 · 中山大学数字公共治理 · 大学规划站</div>
+    </div>
+    <nav id="site-nav"></nav>
+    <div class="sidebar-foot">2026 级 · 目标：保研 · 荣誉学士 · 央选（研究生主攻）</div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <button id="menuBtn" class="menu-btn" aria-label="菜单">☰</button>
+      <button id="searchBtn" class="menu-btn" data-search-trigger aria-label="搜索">🔍</button>
+
+      <strong>数智治途</strong>
+    </div>
+    <div class="page">
+      <div class="page-inner">
+        <div class="breadcrumb"><a href="index.html">首页</a> › <a href="zhuanye-jiedu.html">专业与课程</a> › 课程地图</div>
+        <h1 class="page-title">课程地图 · 99 门课</h1>
+        <p class="page-desc">四年全部课程一网打尽：按分类、选修模块、学年筛选，或直接搜索课程名 / 课程编码 / 老师。下面还有五个选修模块的深度解读卡。</p>
+
+        <div class="callout info">
+          <div class="ct">🗺️ 怎么用这张地图</div>
+          ① 在搜索框输入课程名、编码或老师姓名；② 点击筛选标签，按分类 / 模块 / 学年查看；③ 每种筛选一次生效一个，想重置就点「全部」。下方每个模块都有"培养什么能力 / 适合谁 / 推荐选哪几门"的解读，选课之前先读它。
+        </div>
+
+                <h2>四年课程路线图（点击任意课程芯片可定位）</h2>
+        <div class="card">
+          <div class="roadmap-legend">
+            <span class="lg"><span class="dot" style="background:#e7eef6"></span>公共必修</span>
+            <span class="lg"><span class="dot" style="background:#e3f0ec"></span>通识平台</span>
+            <span class="lg"><span class="dot" style="background:#f6eedd"></span>专业核心</span>
+            <span class="lg"><span class="dot" style="background:#fbeae6"></span>实践</span>
+            <span class="lg"><span class="dot" style="background:#e9ebef"></span>专业选修</span>
+          </div>
+          <div id="courseRoadmap" class="roadmap"></div>
+        </div>
+
+<input type="text" id="courseSearch" class="search-box" placeholder="搜索课程/编码/老师">
+
+        <h3>按课程分类</h3>
+        <div class="filter-bar">
+          <button type="button" class="filter-chip active" data-filter="all">全部</button>
+          <button type="button" class="filter-chip" data-filter="公共必修课">公共必修</button>
+          <button type="button" class="filter-chip" data-filter="通识平台课">通识平台</button>
+          <button type="button" class="filter-chip" data-filter="专业核心课">专业核心</button>
+          <button type="button" class="filter-chip" data-filter="实践课">实践课</button>
+        </div>
+
+        <h3>按选修模块（5 大模块）</h3>
+        <div class="filter-bar">
+          <button type="button" class="filter-chip" data-filter="2.3.2.1 数字时代的公共治理与监管模块">数字时代的公共治理与监管</button>
+          <button type="button" class="filter-chip" data-filter="2.3.2.2 大数据与公共政策模块">大数据与公共政策</button>
+          <button type="button" class="filter-chip" data-filter="2.3.2.3 数字化转型与公共服务模块">数字化转型与公共服务</button>
+          <button type="button" class="filter-chip" data-filter="2.3.2.4 本研贯通模块">本研贯通（荣誉课）</button>
+          <button type="button" class="filter-chip" data-filter="2.3.2.5 数字技术与数据分析模块">数字技术与数据分析</button>
+        </div>
+
+        <h3>按学年</h3>
+        <div class="filter-bar">
+          <button type="button" class="filter-chip" data-filter="大一上">大一上</button>
+          <button type="button" class="filter-chip" data-filter="大一下">大一下</button>
+          <button type="button" class="filter-chip" data-filter="大二上">大二上</button>
+          <button type="button" class="filter-chip" data-filter="大二下">大二下</button>
+          <button type="button" class="filter-chip" data-filter="大三上">大三上</button>
+          <button type="button" class="filter-chip" data-filter="大三下">大三下</button>
+          <button type="button" class="filter-chip" data-filter="大四上">大四上</button>
+          <button type="button" class="filter-chip" data-filter="大四下">大四下</button>
+        </div>
+
+        <div id="courseList"></div>
+
+        <h2>课程地图使用说明</h2>
+        <div class="card">
+          <ul>
+            <li><strong>数据来源</strong>：2026 级数字公共治理专业培养方案，共 99 门课：公共必修 21 门 + 学分必修 1 门（艺术与审美课）、专业核心 21 门、实践课 3 门、通识平台 6 门、专业选修 47 门。</li>
+            <li><strong>搜索</strong>：支持课程名、课程编码、老师姓名（如输入"Python""GOV161"或"郑跃平"）。</li>
+            <li><strong>筛选</strong>：每次点击一个标签即切换筛选条件（单选）。「通识平台」标签只显示 6 门平台必修课（政治学原理、行政管理学、高数 I/II、中国政府与政治、概率统计）；想看选修再点下方具体模块标签。</li>
+            <li><strong>跨学期课程</strong>：国家安全教育、形势与政策、劳动教育、艺术与审美课等横跨多个学期的课程，不归入单学年筛选，请用「全部」或搜索查看。</li>
+            <li><strong>建议</strong>：选课前用「学年」标签把当学期课程拉出来，再用「模块」标签看选修布局，最后用搜索核对老师和编码。</li>
+            <li><strong>学分小账</strong>：公共必修 34（含艺术与审美 2）＋ 通识平台 20 ＋ 专业核心 44.5 ＋ 实践 8 ＋ 选修约 39 ＝ 毕业 145.5 学分。47 门选修课学分合计高达 97.5，你需要按路径挑着选——这就是这张地图存在的意义。</li>
+          </ul>
+        </div>
+
+        <h2>四年课程分布速览</h2>
+        <table class="c-table">
+          <thead><tr><th>学期</th><th>课程数</th><th>学期画像</th></tr></thead>
+          <tbody>
+            <tr><td>大一上</td><td>10 门</td><td>公共必修 + 通识平台打底，高数 I 与英语是重点</td></tr>
+            <tr><td>大一下</td><td>14 门</td><td>专业正式起步：数字治理概论、Python、社科研究方法</td></tr>
+            <tr><td>大二上</td><td>7 门</td><td>最轻的学期，概率统计 + 核心课，适合加练 Python 与科研</td></tr>
+            <tr><td>大二下</td><td>15 门</td><td>专业核心密集期：计量、公共政策导论、AI 两门课</td></tr>
+            <tr><td>大三上</td><td>20 门</td><td>课程峰值：选修冲刺 + 大数据分析，学会取舍</td></tr>
+            <tr><td>大三下</td><td>20 门</td><td>数据可视化、计算社会科学 + 科研与创新训练</td></tr>
+            <tr><td>大四上</td><td>6 门</td><td>专业实习 + 本研贯通荣誉课，考研保研申请季</td></tr>
+            <tr><td>大四下</td><td>3 门</td><td>毕业论文 + 高级统计 / 高级政策分析</td></tr>
+          </tbody>
+        </table>
+        <p>（另有国家安全教育、形势与政策、劳动教育、艺术与审美课 4 门跨学期课程。表格按培养方案学期归属统计。）</p>
+        <div class="callout info">
+          <div class="ct">📊 三个节奏启示</div>
+          ① 大二是"最轻却最该发力"的窗口：课程少，正好用来把 Python 练熟、进课题组；② 大三课程最密集，选修要提前到大二下开始消化，别全部堆在峰值期；③ 大四反而清空，留给实习、论文和荣誉课程——所以路径 4 的专选务必在大三下之前修完。
+        </div>
+
+        <div class="callout tip">
+          <div class="ct">🎯 大一新生优先关注课程</div>
+          <p><strong>大一上</strong>：高等数学三（I）4 学分（绩点命脉）· 大学英语 2 · 军事课 4 · 政治学原理 3 · 行政管理学 3 · 经济学基础 3 · 理解数字时代：智能体与公共管理 0.5（接触老师）</p>
+          <p><strong>大一下</strong>：高等数学三（II）4 · 数字治理概论 2（专业第一课）· Python 基础与数据分析 2（编程起点）· 社会科学研究方法 3 · 宪法与行政法 3 · 中国政府与政治 3</p>
+          <p>优先级建议：<strong>高数 &gt; Python &gt; 数字治理概论 &gt; 英语 &gt; 其他</strong>。前两门定绩点，中间两门定专业方向。</p>
+        </div>
+
+        <h2>五个选修模块解读</h2>
+        <p>专业选修按五大模块组织，对应不同的能力方向和出路。以下按"培养什么能力 / 适合谁 / 推荐选哪几门"逐张解读，选课前建议先读一遍。</p>
+        <div class="callout tip">
+          <div class="ct">🧭 30 秒定位</div>
+          想做监管规则 → 模块 1；想做政策研究 / 智库 → 模块 2；爱看城市与社区 → 模块 3；铁了心读研 / 冲荣誉学士 → 模块 4；理科背景、想当"懂技术的治理者" → 模块 5。混搭公式：主模块修满 ≥12 学分，再从相邻模块挑 2-4 学分，竞争力最强。
+        </div>
+
+        <div class="accordion open">
+          <div class="acc-head"><span>模块 1 · 数字时代的公共治理与监管（11 门）</span><span class="chev">▶</span></div>
+          <div class="acc-body">
+            <table class="c-table">
+              <thead><tr><th>课程</th><th>学分</th><th>学期</th><th>老师</th></tr></thead>
+              <tbody>
+                <tr><td>数字战略管理</td><td>2</td><td>大二下</td><td>吴少龙</td></tr>
+                <tr><td>制度经济学</td><td>2</td><td>大二下</td><td>周燕</td></tr>
+                <tr><td>公共财务管理</td><td>2</td><td>大三上</td><td>王秋石</td></tr>
+                <tr><td>区域科技创新</td><td>2</td><td>大三上</td><td>叶林</td></tr>
+                <tr><td>数字时代的社会组织管理</td><td>2</td><td>大三上</td><td>刘泽金</td></tr>
+                <tr><td>数字化协同治理</td><td>2</td><td>大三上</td><td>陈琤</td></tr>
+                <tr><td>廉政与治理</td><td>2</td><td>大三上</td><td>朱琳</td></tr>
+                <tr><td>公共财政与税收</td><td>2</td><td>大三下</td><td>陈馨</td></tr>
+                <tr><td>福利国家政治经济学</td><td>2</td><td>大三下</td><td>李棉管</td></tr>
+                <tr><td>政治社会学</td><td>2</td><td>大三下</td><td>马欣荣</td></tr>
+                <tr><td>国家发展</td><td>2</td><td>大四上</td><td>梁平汉</td></tr>
+              </tbody>
+            </table>
+            <p><strong>培养什么能力</strong>：理解"数字时代政府怎么监管"——平台经济与数字战略、数字化协同治理、廉政与治理、公共财政与税收等。本质是训练你站在"规则制定者"视角思考：新技术出现后，制度该怎么跟进、怎么约束、怎么平衡。</p>
+            <p><strong>适合谁</strong>：想走体制内监管 / 政策岗、目标考公选调的同学，或想做"治理规则"研究的人。和你"政策 + 技术"双线里的政策线最贴近。</p>
+            <p><strong>推荐选</strong>（与路径 1 和选调最相关）：数字战略管理（2，大二下，吴少龙）、数字化协同治理（2，大三上，陈琤）、廉政与治理（2，大三上，朱琳）、公共财务管理（2，大三上）、国家发展（2，大四上，梁平汉）。</p>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="acc-head"><span>模块 2 · 大数据与公共政策（13 门）</span><span class="chev">▶</span></div>
+          <div class="acc-body">
+            <table class="c-table">
+              <thead><tr><th>课程</th><th>学分</th><th>学期</th><th>老师</th></tr></thead>
+              <tbody>
+                <tr><td>社会政策导论</td><td>2</td><td>大二下</td><td>岳经纶</td></tr>
+                <tr><td>卫生经济与政策</td><td>2</td><td>大二下</td><td>黄严</td></tr>
+                <tr><td>应急管理</td><td>2</td><td>大三上</td><td>练宏</td></tr>
+                <tr><td>认知科学与公共政策</td><td>2</td><td>大三上</td><td>陈文娜</td></tr>
+                <tr><td>住房政策</td><td>2</td><td>大三上</td><td>朱亚鹏</td></tr>
+                <tr><td>教育政策</td><td>2</td><td>大三上</td><td>徐淑芹</td></tr>
+                <tr><td>公共政策评估</td><td>2</td><td>大三上</td><td>关小东</td></tr>
+                <tr><td>比较社会政策</td><td>2</td><td>大三上</td><td>陈永杰</td></tr>
+                <tr><td>养老政策</td><td>2</td><td>大三上</td><td>陈永杰</td></tr>
+                <tr><td>劳工政策</td><td>2</td><td>大三下</td><td>陈永杰</td></tr>
+                <tr><td>科技政策</td><td>2</td><td>大三下</td><td>周燕</td></tr>
+                <tr><td>数据预测与决策模拟</td><td>2</td><td>大三下</td><td>庄文嘉</td></tr>
+                <tr><td>家庭政策</td><td>2</td><td>大三下</td><td>钟晓慧</td></tr>
+              </tbody>
+            </table>
+            <p><strong>培养什么能力</strong>：把政策分析框架落到具体领域——应急、住房、教育、养老、卫生、科技、劳工，再加一门"数据预测与决策模拟"。训练你"进入一个领域 → 看清问题 → 用数据辅助决策"的完整链路。</p>
+            <p><strong>适合谁</strong>：想走政策研究、智库、保研公共政策方向的同学。领域知识越广，分析越有底气。</p>
+            <p><strong>推荐选</strong>：社会政策导论（2，大二下，岳经纶）、公共政策评估（2，大三上，关小东）、应急管理（2，大三上，练宏）、科技政策（2，大三下，周燕）、数据预测与决策模拟（2，大三下，庄文嘉）。</p>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="acc-head"><span>模块 3 · 数字化转型与公共服务（12 门）</span><span class="chev">▶</span></div>
+          <div class="acc-body">
+            <table class="c-table">
+              <thead><tr><th>课程</th><th>学分</th><th>学期</th><th>老师</th></tr></thead>
+              <tbody>
+                <tr><td>城市分析学</td><td>2</td><td>大二下</td><td>陈娜</td></tr>
+                <tr><td>土地资源管理</td><td>2</td><td>大二下</td><td>起晓星</td></tr>
+                <tr><td>社会福利服务</td><td>2</td><td>大三上</td><td>钟晓慧</td></tr>
+                <tr><td>智能交通治理导论</td><td>2</td><td>大三上</td><td>关小东</td></tr>
+                <tr><td>比较城市治理</td><td>2</td><td>大三上</td><td>蔡荣</td></tr>
+                <tr><td>城市规划</td><td>2</td><td>大三下</td><td>张雪帆</td></tr>
+                <tr><td>中国社会转型与国家治理</td><td>2</td><td>大三下</td><td>叶林</td></tr>
+                <tr><td>智慧社区治理</td><td>2</td><td>大三下</td><td>蔡荣</td></tr>
+                <tr><td>数字化时代下的城市公用事业发展</td><td>2</td><td>大三下</td><td>陈琤</td></tr>
+                <tr><td>城市与房地产经济</td><td>2</td><td>大三下</td><td>起晓星</td></tr>
+                <tr><td>区域公共管理</td><td>2</td><td>大三下</td><td>叶林</td></tr>
+                <tr><td>中国社保制度改革</td><td>2</td><td>大四上</td><td>岳经纶</td></tr>
+              </tbody>
+            </table>
+            <p><strong>培养什么能力</strong>：城市与公共服务领域的数字化转型——城市分析、智慧社区、智能交通、城市规划、社保制度。空间 + 服务双视角，训练"公共服务怎么用数字手段做得更好"。</p>
+            <p><strong>适合谁</strong>：对智慧城市、数字政府落地场景感兴趣，目标数字政府 / 智慧城市运营方向的同学。</p>
+            <p><strong>推荐选</strong>：城市分析学（2，大二下，陈娜）、智能交通治理导论（2，大三上，关小东）、智慧社区治理（2，大三下，蔡荣）、数字化时代下的城市公用事业发展（2，大三下，陈琤）、中国社保制度改革（2，大四上，岳经纶）。</p>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="acc-head"><span>模块 4 · 本研贯通（5 门）⭐ 荣誉学士课源</span><span class="chev">▶</span></div>
+          <div class="acc-body">
+            <table class="c-table">
+              <thead><tr><th>课程</th><th>学分</th><th>学期</th><th>老师</th></tr></thead>
+              <tbody>
+                <tr><td>公共管理经典与前沿</td><td>3</td><td>大四上</td><td>齐云蕾</td></tr>
+                <tr><td>政治理论专题研究</td><td>3</td><td>大四上</td><td>童志超</td></tr>
+                <tr><td>伦理分析与公共政策</td><td>2</td><td>大四上</td><td>朱佳峰</td></tr>
+                <tr><td>高级统计</td><td>2</td><td>大四下</td><td>王秋石</td></tr>
+                <tr><td>高级政策分析</td><td>2</td><td>大四下</td><td>陈娜</td></tr>
+              </tbody>
+            </table>
+            <p><strong>培养什么能力</strong>：研究生水平的经典阅读与研究方法——公共管理经典与前沿、政治理论专题研究、伦理分析与公共政策、高级统计、高级政策分析。这是<strong>荣誉学士学位的核心课程来源</strong>：修 ≥18 学分荣誉课程且主修 + 荣誉课均绩 ≥3.5，即可冲击荣誉学士学位。</p>
+            <p><strong>适合谁</strong>：打算保研 / 读研、想冲荣誉学位的同学。大四再修，但学分规划要提前留好空间。</p>
+            <p><strong>推荐选</strong>：公共管理经典与前沿（3，大四上，齐云蕾）、伦理分析与公共政策（2，大四上，朱佳峰）、高级统计（2，大四下，王秋石）、高级政策分析（2，大四下，陈娜）。</p>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="acc-head"><span>模块 5 · 数字技术与数据分析（6 门）⭐ 路径 4 主干</span><span class="chev">▶</span></div>
+          <div class="acc-body">
+            <table class="c-table">
+              <thead><tr><th>课程</th><th>学分</th><th>学期</th><th>老师</th></tr></thead>
+              <tbody>
+                <tr><td>田野调查方法</td><td>2</td><td>大一下</td><td>夏循祥</td></tr>
+                <tr><td>传播数据分析基础</td><td>3</td><td>大二下</td><td>陈湘萍</td></tr>
+                <tr><td>博弈论</td><td>2</td><td>大三上</td><td>何俊志</td></tr>
+                <tr><td>科研训练与创新实践</td><td>2</td><td>大三下</td><td>李棉管</td></tr>
+                <tr><td>实验公共管理</td><td>2</td><td>大三下</td><td>张书维</td></tr>
+                <tr><td>数据库原理及应用（含实验）</td><td>2.5</td><td>大三下</td><td>张青年</td></tr>
+              </tbody>
+            </table>
+            <p><strong>培养什么能力</strong>：最硬核的技术模块——田野调查（质性数据）、传播数据分析、博弈论、实验公共管理、数据库原理、科研训练。训练你从"拿数据"到"分析数据"再到"做实验 / 做科研"的完整技术链路。</p>
+            <p><strong>适合谁</strong>：理科背景、目标"懂技术的治理者"、保研走实证 / 数据方向的同学——就是为你设计的模块。</p>
+            <p><strong>推荐选</strong>（按时间线）：田野调查方法（2，大一下，夏循祥）→ 传播数据分析基础（3，大二下，陈湘萍）→ 数据库原理及应用（2.5，大三下，张青年）→ 博弈论（2，大三上，何俊志）→ 实验公共管理（2，大三下，张书维）→ 科研训练与创新实践（2，大三下，李棉管）。</p>
+            <p><strong>组合建议</strong>：技术课打底 + 政策课补脑。路径 4 要求专选 ≥12，这里选满 12-14 学分，再留 2-4 学分给模块 1 或模块 2，形成"技术为主、政策为辅"的混搭竞争力。</p>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="ct">🧭 模块与目标的对应</div>
+          <ul>
+            <li>目标<strong>中央选调 / 考公</strong>：模块 1（监管）+ 模块 2（政策）为主，模块 5 的技术课当加分项。</li>
+            <li>目标<strong>保研 / 荣誉学士</strong>：模块 4（本研贯通）必选 ≥18 学分，模块 5 补研究方法。</li>
+            <li>目标<strong>"懂技术的治理者"（推荐）</strong>：模块 5 打底 + 模块 1 / 2 各挑 1-2 门，兼顾稀缺性与体制适配。</li>
+          </ul>
+        </div>
+
+        <div class="footer-note">数智治途 · 课程地图 · 数据来源：2026级培养方案（99 门课）</div>
+      </div>
+    </div>
+  </div>
+</div>
+<button id="backTop" title="返回顶部">↑</button>
+<button id="themeBtn" title="切换主题">🌙</button>
+<script src="assets/data/courses.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

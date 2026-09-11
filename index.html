@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吴宣澄 · AI 开发者项目展示</title>
+<meta name="description" content="吴宣澄的项目集：多智能体系统、学习网站、自动化流水线、桌面工具与知识工程。">
+<meta name="author" content="吴宣澄">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23E17055'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='sans-serif'%3E吴%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0a0b0d; --bg2:#0e1014; --panel:rgba(22,24,30,.72); --panel-solid:#14161b;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --ink:#f2f3f5; --dim:#9aa0ab; --dim2:#6b7280;
+  --acc:#E17055; --acc2:#7768AE; --ok:#10b981; --warn:#f59e0b;
+  --shadow:0 20px 60px rgba(0,0,0,.5); --r:20px;
+  --font:Inter,"Noto Sans SC",system-ui,-apple-system,sans-serif;
+  --mono:"SF Mono","JetBrains Mono",ui-monospace,monospace;
+}
+html[data-theme="light"]{
+  --bg:#f6f5f2; --bg2:#efece6; --panel:rgba(255,255,255,.8); --panel-solid:#fff;
+  --line:rgba(20,20,30,.1); --line2:rgba(20,20,30,.18);
+  --ink:#17181d; --dim:#5c6270; --dim2:#8a8f9c;
+  --shadow:0 20px 50px rgba(30,30,50,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 500px at 85% -10%,rgba(225,112,85,.09),transparent 60%),
+             radial-gradient(700px 500px at -10% 30%,rgba(119,104,174,.08),transparent 60%)}
+html[data-theme="light"] body::before{opacity:.5}
+main{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 24px 90px}
+
+/* 顶部 */
+.top{position:sticky;top:0;z-index:50;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);background:var(--bg);background:color-mix(in srgb,var(--bg) 72%,transparent);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+.logo .cube{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:grid;place-items:center;font-size:13px;color:#fff}
+.top .sp{flex:1}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--dim2)}
+#search{width:210px;padding:8px 12px 8px 32px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:13.5px;outline:none;transition:.25s;font-family:var(--font)}
+#search:focus{border-color:var(--acc);width:250px;box-shadow:0 0 0 3px rgba(225,112,85,.15)}
+.kbd{font-family:var(--mono);font-size:11px;color:var(--dim2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin-left:6px}
+.tbtn{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:var(--panel);cursor:pointer;color:var(--ink);transition:.2s}
+.tbtn:hover{border-color:var(--acc);transform:translateY(-1px)}
+
+/* Hero */
+.hero{padding:88px 0 20px}
+.h-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid var(--line);border-radius:999px;color:var(--dim);font-size:13px;background:var(--panel)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);animation:pulse 2.2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+h1{margin:26px 0 0;font-size:clamp(38px,6.4vw,64px);font-weight:900;line-height:1.12;letter-spacing:-1.5px}
+h1 .grad{background:linear-gradient(100deg,var(--acc) 10%,var(--acc2) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{margin:20px 0 0;max-width:660px;color:var(--dim);font-size:17px}
+.lead b{color:var(--ink);font-weight:650}
+.stats{display:flex;gap:14px;margin:36px 0 6px;flex-wrap:wrap}
+.stat{flex:1;min-width:130px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--panel);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.stat b{display:block;font-size:30px;font-weight:850;font-variant-numeric:tabular-nums}
+.stat b i{font-style:normal;color:var(--acc)}
+.stat span{color:var(--dim);font-size:12.5px}
+
+/* 筛选 */
+.filters{display:flex;gap:9px;margin:52px 0 22px;flex-wrap:wrap;align-items:center}
+.filters h2{font-size:24px;font-weight:850;margin-right:14px}
+.fbtn{padding:7px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:13.5px;cursor:pointer;font-family:var(--font);transition:.2s}
+.fbtn:hover{color:var(--ink);border-color:var(--line2)}
+.fbtn.on{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:650}
+.count{margin-left:auto;color:var(--dim2);font-size:13px}
+
+/* 卡片 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+.card{position:relative;display:flex;flex-direction:column;gap:12px;padding:26px 24px 20px;border-radius:var(--r);border:1px solid var(--line);background:var(--panel);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .28s cubic-bezier(.2,.7,.3,1),border-color .28s,box-shadow .28s;opacity:0;transform:translateY(26px)}
+.card.in{opacity:1;transform:none}
+:where(html.no-js) .card{opacity:1;transform:none}
+.card:hover{transform:translateY(-5px);border-color:rgba(225,112,85,.5);box-shadow:var(--shadow)}
+.card.hide{display:none}
+.card .num{position:absolute;top:22px;right:24px;font-family:var(--mono);font-size:12px;color:var(--dim2)}
+.card .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(225,112,85,.16),rgba(119,104,174,.16));border:1px solid var(--line)}
+.card h3{font-size:19px;font-weight:800;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.flag{font-size:11px;padding:2.5px 9px;border-radius:999px;font-weight:650;letter-spacing:.3px}
+.flag.star{background:rgba(225,112,85,.16);color:var(--acc)}
+.flag.new{background:rgba(16,185,129,.15);color:var(--ok)}
+.card p{color:var(--dim);font-size:14.3px;flex:1}
+.tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{font-size:11.5px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+.acts{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7.5px 14px;border-radius:11px;font-size:13px;font-weight:650;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:.2s;font-family:var(--font)}
+.btn.pri{background:var(--acc);color:#fff}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.gh{border-color:var(--line2);color:var(--dim)}
+.btn.gh:hover{color:var(--ink);border-color:var(--ink)}
+
+/* 工具链 */
+.sec{margin-top:76px}
+.sec>h2{font-size:24px;font-weight:850;display:flex;align-items:center;gap:14px}
+.sec>h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.chip{padding:9px 17px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:14px;transition:.2s}
+.chip:hover{border-color:var(--acc);transform:translateY(-2px)}
+.chip small{color:var(--dim2)}
+.note{margin-top:24px;padding:18px 22px;border-left:3px solid var(--acc2);background:var(--panel);border-radius:0 14px 14px 0;color:var(--dim);font-size:14.3px}
+.note b{color:var(--ink)}
+
+/* 预览弹窗 */
+.veil{position:fixed;inset:0;z-index:90;background:rgba(5,6,8,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:4vh 4vw}
+.veil.on{display:flex}
+.modal{width:min(1200px,100%);height:min(84vh,860px);display:flex;flex-direction:column;border-radius:20px;overflow:hidden;border:1px solid var(--line2);background:var(--panel-solid);box-shadow:var(--shadow);animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.modal header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+.modal header .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xbtn{width:32px;height:32px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer;font-size:15px}
+.xbtn:hover{color:var(--ink);border-color:var(--acc)}
+#frame{flex:1;border:none;background:#fff}
+html[data-theme="dark"] #frame{background:#101216}
+.open-ext{font-size:12.5px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:999px}
+.open-ext:hover{color:var(--acc);border-color:var(--acc)}
+
+/* 进度条/回顶 */
+#prog{position:fixed;top:0;left:0;height:2.5px;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));z-index:99;transition:width .1s linear}
+#up{position:fixed;right:26px;bottom:26px;z-index:60;width:44px;height:44px;border-radius:14px;border:1px solid var(--line2);background:var(--panel);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ink);font-size:17px;cursor:pointer;opacity:0;pointer-events:none;transition:.3s}
+#up.on{opacity:1;pointer-events:auto}
+#up:hover{border-color:var(--acc);transform:translateY(-3px)}
+
+footer{margin-top:90px;padding-top:26px;border-top:1px solid var(--line);color:var(--dim);font-size:13.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--dim)}
+@media(max-width:640px){.top-in{flex-wrap:wrap}#search{width:100%}.hero{padding-top:56px}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<div class="top"><div class="top-in">
+  <span class="logo"><span class="cube">吴</span>吴宣澄 <span style="color:var(--dim);font-weight:500">· 项目集</span></span>
+  <span class="sp"></span>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="search" type="search" placeholder="搜索项目…" autocomplete="off">
+  </div>
+  <span class="kbd">/</span>
+  <button class="tbtn" id="theme" title="切换深浅主题">🌙</button>
+</div></div>
+
+<main>
+<section class="hero">
+  <span class="h-badge"><span class="dot"></span>11 个项目 · 全部经过可行性检验 · 2026-09 整编</span>
+  <h1>你好，我是<span class="grad">吴宣澄</span>。<br>我配置 AI，让它们帮我<span class="grad">造产品</span>。</h1>
+  <p class="lead">一名用 AI Agent 流水线做开发的大一学生。这里收录我<b>亲手配置并产出</b>的全部开发者项目：多智能体系统、交互学习网站、大学规划站、自动化内容流水线、桌面工具与知识工程——每一项都可点开验证，<b>效果与描述一致</b>。</p>
+  <div class="stats">
+    <div class="stat"><b data-n="11">0</b><span>入选项目</span></div>
+    <div class="stat"><b data-n="1856" data-suf="+">0</b><span>军理题库题量</span></div>
+    <div class="stat"><b data-n="32">0</b><span>期 AI 日报连更</span></div>
+    <div class="stat"><b data-n="11" data-suf="+">0</b><span>AI 工具链协同</span></div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="filters">
+    <h2>项目</h2>
+    <button class="fbtn on" data-f="all">全部</button>
+    <button class="fbtn" data-f="web">网站应用</button>
+    <button class="fbtn" data-f="ai">AI 系统</button>
+    <button class="fbtn" data-f="tool">工具</button>
+    <button class="fbtn" data-f="docs">文档</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="sec">
+  <h2>AI 工具链</h2>
+  <div class="chips">
+    <span class="chip">ZCode <small>· 编码中枢</small></span>
+    <span class="chip">Codex CLI <small>· 站点构建</small></span>
+    <span class="chip">WorkBuddy <small>· 微信遥控</small></span>
+    <span class="chip">OpenClaw <small>· 常驻网关</small></span>
+    <span class="chip">Claude Code</span>
+    <span class="chip">Cursor / VS Code</span>
+    <span class="chip">Coze 扣子</span>
+    <span class="chip">LM Studio <small>· 本地模型</small></span>
+    <span class="chip">DSH / Kimi</span>
+    <span class="chip">Obsidian <small>· 知识库</small></span>
+  </div>
+  <p class="note"><b>架构思路</b>：编码智能体（ZCode / Codex / Claude Code）负责造工具，执行通道（WorkBuddy 微信遥控 + OpenClaw 常驻网关）负责跑任务，LM Studio 本地模型兜底，产出统一整编为本合集——「配置 → 产出 → 检验 → 展示」的完整闭环。</p>
+</section>
+
+<footer>
+  <span>© 2026 吴宣澄 · AI 开发者项目展示 · 本页零依赖可离线使用</span>
+  <span><a href="README.md">合集总览与 AI 配置盘点报告</a></span>
+</footer>
+</main>
+
+<div class="veil" id="veil">
+  <div class="modal">
+    <header><span class="t" id="mtitle">预览</span>
+      <a class="open-ext" id="mext" href="#" target="_blank">新窗口打开 ↗</a>
+      <button class="xbtn" id="mclose">✕</button></header>
+    <iframe id="frame" title="项目预览"></iframe>
+  </div>
+</div>
+<button id="up" title="回到顶部">↑</button>
+
+<script>
+/* 脚本可用即移除 no-js 兜底；脚本失效时卡片保持可见（审计修复 A1） */
+document.documentElement.classList.remove('no-js');
+const P=[
+ {n:"01",ic:"🤖",t:"AI Agent Team",flag:["star","旗舰"],cat:"ai",
+  d:"五角色多智能体协作系统：任务分解 → 接力执行 → 审校员自动质检回流 → 产物落盘。LangGraph 状态机编排，Token 预算熔断与文件沙箱等安全设计内建。",
+  tags:["Python","LangChain","LangGraph","多智能体"],
+  doc:"01-ai-agent-team/README.html",docTxt:"项目文档"},
+ {n:"02",ic:"📰",t:"AI 行业日报流水线",cat:"ai",
+  d:"连续 32 期不间断的 AI 行业日报：采集、撰写、排版全自动，每期为自包含 HTML 可离线归档，附时间倒序目录页。",
+  tags:["自动化","HTML","内容工程"],
+  doc:"02-ai-daily-reports/README.html",prev:"02-ai-daily-reports/index.html",pt:"打开目录页"},
+ {n:"03",ic:"📖",t:"雅思备考知识站",cat:"web",
+  d:"个人知识工程：听说读写四模块 + 单词句型 + 日/周/月三层复盘体系的静态知识站，纯静态零依赖，AI 辅助维护。",
+  tags:["静态站点","知识管理"],
+  doc:"03-ielts-hub/README.html",prev:"03-ielts-hub/site/index.html",pt:"打开网站"},
+ {n:"04",ic:"🎖",t:"军事理论备考笔记",flag:["new","新收录"],cat:"web",
+  d:"2026 整合版·交互增强版：章节知识库 + 1856 题全库刷题 + 模拟考试自动评分 + 错题本/收藏夹，2MB 单文件离线可用。",
+  tags:["HTML 应用","题库引擎","离线自包含"],
+  doc:"04-military-hub/README.html",prev:"04-military-hub/军事理论备考笔记（2026整合版·交互增强版）.html",pt:"打开学习网站"},
+ {n:"05",ic:"🧭",t:"数智治途 · 大学规划站",flag:["new","新收录"],cat:"web",
+  d:"用 Codex CLI 构建的大学规划导航站：宏观规划、专业解读、大一行动手册与保研/班长/荣誉等五条目标路线，11+ 页多页站 + 单文件版。",
+  tags:["Codex 构建","多页站点","规划导航"],
+  doc:"05-shuzhi-plan-site/README.html",prev:"05-shuzhi-plan-site/site/index.html",pt:"打开网站"},
+ {n:"06",ic:"🪪",t:"个人作品集网站",flag:["new","新收录"],cat:"web",
+  d:"VS Code 手工打造的单页作品集：深色玻璃拟态、3D 翻转卡片与作品轮播，五大区块（关于/技能/项目/联系），另附早期设计变体留存演进。",
+  tags:["VS Code","TailwindCSS","交互设计"],
+  doc:"06-personal-portfolio/README.html",prev:"06-personal-portfolio/index.html",pt:"打开网站"},
+ {n:"07",ic:"🍅",t:"桌面番茄钟",cat:"tool",
+  d:"纯 tkinter 实现的桌面小组件：圆形进度环、快捷键切换三模式、阶段结束系统通知，446 行零第三方依赖。",
+  tags:["Python","tkinter","桌面工具"],
+  doc:"07-pomodoro-timer/README.html",docTxt:"项目文档"},
+ {n:"08",ic:"📊",t:"PPT 自动生成器",cat:"tool",
+  d:"代码即幻灯片：python-pptx + PIL 程序化控制版式、配色与图片处理，一次编写秒级重建整套演示文稿，已有课堂实战产出。",
+  tags:["Python","python-pptx","办公自动化"],
+  doc:"08-ppt-autogen/README.html",docTxt:"项目文档"},
+ {n:"09",ic:"📚",t:"AI 工具中文手册集",cat:"docs",
+  d:"15 份基于真实配置与踩坑经验的中文手册：Codex、Claude Code、OpenClaw、DSH 等，Markdown + HTML 双格式持续更新。",
+  tags:["文档工程","Markdown"],
+  doc:"09-ai-handbooks/README.html",docTxt:"手册索引"},
+ {n:"10",ic:"🪶",t:"个人简介网站 · Coze 版",flag:["new","新收录"],cat:"web",
+  d:"用扣子 Coze 平台搭建的个人简介单页：297KB 自包含导出，与 06 的手写版形成「低代码平台 vs 手写代码」双版本对照，附 Netlify 部署二维码。",
+  tags:["Coze 扣子","低代码","单页站"],
+  doc:"10-personal-profile-site/README.html",prev:"10-personal-profile-site/个人简介网站.html",pt:"打开网站"},
+ {n:"11",ic:"🔤",t:"WordVault 单词本",flag:["new","新收录"],cat:"web",
+  d:"扣子 Coze 生成的单文件背单词应用：216KB 自包含、离线可用，学习记录仅存本机，与雅思站的单词模块构成完整词汇学习链路。",
+  tags:["Coze 扣子","背单词","零依赖"],
+  doc:"11-wordvault/README.html",prev:"11-wordvault/WordVault单词本.html",pt:"打开应用"},
+];
+const grid=document.getElementById("grid"),count=document.getElementById("count");
+grid.innerHTML=P.map((p,i)=>`<article class="card" data-cat="${p.cat}" data-txt="${(p.t+p.d+p.tags.join()).toLowerCase()}">
+ <span class="num">${p.n}</span><div class="ic">${p.ic}</div>
+ <h3>${p.t}${p.flag?`<span class="flag ${p.flag[0]}">${p.flag[1]}</span>`:""}</h3>
+ <p>${p.d}</p>
+ <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+ <div class="acts">
+   ${p.prev?`<button class="btn pri" data-prev="${encodeURI(p.prev)}" data-t="${p.t}">${p.pt||"在线预览"} →</button>`:""}
+   <a class="btn ${p.prev?"gh":"pri"}" href="${p.doc}">${p.docTxt||"项目文档"}</a>
+   <button class="btn gh" data-copy="${p.n}" title="复制项目相对路径">⧉</button>
+ </div></article>`).join("");
+
+/* 筛选 + 搜索 */
+let cat="all";
+function apply(){
+  const q=document.getElementById("search").value.trim().toLowerCase();
+  let n=0;
+  document.querySelectorAll(".card").forEach(c=>{
+    const ok=(cat==="all"||c.dataset.cat===cat)&&(!q||c.dataset.txt.includes(q));
+    c.classList.toggle("hide",!ok); if(ok)n++;
+  });
+  count.textContent=`${n} / ${P.length} 个项目`;
+}
+document.querySelectorAll(".fbtn").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".fbtn").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");cat=b.dataset.f;apply();
+});
+document.getElementById("search").addEventListener("input",apply);
+document.addEventListener("keydown",e=>{
+  if(e.key==="/"&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();search.focus()}
+  if(e.key==="Escape")closeModal();
+});
+apply();
+
+/* 复制路径 */
+grid.addEventListener("click",e=>{
+  const cp=e.target.closest("[data-copy]");
+  if(cp){const p=P.find(x=>x.n===cp.dataset.copy);
+    navigator.clipboard.writeText(`AI项目展示/${p.doc.split("/")[0]}`).then(()=>{cp.textContent="✓";setTimeout(()=>cp.textContent="⧉",1200)});}
+  const pv=e.target.closest("[data-prev]");
+  if(pv)openModal(pv.dataset.t,pv.dataset.prev);
+});
+
+/* 预览弹窗 */
+const veil=document.getElementById("veil"),frame=document.getElementById("frame");
+function openModal(t,src){document.getElementById("mtitle").textContent=t+" · 实况预览";
+  document.getElementById("mext").href=src;frame.src=src;veil.classList.add("on");document.body.style.overflow="hidden"}
+function closeModal(){veil.classList.remove("on");frame.src="about:blank";document.body.style.overflow=""}
+document.getElementById("mclose").onclick=closeModal;
+veil.addEventListener("click",e=>{if(e.target===veil)closeModal()});
+
+/* 主题切换 */
+const themeBtn=document.getElementById("theme");
+const saved=localStorage.getItem("theme")||"dark";
+document.documentElement.dataset.theme=saved;themeBtn.textContent=saved==="dark"?"🌙":"☀️";
+themeBtn.onclick=()=>{const n=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  document.documentElement.dataset.theme=n;localStorage.setItem("theme",n);themeBtn.textContent=n==="dark"?"🌙":"☀️"};
+
+/* 滚动：进度条/回顶/入场动画/计数 */
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.12});
+document.querySelectorAll(".card").forEach(c=>io.observe(c));
+const prog=document.getElementById("prog"),up=document.getElementById("up");
+addEventListener("scroll",()=>{const h=document.documentElement;
+  prog.style.width=h.scrollTop*100/(h.scrollHeight-h.innerHeight||1)+"%";
+  prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%";
+  up.classList.toggle("on",h.scrollTop>500)});
+up.onclick=()=>scrollTo({top:0,behavior:"smooth"});
+document.querySelectorAll(".stat b").forEach(el=>{
+  const target=+el.dataset.n,suf=el.dataset.suf||"";let t0=null;
+  const io2=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return;io2.disconnect();
+    const step=t=>{if(!t0)t0=t;const k=Math.min((t-t0)/1400,1);
+      el.innerHTML=Math.floor(target*(1-Math.pow(1-k,3)))+(k===1?`<i>${suf}</i>`:"");
+      if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
+  io2.observe(el)});
+</script>
+</body>
+</html>

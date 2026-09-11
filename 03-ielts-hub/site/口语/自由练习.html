@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自由练习 - 雅思7分知识库</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;max-width:1000px;margin:0 auto;padding:30px 20px 80px;background:#f8f9fa;color:#333;line-height:1.8}
+h1{font-size:28px;color:#1a1a2e;border-bottom:3px solid #e94560;padding-bottom:12px;margin-bottom:24px;margin-top:10px}
+h2{font-size:22px;color:#16213e;border-left:5px solid #e94560;padding-left:12px;margin:30px 0 15px}
+.back-home{display:inline-block;margin:10px 0 20px;padding:8px 16px;background:#16213e;color:white;border-radius:6px;font-size:13px;text-decoration:none}
+.back-home:hover{background:#0f3460}
+.section-card{background:white;border-radius:12px;padding:24px;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.usage-tip{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border-left:4px solid #4caf50;padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0;font-size:13px;line-height:1.8}
+.usage-tip strong{color:#2e7d32}
+
+/* 题目区块 */
+.question-block{border:2px solid #e0e0e0;border-radius:12px;padding:20px;margin:16px 0;background:#fafafa;transition:border-color 0.2s}
+.question-block:focus-within{border-color:#4caf50}
+.block-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.block-title{font-size:16px;font-weight:700;color:#16213e}
+.block-del{background:#fff;border:1px solid #f0c0c0;border-radius:6px;padding:4px 12px;font-size:12px;color:#e94560;cursor:pointer;transition:all 0.1s}
+.block-del:hover{background:#fce4e4}
+.block-form{display:flex;flex-direction:column;gap:10px}
+.block-form textarea{width:100%;padding:10px 12px;border:2px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical;transition:border-color 0.2s;background:white}
+.block-form textarea:focus{outline:none;border-color:#4caf50}
+.block-form label{font-size:13px;font-weight:600;color:#16213e;display:flex;align-items:center;gap:6px}
+.block-form label .tag{font-size:11px;font-weight:400;color:#999;background:#eee;padding:1px 8px;border-radius:10px}
+.block-rec-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.rec-btn{padding:8px 18px;border:none;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.rec-btn:disabled{opacity:0.5;cursor:not-allowed}
+.rec-btn-start{background:#4caf50;color:white}
+.rec-btn-start:hover:not(:disabled){background:#43a047}
+.rec-btn-start.recording{background:#c62828;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(198,40,40,0.4)}50%{box-shadow:0 0 0 12px rgba(198,40,40,0)}}
+.rec-btn-stop{background:#555;color:white}
+.rec-btn-stop:hover:not(:disabled){background:#444}
+.rec-timer{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;color:#16213e;min-width:70px;text-align:center}
+.rec-status{font-size:12px;color:#999}
+.rec-status.recording{color:#e94560}
+.block-upload{border:2px dashed #ddd;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;margin-top:4px}
+.block-upload:hover{border-color:#4caf50;background:#f1f8e9}
+.block-upload.dragover{border-color:#4caf50;background:#e8f5e9}
+.block-upload .up-icon{font-size:28px;margin-bottom:4px}
+.block-upload p{font-size:13px;color:#999}
+.block-upload input[type="file"]{display:none}
+.block-file-list{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.block-file-item{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:#f0f2f5;border-radius:6px;font-size:12px}
+.block-file-item .fi-info{display:flex;align-items:center;gap:8px}
+.block-file-item .fi-name{font-weight:600;color:#333}
+.block-file-item .fi-size{color:#999}
+.block-file-item .fi-del{color:#e94560;cursor:pointer;padding:2px 6px;border:1px solid #f0c0c0;border-radius:4px;background:white;font-size:11px}
+.block-file-item .fi-del:hover{background:#fce4e4}
+.block-submit{margin-top:10px;display:flex;gap:8px;align-items:center}
+.submit-btn{display:flex;align-items:center;gap:6px;padding:10px 22px;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#4caf50,#66bb6a);color:white;box-shadow:0 2px 8px rgba(76,175,80,0.3);transition:all 0.2s}
+.submit-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 12px rgba(76,175,80,0.4)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.submit-hint{font-size:11px;color:#999}
+
+/* 添加题目按钮 */
+.add-block-btn{display:flex;align-items:center;gap:8px;padding:14px 24px;width:100%;border:2px dashed #4caf50;border-radius:12px;background:rgba(76,175,80,0.04);font-size:15px;font-weight:600;color:#4caf50;cursor:pointer;justify-content:center;transition:all 0.2s;margin-top:8px}
+.add-block-btn:hover{background:rgba(76,175,80,0.1);border-color:#43a047}
+
+/* 评价区 */
+.eval-empty{text-align:center;padding:40px 20px;color:#bbb}
+.eval-empty .eval-icon{font-size:48px;margin-bottom:10px}
+.eval-empty p{font-size:14px}
+.eval-result{display:none}
+.eval-result.show{display:block}
+.eval-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.eval-question{font-size:14px;color:#666;background:#f0f2f5;padding:4px 12px;border-radius:6px;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eval-date{font-size:12px;color:#999}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.score-item{background:#f8f9fa;border-radius:10px;padding:14px;text-align:center}
+.score-item .score-label{font-size:12px;color:#999;margin-bottom:4px}
+.score-item .score-value{font-size:28px;font-weight:800;color:#16213e}
+.score-item .score-stars{font-size:16px;margin-top:2px;letter-spacing:2px}
+.score-item .score-band{font-size:11px;color:#999;margin-top:2px}
+.eval-section{margin:16px 0}
+.eval-section h4{font-size:14px;color:#16213e;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.eval-section p,.eval-section ul{font-size:14px;color:#555;line-height:1.7}
+.eval-section ul{padding-left:20px}
+.eval-section li{margin:3px 0}
+.eval-example{background:linear-gradient(135deg,#e8f0fe,#f0f4ff);border-left:4px solid #4a90d9;padding:14px 18px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px;line-height:1.7;color:#333}
+
+/* 记录 */
+.record-empty{text-align:center;padding:30px;color:#bbb;font-size:14px}
+.record-item{padding:14px 16px;border-bottom:1px solid #f0f2f5;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.1s}
+.record-item:hover{background:#f8f9fa}
+.record-item:last-child{border-bottom:none}
+.record-item .rl{display:flex;align-items:center;gap:12px}
+.record-item .rdate{font-size:12px;color:#999;min-width:85px}
+.record-item .rtopic{font-size:14px;font-weight:600;max-width:350px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.record-item .rscore{font-size:20px;font-weight:800;color:#4caf50}
+.record-detail{margin-top:10px;padding:12px;background:#f8f9fa;border-radius:8px;font-size:13px;display:none}
+.record-detail.show{display:block}
+
+/* 底部导航 */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(22,33,62,0.95);backdrop-filter:blur(10px);padding:10px 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;z-index:1000}
+.nav-bar a{color:#ccc;font-size:12px;padding:4px 10px;border-radius:4px;transition:all 0.2s;text-decoration:none}
+.nav-bar a:hover{background:rgba(255,255,255,0.1);color:white}
+.nav-bar a.active{background:#4caf50;color:white}
+
+@media(max-width:600px){
+  .rec-btn{padding:6px 14px;font-size:12px}
+  .rec-timer{font-size:16px;min-width:60px}
+  .score-grid{grid-template-columns:repeat(2,1fr)}
+  .record-item{flex-direction:column;align-items:flex-start;gap:6px}
+  .record-item .rtopic{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="back-home">← 返回首页</a>
+<h1>📝 自由练习 · 多题目+录音</h1>
+
+<div class="usage-tip">
+  <strong>💡 使用流程：</strong>
+  ① 点击「添加题目」输入多个题目 → ② 每个题目下录音/上传回答 →
+  ③ 每个题目有自己的「提交给AI评价」按钮，点击后录音文件下载到本地（自己回听），同时生成文字数据包（.json）
+  ④ 把文字数据包（.json）通过对话发给我 → ⑤ 我把评价码发给你，粘贴到下方「粘贴评价码」框，评分立刻显示！
+</div>
+
+<!-- ====== 多题目区块 ====== -->
+<div class="section-card">
+  <h2>✏️ 题目列表</h2>
+  <div id="questionBlocks"></div>
+  <button class="add-block-btn" onclick="addQuestionBlock()">＋ 添加题目</button>
+</div>
+
+<!-- ====== AI评价区 ====== -->
+<div class="section-card">
+  <h2>📊 AI评价与反馈</h2>
+  <div id="evalEmpty" class="eval-empty">
+    <div class="eval-icon">🤖</div>
+    <p>还没有自由练习记录</p>
+    <p style="font-size:12px;color:#ddd;">添加题目 → 录音/打字 → 提交给我，我立刻给你评价！</p>
+  </div>
+  <div id="evalResult" class="eval-result">
+    <div class="eval-header">
+      <div><span id="evalQuestion" class="eval-question"></span></div>
+      <span id="evalDate" class="eval-date"></span>
+    </div>
+    <div class="score-grid" id="scoreGrid"></div>
+    <div class="eval-section"><h4>📝 综合评价</h4><p id="evalComment"></p></div>
+    <div class="eval-section"><h4>✅ 亮点</h4><ul id="evalStrengths"></ul></div>
+    <div class="eval-section"><h4>🔧 改进建议</h4><ul id="evalImprovements"></ul></div>
+    <div class="eval-section"><h4>🎯 示范回答</h4><div class="eval-example" id="evalExample"></div></div>
+  </div>
+</div>
+
+<!-- ====== 粘贴评价码 ====== -->
+<div class="section-card" style="border:2px solid #4a90d9;border-radius:12px;">
+  <h2>🔑 粘贴评价码</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:12px;">把我在对话中给出的评价码复制粘贴到下方，点击「显示评价」即可看到完整评分和反馈。</p>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <textarea id="evalCodeInput" placeholder="在此粘贴评价码..." style="width:100%;min-height:80px;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;font-family:monospace;resize:vertical;background:#fafafa;" onfocus="this.style.borderColor='#4a90d9';this.style.background='white'" onblur="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'"></textarea>
+    <div class="block-submit" style="margin-top:0;">
+      <button class="submit-btn" onclick="parseEvaluationCode()" style="background:linear-gradient(135deg,#4a90d9,#5ba0e8);box-shadow:0 2px 8px rgba(74,144,217,0.3);">
+        <span class="sub-icon">📊</span> 显示评价
+      </button>
+      <span class="submit-hint">粘贴我给你的评价码 → 点击显示</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 练习记录 ====== -->
+<div class="section-card">
+  <h2>📝 自由练习记录</h2>
+  <div id="recordList"><div class="record-empty">暂无练习记录，开始你的第一次自由练习吧！</div></div>
+</div>
+
+<!-- ====== 底部导航 ====== -->
+<div class="nav-bar">
+<a href="../index.html">🏠 首页</a>
+<a href="../口语/知识点.html">🗣️ 口语知识</a>
+<a href="../口语/练习.html">🎙️ 口语练习</a>
+<a href="../口语/自由练习.html" class="active">🗂️ 自由练习</a>
+<a href="../口语/错题本.html">📝 口语错题</a>
+<a href="../写作/知识点.html">✍️ 写作</a>
+<a href="../写作/错题本.html">📝 写作错题</a>
+<a href="../听力/知识点.html">🎧 听力</a>
+<a href="../听力/错题本.html">📝 听力错题</a>
+<a href="../阅读/知识点.html">📖 阅读</a>
+<a href="../阅读/错题本.html">📝 阅读错题</a>
+<a href="../单词句型好句/单词.html">📚 单词</a>
+<a href="../单词句型好句/句型.html">🏗️ 句型</a>
+<a href="../单词句型好句/好句.html">⭐ 好句</a>
+<a href="../单词句型好句/错题本.html">📝 单词错题</a>
+<a href="../每日总结/模板.html">📅 每日总结</a>
+<a href="../周报/模板.html">📊 周报</a>
+<a href="../月报/模板.html">📈 月报</a>
+</div>
+
+<script>
+// ========== 全局变量 ==========
+let blockCounter = 0;
+let records = JSON.parse(localStorage.getItem('ieltsFreeRecords') || '[]');
+// 每个block的录音数据: { [blockId]: [{id, name, data, size, date}] }
+let blockAudio = {};
+
+// ========== 添加题目区块 ==========
+function addQuestionBlock() {
+  blockCounter++;
+  const id = blockCounter;
+  const container = document.getElementById('questionBlocks');
+  const div = document.createElement('div');
+  div.className = 'question-block';
+  div.id = 'block_' + id;
+  div.innerHTML = `
+    <div class="block-header">
+      <span class="block-title">📌 题目 #${id}</span>
+      <button class="block-del" onclick="deleteBlock(${id})">✕ 删除</button>
+    </div>
+    <div class="block-form">
+      <div>
+        <label>📌 你的问题 / 题目 <span class="tag">必填</span></label>
+        <textarea id="bq_${id}" placeholder="例如：What are the advantages of studying abroad?" oninput="updateBlockBtn(${id})" style="min-height:50px;"></textarea>
+      </div>
+      <div>
+        <label>✍️ 你的回答（文字版）<span class="tag">可选</span></label>
+        <textarea id="ba_${id}" placeholder="把你说的内容打字贴在这里，或者直接录音上传也可以" style="min-height:80px;" oninput="updateBlockBtn(${id})"></textarea>
+      </div>
+      <div class="block-rec-controls">
+        <button class="rec-btn rec-btn-start" id="bs_${id}" onclick="startBlockRec(${id})">🎤 录音</button>
+        <button class="rec-btn rec-btn-stop" id="bst_${id}" onclick="stopBlockRec(${id})" disabled>⏹ 停止</button>
+        <span class="rec-timer" id="bt_${id}">00:00</span>
+        <span class="rec-status" id="bstatus_${id}">就绪</span>
+      </div>
+      <div class="block-upload" id="bu_${id}" onclick="blockClickUpload(${id})" ondragover="e=>e.preventDefault();e.target.classList.add('dragover')" ondragleave="e=>e.target.classList.remove('dragover')" ondrop="blockDropUpload(event,${id})">
+        <div class="up-icon">📁</div>
+        <p>点击或拖拽上传录音文件（MP3/WAV/M4A）</p>
+        <input type="file" accept="audio/*" onchange="blockFileUpload(event,${id})">
+      </div>
+      <div class="block-file-list" id="bfl_${id}"></div>
+      <div class="block-submit">
+        <button class="submit-btn" id="bSubmit_${id}" onclick="submitBlock(${id})" disabled>
+          <span>🤖</span> 提交给AI评价
+        </button>
+        <span class="submit-hint">提交后录音本地保存 + 生成文字数据包，发文字包给我获评价</span>
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+  blockAudio[id] = [];
+
+  // 拖拽事件绑定
+  const uploadArea = div.querySelector('.block-upload');
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+  uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('audio/')) {
+      const q = document.getElementById('bq_' + id).value.trim();
+      if (!q) { alert('请先输入题目再上传录音！'); return; }
+      const qShort = q.slice(0, 20);
+      const fileName = new Date().toISOString().slice(0,10) + '_' + qShort + '.' + file.name.split('.').pop();
+      addBlockAudio(id, fileName, file);
+    } else {
+      alert('请上传音频文件（MP3 / WAV / M4A）');
+    }
+  });
+
+  div.querySelector('input[type="file"]').addEventListener('change', function(e) {
+    blockFileUpload(e, id);
+  });
+
+  setTimeout(() => div.querySelector('textarea').focus(), 100);
+}
+
+// ========== 删除区块 ==========
+function deleteBlock(id) {
+  const el = document.getElementById('block_' + id);
+  if (el) {
+    if (confirm('确定删除题目 #' + id + ' 及其所有录音？')) {
+      delete blockAudio[id];
+      el.remove();
+    }
+  }
+}
+
+// ========== 区块录音 ==========
+const blockRecState = {};
+function startBlockRec(id) {
+  const q = document.getElementById('bq_' + id).value.trim();
+  if (!q) { alert('请先输入题目！'); document.getElementById('bq_' + id).focus(); return; }
+  navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true } }).then(stream => {
+    const mr = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    const chunks = [];
+    blockRecState[id] = { mr, stream, chunks, seconds: 0, timer: null };
+    mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    mr.onstop = () => {
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      const qShort = q.slice(0, 20);
+      const fileName = new Date().toISOString().slice(0,10) + '_' + qShort + '.webm';
+      addBlockAudio(id, fileName, blob);
+      stream.getTracks().forEach(t => t.stop());
+    };
+    mr.start();
+    blockRecState[id].seconds = 0;
+    document.getElementById('bt_' + id).textContent = '00:00';
+    blockRecState[id].timer = setInterval(() => {
+      blockRecState[id].seconds++;
+      document.getElementById('bt_' + id).textContent = String(Math.floor(blockRecState[id].seconds/60)).padStart(2,'0') + ':' + String(blockRecState[id].seconds%60).padStart(2,'0');
+      if (blockRecState[id].seconds >= 120) { stopBlockRec(id); alert('录音已到2分钟上限'); }
+    }, 1000);
+    document.getElementById('bs_' + id).disabled = true;
+    document.getElementById('bs_' + id).classList.add('recording');
+    document.getElementById('bs_' + id).innerHTML = '🔴 录音中';
+    document.getElementById('bst_' + id).disabled = false;
+    document.getElementById('bstatus_' + id).textContent = '🔴 录音中...';
+    document.getElementById('bstatus_' + id).classList.add('recording');
+  }).catch(() => alert('无法访问麦克风，请确保已授予麦克风权限。\n你也可以直接上传录音文件。'));
+}
+
+function stopBlockRec(id) {
+  const state = blockRecState[id];
+  if (!state) return;
+  if (state.mr && state.mr.state !== 'inactive') state.mr.stop();
+  clearInterval(state.timer);
+  document.getElementById('bs_' + id).disabled = false;
+  document.getElementById('bs_' + id).classList.remove('recording');
+  document.getElementById('bs_' + id).innerHTML = '🎤 录音';
+  document.getElementById('bst_' + id).disabled = true;
+  document.getElementById('bstatus_' + id).textContent = '录音已停止';
+  document.getElementById('bstatus_' + id).classList.remove('recording');
+  document.getElementById('bt_' + id).textContent = '00:00';
+  delete blockRecState[id];
+}
+
+// ========== 区块文件上传 ==========
+function blockClickUpload(id) {
+  const q = document.getElementById('bq_' + id).value.trim();
+  if (!q) { alert('请先输入题目再上传录音！'); document.getElementById('bq_' + id).focus(); return; }
+  document.getElementById('bu_' + id).querySelector('input[type="file"]').click();
+}
+
+function blockFileUpload(event, id) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const q = document.getElementById('bq_' + id).value.trim();
+  if (!q) { alert('请先输入题目再上传录音！'); return; }
+  const qShort = q.slice(0, 20);
+  const fileName = new Date().toISOString().slice(0,10) + '_' + qShort + '.' + file.name.split('.').pop();
+  addBlockAudio(id, fileName, file);
+  event.target.value = '';
+}
+
+function blockDropUpload(e, id) {
+  e.preventDefault();
+  document.getElementById('bu_' + id).classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('audio/')) {
+    const q = document.getElementById('bq_' + id).value.trim();
+    if (!q) { alert('请先输入题目再上传录音！'); return; }
+    const qShort = q.slice(0, 20);
+    const fileName = new Date().toISOString().slice(0,10) + '_' + qShort + '.' + file.name.split('.').pop();
+    addBlockAudio(id, fileName, file);
+  } else { alert('请上传音频文件（MP3 / WAV / M4A）'); }
+}
+
+// ========== 区块音频管理 ==========
+function addBlockAudio(id, fileName, blob) {
+  if (!blockAudio[id]) blockAudio[id] = [];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    blockAudio[id].push({ id: Date.now(), name: fileName, data: e.target.result, size: blob.size, date: new Date().toISOString() });
+    renderBlockFileList(id);
+    updateBlockBtn(id);
+  };
+  reader.readAsDataURL(blob);
+}
+
+function renderBlockFileList(id) {
+  const container = document.getElementById('bfl_' + id);
+  const files = blockAudio[id] || [];
+  if (files.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = files.map(f => {
+    const kb = (f.size / 1024).toFixed(1);
+    return '<div class="block-file-item"><div class="fi-info"><span>🎵</span><span class="fi-name">' + f.name + '</span><span class="fi-size">' + kb + 'KB</span></div><button class="fi-del" onclick="delBlockAudio(' + id + ',' + f.id + ')">删除</button></div>';
+  }).join('');
+}
+
+function delBlockAudio(blockId, fileId) {
+  if (!confirm('确定删除此录音？')) return;
+  blockAudio[blockId] = (blockAudio[blockId] || []).filter(f => f.id !== fileId);
+  renderBlockFileList(blockId);
+  updateBlockBtn(blockId);
+}
+
+// ========== 区块提交按钮状态 ==========
+function updateBlockBtn(id) {
+  const q = document.getElementById('bq_' + id).value.trim();
+  const a = document.getElementById('ba_' + id).value.trim();
+  const hasAudio = (blockAudio[id] || []).length > 0;
+  document.getElementById('bSubmit_' + id).disabled = !(q && (a || hasAudio));
+}
+
+// ========== 提交区块 ==========
+function submitBlock(id) {
+  const q = document.getElementById('bq_' + id).value.trim();
+  const a = document.getElementById('ba_' + id).value.trim();
+  const files = blockAudio[id] || [];
+  if (!q) { alert('请先输入题目！'); return; }
+  if (!a && files.length === 0) { alert('请至少录音上传或输入文字回答！'); return; }
+
+  const safeName = q.slice(0, 30).replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
+  const dateStr = new Date().toISOString().slice(0,10);
+
+  // 1. 下载录音文件到本地（供自己回听练习，不用上传给我）
+  files.forEach((f, i) => {
+    const aEl = document.createElement('a');
+    aEl.href = f.data;
+    aEl.download = '录音_' + safeName + '_' + (i+1) + '_' + dateStr + '.webm';
+    aEl.click();
+  });
+
+  // 2. 生成轻量文字数据包（仅题目+回答，几百字节）
+  const metaData = {
+    type: 'ielts_free_practice',
+    time: new Date().toISOString(),
+    question: q,
+    answer: a,
+    audioCount: files.length,
+    audioFilenames: files.map(f => f.name)
+  };
+  const metaJson = JSON.stringify(metaData, null, 2);
+  const metaBlob = new Blob([metaJson], { type: 'application/json' });
+  const metaUrl = URL.createObjectURL(metaBlob);
+  const metaA = document.createElement('a');
+  metaA.href = metaUrl;
+  metaA.download = '文字_' + safeName + '_' + dateStr + '.json';
+  metaA.click();
+  URL.revokeObjectURL(metaUrl);
+
+  // 提示
+  const audioMsg = files.length > 0
+    ? '录音文件已下载到本地，你可以自己回听练习。\n\n'
+    : '';
+  alert('✅ 提交成功！\n\n' + audioMsg + '把「文字_' + safeName + '_' + dateStr + '.json」文件发给我，\n我收到后立刻给出AI评价，评价码粘贴到页面即可显示！');
+}
+
+// ========== 解析评价码 ==========
+function parseEvaluationCode() {
+  const code = document.getElementById('evalCodeInput').value.trim();
+  if (!code) { alert('请先粘贴评价码！'); return; }
+  try {
+    const data = JSON.parse(code);
+    if (data.type !== 'ielts_eval') { alert('评价码格式不正确，请检查是否完整复制。'); return; }
+    showEvaluation(data);
+    document.getElementById('evalCodeInput').value = '';
+    alert('✅ 评价已显示！');
+  } catch(e) {
+    alert('评价码解析失败，请确认已完整复制。\n错误：' + e.message);
+  }
+}
+
+// ========== 评价展示 ==========
+function showEvaluation(data) {
+  document.getElementById('evalEmpty').style.display = 'none';
+  document.getElementById('evalResult').classList.add('show');
+  document.getElementById('evalQuestion').textContent = data.question;
+  document.getElementById('evalDate').textContent = data.date;
+
+  const items = [
+    { label: '流利度与连贯性', value: data.fluency, desc: 'Fluency & Coherence' },
+    { label: '词汇资源', value: data.lexical, desc: 'Lexical Resource' },
+    { label: '语法范围与准确性', value: data.grammar, desc: 'Grammatical Range' },
+    { label: '发音', value: data.pronunciation, desc: 'Pronunciation' }
+  ];
+  document.getElementById('scoreGrid').innerHTML = items.map(i =>
+    '<div class="score-item"><div class="score-label">' + i.label + '</div><div class="score-value">' + i.value.toFixed(1) + '</div><div class="score-stars" style="color:#ffb300;">' + '★'.repeat(Math.floor(i.value)) + '☆'.repeat(5-Math.floor(i.value)) + '</div><div class="score-band">' + i.desc + '</div></div>'
+  ).join('');
+
+  document.getElementById('evalComment').textContent = data.comment;
+  document.getElementById('evalStrengths').innerHTML = data.strengths.map(s => '<li>' + s + '</li>').join('');
+  document.getElementById('evalImprovements').innerHTML = data.improvements.map(s => '<li>' + s + '</li>').join('');
+  document.getElementById('evalExample').innerHTML = data.example.replace(/\n/g, '<br>');
+  addRecord(data);
+}
+
+// ========== 练习记录 ==========
+function addRecord(data) {
+  records.unshift({
+    date: data.date, question: data.question,
+    overall: data.overall || ((data.fluency + data.lexical + data.grammar + data.pronunciation) / 4).toFixed(1),
+    comment: data.comment, strengths: data.strengths, improvements: data.improvements
+  });
+  localStorage.setItem('ieltsFreeRecords', JSON.stringify(records));
+  renderRecords();
+}
+
+function renderRecords() {
+  const container = document.getElementById('recordList');
+  if (records.length === 0) { container.innerHTML = '<div class="record-empty">暂无练习记录，开始你的第一次自由练习吧！</div>'; return; }
+  container.innerHTML = records.map((r, i) =>
+    '<div class="record-item" onclick="document.getElementById(\'rd' + i + '\').classList.toggle(\'show\')"><div class="rl"><span class="rdate">' + r.date + '</span><span class="rtopic">' + r.question + '</span></div><div class="rscore">' + r.overall + '</div></div><div class="record-detail" id="rd' + i + '"><strong>综合评价：</strong>' + r.comment + '<br><strong>亮点：</strong><ul>' + (r.strengths||[]).map(s => '<li>' + s + '</li>').join('') + '</ul><strong>改进建议：</strong><ul>' + (r.improvements||[]).map(s => '<li>' + s + '</li>').join('') + '</ul></div>'
+  ).join('');
+}
+
+// ========== 初始化 ==========
+renderRecords();
+// 默认添加一个题目
+addQuestionBlock();
+</script>
+</body>
+</html>

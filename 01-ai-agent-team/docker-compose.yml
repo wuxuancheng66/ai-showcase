@@ -1,0 +1,41 @@
+# ============================================================
+# AI Agent Team 基础设施
+# 启动：docker compose up -d
+# 说明：两者均为可选组件；不启动时系统自动降级运行
+#       （记忆→本地 JSON 文件，缓存扩展位→内存）。
+# ============================================================
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: agent_redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"   # 只绑定本机，避免暴露到局域网
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: agent_chromadb
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"   # 只绑定本机
+    volumes:
+      - chroma-data:/data       # 新版镜像数据目录为 /data（旧版为 /chroma/chroma）
+    environment:
+      # 本机开发默认关闭鉴权；若需公网部署请按官方文档开启 Auth
+      - CHROMA_SERVER_HTTP_PORT=8000
+    healthcheck:
+      test: ["CMD", "/bin/sh", "-c", "curl -sf http://localhost:8000/api/v2/heartbeat || wget -qO- http://localhost:8000/api/v2/heartbeat"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis-data:
+  chroma-data:

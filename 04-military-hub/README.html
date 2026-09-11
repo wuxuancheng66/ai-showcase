@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>军事理论备考笔记 · 吴宣澄的项目</title>
+<style>
+:root{--bg:#0a0b0d;--panel:#121317;--line:#26272e;--ink:#e9ebee;--dim:#9aa0ab;--acc:#E17055;--code:#1c1e24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif;line-height:1.85;font-size:16px}
+main{max-width:860px;margin:0 auto;padding:56px 24px 90px}
+a.back{display:inline-flex;align-items:center;gap:6px;color:var(--dim);text-decoration:none;font-size:14px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;transition:.2s}
+a.back:hover{color:var(--acc);border-color:var(--acc)}
+h1{font-size:34px;font-weight:900;margin:26px 0 18px;letter-spacing:-.5px}
+h2{font-size:23px;font-weight:800;margin:44px 0 14px;padding-left:14px;border-left:4px solid var(--acc)}
+h3{font-size:18px;font-weight:700;margin:28px 0 10px}
+p{margin:12px 0;color:#c9cdd4}
+ul,ol{margin:12px 0 12px 22px}li{margin:6px 0;color:#c9cdd4}
+code{font-family:"SF Mono","JetBrains Mono",monospace;font-size:.88em;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:#f0a58e}
+pre{background:var(--code);border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:13.5px;line-height:1.7}
+pre.mermaid{border-color:rgba(119,104,174,.5)}pre.mermaid code{color:#b9aee6}
+pre .cap{display:block;font-size:12px;color:var(--dim);margin-bottom:10px;font-family:Inter,"Noto Sans SC",sans-serif}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+th{background:var(--panel);color:var(--ink);font-weight:700}td{color:#c9cdd4}
+blockquote{margin:16px 0;padding:12px 18px;border-left:3px solid var(--acc3,#7768AE);background:var(--panel);border-radius:0 12px 12px 0;color:var(--dim)}
+hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+img{max-width:100%;vertical-align:middle}
+a{color:var(--acc)}
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">← 返回项目展示</a>
+<h1>军事理论备考笔记 · 2026 整合版（交互增强版）</h1>
+<p><img alt="Type" src="https://img.shields.io/badge/类型-单文件交互学习应用-9cf"> <img alt="Size" src="https://img.shields.io/badge/体积-2MB自包含-success"> <img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></p>
+<p>军事理论课的全栈式备考应用：把 <strong>教材章节知识梳理 + 1856 题全库 + 模拟考试 + 错题本/收藏夹</strong> 整合进一个 2MB 的自包含 HTML 文件——零依赖、离线可用、双击即学。</p>
+<h2>✨ 功能一览（与实际界面一一对应）</h2>
+<ul><li><strong>章节知识库</strong>：第一章 中国国防、第三章 军事思想 …… 第七章 主观题速成与答题模板，卡片式知识点全部展开/收起自由切换；</li><li><strong>刷题模式</strong>：全库 1856 题随时开刷（章节练习/随机刷题/模拟考试三模式），「再来一组」随机组题；</li><li><strong>模拟考试</strong>：整卷作答 → 提交答案 → 核对答案 → 自动评分（A+ 等级）→ 查看错题回顾 → ↻ 再做；</li><li><strong>错题本 &amp; 收藏夹</strong>：错题自动归集，支持「重做全部错题 / 重做收藏题」，一键清空重置；</li><li><strong>主观题速成</strong>：答题模板与速成技巧专章。</li></ul>
+<h2>🚀 使用</h2>
+<p>双击 <code>军事理论备考笔记（2026整合版·交互增强版）.html</code> 即可，无需联网、无需安装。 做题记录保存在浏览器本地（localStorage），可随时「清空做题记录」重置。</p>
+<h2>🛠 技术实现</h2>
+<p>由 Python 流水线构建：<code>parse_*.py</code> 从 Word 题库文档解析出结构化 JSON（q200/q900/terms/exams）， <code>assemble_v4.py</code> 将界面模板与应用逻辑装配为单文件产物（构建源码另存于工作区，本合集收录最终成品）。</p>
+<hr>
+<p>作者：吴宣澄 · 2026-08</p>
+<footer><span>吴宣澄 · AI 项目合集 © 2026</span><span><a href="../index.html">index.html</a> · 全部项目</span></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思7分知识库</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 80px;
+    background: #f8f9fa;
+    color: #333;
+    line-height: 1.8;
+}
+h1 {
+    font-size: 28px;
+    color: #1a1a2e;
+    border-bottom: 3px solid #e94560;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    margin-top: 10px;
+}
+h2 {
+    font-size: 22px;
+    color: #16213e;
+    border-left: 5px solid #e94560;
+    padding-left: 12px;
+    margin: 30px 0 15px;
+}
+h3 {
+    font-size: 18px;
+    color: #0f3460;
+    margin: 20px 0 10px;
+}
+blockquote {
+    background: linear-gradient(135deg, #e8f0fe, #f0f4ff);
+    border-left: 4px solid #4a90d9;
+    padding: 12px 16px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 15px;
+}
+blockquote p { margin: 0; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 14px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+th {
+    background: #16213e;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+}
+td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e9ecef;
+    background: white;
+}
+tr:hover td { background: #f1f4f9; }
+code {
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #d63384;
+}
+pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 15px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+pre code { background: none; color: inherit; padding: 0; }
+ul, ol { margin: 10px 0 10px 20px; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 2px dashed #ddd; margin: 25px 0; }
+strong { color: #1a1a2e; }
+a { color: #4a90d9; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 1000;
+}
+.nav-bar a {
+    color: #ccc;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-bar a.active { background: #e94560; color: white; }
+.back-home {
+    display: inline-block;
+    margin: 10px 0 20px;
+    padding: 8px 16px;
+    background: #16213e;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    text-decoration: none;
+}
+.back-home:hover { background: #0f3460; }
+</style>
+
+<style>
+.hero {
+    background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #e94560 100%);
+    color: white;
+    padding: 50px 40px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.hero h1 { font-size: 36px; border: none; color: white; margin: 0 0 8px; }
+.hero p { font-size: 16px; opacity: 0.9; margin: 4px 0; }
+.hero .score { font-size: 48px; font-weight: 800; color: #ffd700; margin: 10px 0; }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+.card h3 { margin: 0 0 6px; font-size: 17px; }
+.card p { margin: 0; font-size: 13px; color: #666; }
+.card .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-top: 8px;
+}
+.badge-red { background: #fce4e4; color: #e94560; }
+.badge-blue { background: #e3f2fd; color: #1565c0; }
+.badge-green { background: #e8f5e9; color: #2e7d32; }
+.badge-yellow { background: #fff8e1; color: #f57f17; }
+.badge-purple { background: #f3e5f5; color: #7b1fa2; }
+.section-title { font-size: 20px; margin: 30px 0 15px; color: #16213e; }
+</style>
+</head>
+<body>
+<div class="hero">
+    <h1>🎯 雅思学习空间</h1>
+    <div class="score">目标 7.0+</div>
+    <p>👤 吴宣澄 · 准大一</p>
+    <p>📚 系统学习 · 稳步提升 · 每天进步一点点</p>
+    <p>📍 学习优先级：口语 &gt; 写作 &gt; 听力 &gt; 阅读</p>
+</div>
+
+<blockquote class="daily-tip">
+<p>💡 <strong>学习建议：</strong>每天固定四项 —— 口语跟读 15 分钟 + 听力精听 1 篇 + 阅读 1 篇 + 写作 1 段，完成后记入「每日总结」。</p>
+</blockquote>
+
+<h2 class="section-title">🗣️ 听说读写</h2>
+<div class="cards">
+    <a href="口语/知识点.html" class="card">
+        <h3>🗣️ 口语知识库</h3>
+        <p>Part1-3全攻略 · 发音技巧 · 考试策略</p>
+        <span class="badge badge-red">排名第1 · 重点突破</span>
+    </a>
+    <a href="口语/错题本.html" class="card">
+        <h3>📝 口语错题本</h3>
+        <p>语法/词汇/发音/流利度错题追踪</p>
+        <span class="badge badge-red">排名第1</span>
+    </a>
+    <a href="口语/练习.html" class="card">
+        <h3>🎙️ 题库练习</h3>
+        <p>雅思口语题库 · 录音上传 · AI评价 · 练习记录</p>
+        <span class="badge badge-red">题库+录音+AI评价</span>
+    </a>
+    <a href="口语/自由练习.html" class="card">
+        <h3>📝 自由练习</h3>
+        <p>多题目 · 每题独立录音 · 下载数据包 · AI评价</p>
+        <span class="badge badge-green">多题目+录音+AI评价</span>
+    </a>
+    <a href="写作/知识点.html" class="card">
+        <h3>✍️ 写作知识库</h3>
+        <p>Task1图表 · Task2议论文 · 评分标准</p>
+        <span class="badge badge-blue">排名第2</span>
+    </a>
+    <a href="写作/错题本.html" class="card">
+        <h3>📝 写作错题本</h3>
+        <p>审题/结构/论证/词汇/语法分类统计</p>
+        <span class="badge badge-blue">排名第2</span>
+    </a>
+    <a href="听力/知识点.html" class="card">
+        <h3>🎧 听力知识库</h3>
+        <p>四大Section解析 · 题型技巧 · 场景词</p>
+        <span class="badge badge-green">排名第3</span>
+    </a>
+    <a href="听力/错题本.html" class="card">
+        <h3>📝 听力错题本</h3>
+        <p>拼写/理解/注意力/审题原因分类</p>
+        <span class="badge badge-green">排名第3</span>
+    </a>
+    <a href="阅读/知识点.html" class="card">
+        <h3>📖 阅读知识库</h3>
+        <p>十大题型技巧 · 时间分配 · 长难句</p>
+        <span class="badge badge-yellow">排名第4 · 最强项</span>
+    </a>
+    <a href="阅读/错题本.html" class="card">
+        <h3>📝 阅读错题本</h3>
+        <p>定位/理解/TFNG/时间管理分类统计</p>
+        <span class="badge badge-yellow">排名第4</span>
+    </a>
+</div>
+
+<h2 class="section-title">📚 词汇句型好句</h2>
+<div class="cards">
+    <a href="单词句型好句/单词.html" class="card">
+        <h3>📚 核心词汇库</h3>
+        <p>刘洪波考点词+官方最难25词+学术词+话题分类词</p>
+        <span class="badge badge-purple">6大分类 · 120+词汇</span>
+    </a>
+    <a href="单词句型好句/句型.html" class="card">
+        <h3>🏗️ 句型库</h3>
+        <p>Task1趋势描述+Task2论证+口语Part1-3+7分语法</p>
+        <span class="badge badge-purple">全场景覆盖</span>
+    </a>
+    <a href="单词句型好句/好句.html" class="card">
+        <h3>⭐ 高分好句库</h3>
+        <p>40+ 7分写作好句+万能模板+王牌搭配短语</p>
+        <span class="badge badge-purple">含亮点分析</span>
+    </a>
+</div>
+
+<h2 class="section-title">📅 模板工具</h2>
+<div class="cards">
+    <a href="每日总结/模板.html" class="card">
+        <h3>📅 每日总结模板</h3>
+        <p>每日学习内容 + 新增知识点 + 错题总结</p>
+    </a>
+    <a href="周报/模板.html" class="card">
+        <h3>📊 周报模板</h3>
+        <p>每周自动生成 · 四科进度追踪</p>
+        <span class="badge badge-blue">每周日20:00自动生成</span>
+    </a>
+    <a href="每日总结/2026-07-21.html" class="card">
+        <h3>🗓️ 最近学习记录</h3>
+        <p>查看最近一次的学习日志（2026-07-21）</p>
+    </a>
+    <a href="月报/模板.html" class="card">
+        <h3>📈 月报模板</h3>
+        <p>每月总结 · 词汇量统计 · 下月目标</p>
+        <span class="badge badge-blue">每月1日20:00自动生成</span>
+    </a>
+</div>
+
+<div style="text-align: center; margin: 40px 0; color: #999; font-size: 13px;">
+    <p>📚 每天进步一点点，坚持就是胜利</p>
+    <p>💪 吴宣澄，加油！</p>
+</div>
+</body>
+</html>
