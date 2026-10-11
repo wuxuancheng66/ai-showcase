@@ -169,7 +169,14 @@ a:hover { text-decoration: underline; }
 .badge-purple { background: #f3e5f5; color: #7b1fa2; }
 .section-title { font-size: 20px; margin: 30px 0 15px; color: #16213e; }
 </style>
-</head>
+
+<style id="accessibility-refinement">
+:focus-visible{outline:3px solid #087ce5!important;outline-offset:4px}
+button,input,select,textarea{font:inherit}button,a,input,select,textarea{touch-action:manipulation}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}}
+@media(max-width:600px){table{display:block;max-width:100%;overflow-x:auto}input,select,textarea{font-size:16px!important}}
+</style>
+<style>.card[hidden]{display:none!important}.hub-search{margin:24px 0}.hub-search label{display:block;font-weight:600;margin-bottom:8px}.hub-search input{width:100%;padding:12px 14px;border:1px solid #ccd3df;border-radius:12px;background:#fff}.hub-search p{font-size:13px;color:#536174;margin-top:6px}</style></head>
 <body>
 <div class="hero">
     <h1>🎯 雅思学习空间</h1>
@@ -179,6 +186,7 @@ a:hover { text-decoration: underline; }
     <p>📍 学习优先级：口语 &gt; 写作 &gt; 听力 &gt; 阅读</p>
 </div>
 
+<div class="hub-search"><label for="hub-search">查找学习模块</label><input type="search" id="hub-search" placeholder="输入口语、错题、词汇…" autocomplete="off"><p id="hub-result" role="status" aria-live="polite">选择模块开始学习</p></div>
 <blockquote class="daily-tip">
 <p>💡 <strong>学习建议：</strong>每天固定四项 —— 口语跟读 15 分钟 + 听力精听 1 篇 + 阅读 1 篇 + 写作 1 段，完成后记入「每日总结」。</p>
 </blockquote>
@@ -264,8 +272,8 @@ a:hover { text-decoration: underline; }
     </a>
     <a href="周报/模板.html" class="card">
         <h3>📊 周报模板</h3>
-        <p>每周自动生成 · 四科进度追踪</p>
-        <span class="badge badge-blue">每周日20:00自动生成</span>
+        <p>每周复盘 · 四科进度追踪</p>
+        <span class="badge badge-blue">建议每周日复盘</span>
     </a>
     <a href="每日总结/2026-07-21.html" class="card">
         <h3>🗓️ 最近学习记录</h3>
@@ -274,7 +282,7 @@ a:hover { text-decoration: underline; }
     <a href="月报/模板.html" class="card">
         <h3>📈 月报模板</h3>
         <p>每月总结 · 词汇量统计 · 下月目标</p>
-        <span class="badge badge-blue">每月1日20:00自动生成</span>
+        <span class="badge badge-blue">建议每月初复盘</span>
     </a>
 </div>
 
@@ -282,5 +290,12 @@ a:hover { text-decoration: underline; }
     <p>📚 每天进步一点点，坚持就是胜利</p>
     <p>💪 吴宣澄，加油！</p>
 </div>
-</body>
+<script>
+document.getElementById('hub-search').addEventListener('input',function(){
+const q=this.value.trim().toLocaleLowerCase();let n=0;
+document.querySelectorAll('.card').forEach(card=>{card.hidden=!card.textContent.toLocaleLowerCase().includes(q);if(!card.hidden)n++;});
+document.querySelectorAll('.section-title').forEach(title=>{const list=title.nextElementSibling;title.hidden=!!list&&!Array.from(list.children).some(c=>!c.hidden);});
+document.getElementById('hub-result').textContent=q?(n?'找到 '+n+' 个模块':'没有匹配的模块，试试“口语”或“错题”'):'选择模块开始学习';
+});
+</script></body>
 </html>

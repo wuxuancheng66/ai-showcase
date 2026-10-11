@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}AI 日报 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">每日信号</p>
+    <h1>AI 日报</h1>
+    <p class="lede">每天 07:30 汇总分级新闻源与本机雷达数据，保留来源链接并保存到指定日报目录。</p>
+  </div>
+  <div class="status-rail">
+    <span class="status-chip">上次生成：{{ generated_at[:19] if generated_at else '从未' }}</span>
+    <span class="status-chip">入选新闻：{{ items if items is not none else '—' }} 条</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">生成与打开</h2>
+      <p class="panel__meta">手动生成不会删除历史版本</p>
+    </div>
+  </div>
+  <div class="page-actions">
+    {% if latest_exists %}<a class="button button--primary" href="/daily/latest?v={{ report_version }}" target="_blank" rel="noopener">打开最新一期 ↗</a>{% else %}<span class="button" aria-disabled="true">暂无最新一期</span>{% endif %}
+    <button class="button" id="generate-daily" type="button">立即生成一期</button>
+  </div>
+  <p id="gen" class="notice" role="status" aria-live="polite" hidden></p>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">历史日报</h2>
+      <p class="panel__meta">最近 30 期</p>
+    </div>
+    <span class="pill">{{ files|length }} 期</span>
+  </div>
+  <ul class="signal-list">
+    {% for f in files %}
+    <li class="signal-item">
+      <span class="signal-item__icon" aria-hidden="true">↗</span>
+      <span class="signal-item__body"><a href="/daily/file/{{ f | urlencode }}?v={{ report_version }}">{{ f }}</a></span>
+    </li>
+    {% else %}<li class="hint">暂无日报，点击“立即生成一期”创建。</li>{% endfor %}
+  </ul>
+</section>
+
+<script>
+const generateButton = document.getElementById('generate-daily');
+const genStatus = document.getElementById('gen');
+generateButton.addEventListener('click', async () => {
+  const original = generateButton.textContent;
+  generateButton.disabled = true;
+  generateButton.textContent = '生成中…';
+  genStatus.hidden = false;
+  genStatus.className = 'notice';
+  genStatus.textContent = '正在整理新闻源和本机雷达数据…';
+  try {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 120000);
+    const response = await fetch('/api/v1/daily/generate', {method: 'POST', signal: controller.signal});
+    window.clearTimeout(timeoutId);
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.detail || '生成失败');
+    genStatus.className = 'notice notice--ok';
+    genStatus.textContent = `生成完成：入选 ${result.items} 条新闻。`;
+    generateButton.textContent = '已生成';
+    setTimeout(() => location.reload(), 1200);
+  } catch (error) {
+    genStatus.className = 'notice notice--error';
+    genStatus.textContent = error.message;
+    generateButton.textContent = original;
+    generateButton.disabled = false;
+  }
+});
+</script>
+{% endblock %}

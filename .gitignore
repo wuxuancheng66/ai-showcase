@@ -1,0 +1,18 @@
+# Private source remains local; publish only its sanitized introduction.
+05-shuzhi-plan-site/
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.next/
+**/uploads/
+**/logs/
+*.db
+*.db-wal
+*.db-shm
+*.dmg
+*.zip
+.DS_Store

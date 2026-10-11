@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}运行管理 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">运行状态</p>
+    <h1>AI 运行管理</h1>
+    <p class="lede">查看充值类与免费类的额度余量、可用天数预测、诊断结论和可执行的修复动作。</p>
+  </div>
+  <div class="status-rail">
+    <span class="status-chip">更新于 {{ updated }}</span>
+    <span class="status-chip">额度为本地台账估算</span>
+    <span class="status-chip">探活结果来自最近一次真实请求</span>
+  </div>
+</section>
+
+<section class="stats-grid" aria-label="自动监测概览">
+  <article class="stat-card stat-card--primary">
+    <span class="stat-card__value">{{ monitor.monitored }}</span>
+    <span class="stat-card__label">已自动监测对象</span>
+    <span class="stat-card__note">打开页面即刷新本机 Agent 状态与 Token</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-card__value">{{ '{:,}'.format(monitor.token_used_7d) }}</span>
+    <span class="stat-card__label">近 7 日 Token</span>
+    <span class="stat-card__note">来自可验证的本地日志与会话记录</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-card__value">{{ monitor.balance_count }}</span>
+    <span class="stat-card__label">余额接口已接入</span>
+    <span class="stat-card__note">没有官方余额接口时不会伪造数字</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-card__value">自动</span>
+    <span class="stat-card__label">监测模式</span>
+    <span class="stat-card__note">最近更新：{{ monitor.last_at[:19] if monitor.last_at else '启动中' }}</span>
+  </article>
+</section>
+
+{% set sections = [("充值类", paid), ("免费类", free)] %}
+{% for title, rows in sections %}
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">{{ title }}</h2>
+      <p class="panel__meta">{{ rows|length }} 个条目</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>名称</th><th>类型</th><th>状态</th><th>Token 消耗</th><th>额度余量</th><th>可用预测</th><th>诊断</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td data-label="名称">
+          <span class="model-name">{{ r.name }}</span>
+          {% if r.deployed_models %}<br><span class="model-id">已部署：{{ r.deployed_models|join('、') }}</span>{% elif r.models %}<br><span class="model-id">模型：{{ r.models|join('、')|truncate(60) }}</span>{% endif %}
+        </td>
+        <td data-label="类型">{% if r.kind == 'agent' %}Agent{% elif r.kind == 'app' %}桌面 Agent{% elif r.kind == 'cli' %}CLI Agent{% else %}API 渠道{% endif %}</td>
+        <td data-label="状态">
+          <span class="status status--{{ r.status }}">{{ r.status }}</span>
+          {% if r.last_checked %}<br><span class="signal-item__meta">{{ r.last_checked }}</span>{% endif %}
+        </td>
+        <td data-label="Token 消耗" class="number">
+          {% if r.used_tokens is not none %}<b>{{ '{:,}'.format(r.used_tokens) }}</b> / 7 天{% else %}等待数据{% endif %}
+          {% if r.input_tokens is not none or r.output_tokens is not none %}<br><span class="signal-item__meta">输入 {{ r.input_tokens or 0 }} · 输出 {{ r.output_tokens or 0 }}</span>{% endif %}
+          {% if r.last_monitored %}<br><span class="signal-item__meta">{{ r.monitor_source }} · {{ r.last_monitored[:19] }}</span>{% endif %}
+        </td>
+        <td data-label="额度余量" class="number">
+          {% if r.balance_value is not none %}<b>{{ r.balance_value }} {{ r.balance_unit or '' }}</b><br><span class="signal-item__meta">平台官方余额</span>
+          {% elif r.balance %}<b>{{ '{:,}'.format(r.balance) }}</b> Token<br><span class="signal-item__meta">本地台账余额</span>
+          {% elif r.balance_adapter and not r.has_key %}<span class="small">配置 key 后自动读取</span>
+          {% elif r.balance_adapter %}<span class="small">等待官方余额接口</span>
+          {% else %}<span class="small">未提供余额接口</span>{% endif %}
+        </td>
+        <td data-label="可用预测">
+          {% if r.days_left is not none %}约 {{ r.days_left }} 天<br><span class="signal-item__meta">日耗 {{ r.daily_burn }}</span>
+          {% elif r.daily_burn %}日均 {{ r.daily_burn }} Token，需余额接口后预测
+          {% else %}等待消耗样本{% endif %}
+        </td>
+        <td data-label="诊断">{{ r.diagnosis or '—' }}</td>
+        <td data-label="操作">
+          <div class="actions">
+          {% for act in r.repairs %}
+            {% if act == '重新探活' %}
+              <button class="button button--quiet" type="button" data-probe="{{ r.id }}">{{ act }}</button>
+            {% elif act == '重启网关' or act == '重启 OpenClaw 网关' %}
+              <button class="button button--quiet" type="button" data-restart="{{ r.id }}">重启网关</button>
+            {% elif act == '查看领取指引' %}
+              <a class="button button--quiet" href="/activities">领取指引</a>
+            {% else %}
+              <span class="small single-action">{{ act }}</span>
+            {% endif %}
+          {% endfor %}
+          {% if r.url %}<a class="button button--quiet" href="{{ r.url }}" target="_blank" rel="noopener">官网 ↗</a>{% endif %}
+          {% if not r.repairs and not r.url %}<span class="small">无需操作</span>{% endif %}
+          </div>
+        </td>
+      </tr>
+      {% else %}<tr><td colspan="8" class="empty">当前分组没有条目。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endfor %}
+
+<div id="tip" class="notice" role="status" aria-live="polite" hidden></div>
+
+<script>
+const tip = document.getElementById('tip');
+function showTip(message, kind = '') {
+  tip.hidden = false;
+  tip.className = 'notice' + (kind ? ' notice--' + kind : '');
+  tip.textContent = message;
+}
+async function requestJson(url, options = {}, timeoutMs = 12000) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {...options, signal: controller.signal});
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || '请求失败（' + response.status + '）');
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('请求超时，请稍后重试。');
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+document.querySelectorAll('[data-probe]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const original = button.textContent;
+    button.disabled = true;
+    button.textContent = '探活中…';
+    try {
+      const result = await requestJson('/api/v1/manage/probe', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({channel_id: button.dataset.probe})
+      });
+      button.textContent = result.ok ? '状态：' + result.status : '无可用探活方式';
+      showTip(result.ok ? '探活完成：' + result.status : (result.reason || '无可用探活方式'), result.ok ? 'ok' : 'warn');
+      setTimeout(() => location.reload(), 1200);
+    } catch (error) {
+      button.textContent = original;
+      button.disabled = false;
+      showTip(error.message, 'error');
+    }
+  });
+});
+document.querySelectorAll('[data-restart]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    if (!window.confirm('重启网关会短暂中断正在进行的 Agent 任务，确认继续？')) return;
+    const original = button.textContent;
+    button.disabled = true;
+    button.textContent = '下发中…';
+    try {
+      const result = await requestJson('/api/v1/manage/restart', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({agent: button.dataset.restart})
+      });
+      button.textContent = '已下发';
+      showTip(result.message || '重启指令已下发宿主执行器。', 'ok');
+      if (!result.plan_id) return;
+      const timer = setInterval(async () => {
+        try {
+          const state = await requestJson('/api/v1/deploy/status/' + encodeURIComponent(result.plan_id));
+          if (state.status === 'done') {
+            clearInterval(timer);
+            button.textContent = '重启成功';
+            showTip('网关重启完成。', 'ok');
+          } else if (state.status === 'failed') {
+            clearInterval(timer);
+            button.textContent = '重启失败';
+            showTip('重启失败：' + (state.result?.error || '未知错误'), 'error');
+          }
+        } catch (error) {
+          clearInterval(timer);
+          showTip(error.message, 'error');
+        }
+      }, 3000);
+    } catch (error) {
+      button.textContent = original;
+      button.disabled = false;
+      showTip(error.message, 'error');
+    }
+  });
+});
+</script>
+{% endblock %}

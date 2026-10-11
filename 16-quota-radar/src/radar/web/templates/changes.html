@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}变更日志 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">数据变更</p>
+    <h1>变更日志</h1>
+    <p class="lede">价格涨跌、新免费模型、渠道状态和来源恢复都记录在这里。每条都来自一次实际采集。</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">最近 100 条</h2>
+      <p class="panel__meta">按检测时间倒序</p>
+    </div>
+    <span class="pill">{{ rows|length }} 条</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>时间</th><th>类型</th><th>内容</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td data-label="时间" class="number">{{ r.created_at[:19] }}</td>
+        <td data-label="类型"><span class="badge b-{{ r.kind }}">{{ badge.get(r.kind, r.kind) }}</span></td>
+        <td data-label="内容">{{ r.summary }}</td>
+      </tr>
+      {% else %}<tr><td colspan="3" class="empty">暂无变更。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

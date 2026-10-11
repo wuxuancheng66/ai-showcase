@@ -1,0 +1,224 @@
+# 本机平台指纹库：根据环境变量名 + /Applications 桌面应用名识别电脑上配置过哪些 AI 平台。
+# match 命中环境变量名（不含值）即算发现；apps 命中 /Applications 下的应用名也算发现。
+# claim 为该平台可领额度/活动入口（null = 无签到类活动）；claim_desc 说明权益在哪领。
+
+platforms:
+  - match: ["ZHIPU", "BIGMODEL", "GLM_"]
+    apps: ["智谱清言", "ChatGLM", "Zhipu"]
+    name: 智谱 BigModel
+    console: https://bigmodel.cn
+    claim: https://bigmodel.cn/explore
+    claim_desc: "API 额度：活动中心签到/任务；清言 App 内另有签到会员权益"
+    env_key: ZHIPU_API_KEY
+
+  - match: ["DEEPSEEK"]
+    name: DeepSeek
+    console: https://platform.deepseek.com
+    claim: null
+    claim_desc: 无签到活动（低价标杆，充值即用）
+    env_key: DEEPSEEK_API_KEY
+
+  - match: ["SILICONFLOW"]
+    name: 硅基流动
+    console: https://cloud.siliconflow.cn
+    claim: https://cloud.siliconflow.cn/account/ak
+    claim_desc: 注册礼/邀请奖励/免费模型
+    env_key: SILICONFLOW_API_KEY
+
+  - match: ["DASHSCOPE", "QWEN_API", "BAILIAN"]
+    apps: ["千问", "Qwen"]
+    name: 阿里云百炼（通义千问）
+    console: https://bailian.console.aliyun.com
+    claim: https://bailian.console.aliyun.com
+    claim_desc: "新用户各模型赠送百万级 tokens；千问 App 对话免费"
+
+  - apps: ["LM Studio"]
+    name: LM Studio（本地模型）
+    billing: free
+    console: null
+    claim: null
+    claim_desc: "本地跑开源模型，完全免费、无限制（吃本机算力）"
+
+  - match: ["MOONSHOT", "KIMI_API"]
+    name: Kimi 开放平台（月之暗面）
+    console: https://platform.moonshot.cn
+    claim: https://platform.moonshot.cn
+    claim_desc: 新用户赠送额度
+
+  - match: ["ARK_", "VOLC_", "DOUBAO"]
+    name: 火山方舟（豆包）
+    console: https://console.volcengine.com/ark
+    claim: https://console.volcengine.com/ark
+    claim_desc: 新用户赠送 tokens（活动性质）
+
+  - match: ["MINIMAX", "ABAB"]
+    name: MiniMax
+    console: https://platform.minimaxi.com
+    claim: https://platform.minimaxi.com
+    claim_desc: 注册赠送额度
+
+  - match: ["OPENROUTER"]
+    name: OpenRouter
+    console: https://openrouter.ai
+    claim: https://openrouter.ai/models?max_price=0
+    claim_desc: :free 模型每日免费额度
+    env_key: OPENROUTER_API_KEY
+
+  - match: ["GEMINI_API", "GOOGLE_API_KEY", "GOOGLE_AI"]
+    name: Google AI Studio（Gemini）
+    console: https://aistudio.google.com
+    claim: https://aistudio.google.com
+    claim_desc: 免费层按模型限 RPM/RPD
+    env_key: GEMINI_API_KEY
+
+  - match: ["OPENAI_API", "OPENAI_KEY"]
+    apps: ["ChatGPT"]
+    name: OpenAI（ChatGPT）
+    billing: paid
+    console: https://platform.openai.com
+    claim: https://chatgpt.com
+    claim_desc: "ChatGPT 免费版有每日限额；Free 层不定期开放迷你模型额度"
+
+  - match: ["MOONSHOT", "KIMI_API"]
+    apps: ["Kimi", "Kimi智能助手"]
+    name: Kimi（月之暗面）
+    billing: free
+    console: https://platform.moonshot.cn
+    claim: https://platform.moonshot.cn
+    claim_desc: "App 每日免费额度随登录刷新；开放平台新户另赠 API 额度"
+    env_key: MOONSHOT_API_KEY
+
+  - match: ["DOUBAO_", "DOUBAO_APP"]
+    apps: ["豆包", "Doubao"]
+    name: 豆包
+    billing: free
+    console: https://www.doubao.com
+    claim: null
+    claim_desc: "App 对话免费；开发者新户 tokens 赠送在火山方舟"
+
+  - apps: ["AutoClaw"]
+    name: AutoClaw（GLM 生态 agent）
+    billing: paid
+    console: https://chatglm.cn
+    claim: https://bigmodel.cn/explore
+    claim_desc: "GLM 额度随智谱账号；活动中心签到同享"
+
+  - apps: ["OpenClaw"]
+    name: OpenClaw（NVIDIA agent）
+    billing: free
+    console: https://build.nvidia.com
+    claim: null
+    claim_desc: "NVIDIA 免费模型已部署，由雷达部署中心管理"
+
+  - apps: ["Hermes", "HermesAgent"]
+    name: Hermes Agent
+    billing: free
+    console: null
+    claim: null
+    claim_desc: "本地 agent 工具（额度随其配置的模型账号）"
+
+  - apps: ["DSH", "DSHDesktop", "DSH Desktop"]
+    name: DSH Desktop
+    billing: paid
+    console: null
+    claim: null
+    claim_desc: "已安装（额度随其配置的模型账号）"
+
+  - apps: ["WorkBuddy", "workbuddy"]
+    name: WorkBuddy
+    billing: free
+    console: null
+    claim: null
+    claim_desc: "已安装（额度随其配置的模型账号）"
+
+  - apps: ["启动 Agent Team"]
+    name: Agent Team 启动器（本地多 agent）
+    billing: free
+    console: null
+    claim: null
+    claim_desc: "本地多 agent 团队启动器（额度随其配置的模型账号）"
+
+  - match: ["ANTHROPIC_API", "CLAUDE_API"]
+    name: Anthropic
+    console: https://console.anthropic.com
+    claim: null
+    claim_desc: 无免费层
+
+  - match: ["GROQ"]
+    name: Groq
+    console: https://console.groq.com
+    claim: https://console.groq.com
+    claim_desc: 免费层限速不限量
+    env_key: GROQ_API_KEY
+
+  - match: ["CEREBRAS"]
+    name: Cerebras
+    console: https://cloud.cerebras.ai
+    claim: https://cloud.cerebras.ai
+    claim_desc: 免费层
+    env_key: CEREBRAS_API_KEY
+
+  - match: ["MISTRAL"]
+    name: Mistral
+    console: https://console.mistral.ai
+    claim: https://console.mistral.ai
+    claim_desc: 免费实验层
+    env_key: MISTRAL_API_KEY
+
+  - match: ["NVIDIA", "NIM_"]
+    name: NVIDIA NIM
+    console: https://build.nvidia.com
+    claim: https://build.nvidia.com/explore
+    claim_desc: 试用 credits（限时活动）
+    env_key: NVIDIA_API_KEY
+
+  - match: ["XAI_", "GROK_API"]
+    name: xAI（Grok）
+    console: https://console.x.ai
+    claim: null
+    claim_desc: 按量计费（常有新户赠送）
+
+  - match: ["FIREWORKS"]
+    name: Fireworks AI
+    console: https://fireworks.ai
+    claim: https://fireworks.ai/account/api-keys
+    claim_desc: 新户赠送 $1 额度
+
+  - match: ["TOGETHER_"]
+    name: Together AI
+    console: https://api.together.xyz
+    claim: https://api.together.xyz/settings/api-keys
+    claim_desc: 新户赠送额度
+
+  - match: ["COHERE"]
+    name: Cohere
+    console: https://dashboard.cohere.com
+    claim: https://dashboard.cohere.com/api-keys
+    claim_desc: Trial key 每月免费额度
+    env_key: COHERE_API_KEY
+
+  - match: ["HUNYUAN"]
+    name: 腾讯混元
+    console: https://cloud.tencent.com/product/hunyuan
+    claim: null
+    claim_desc: hunyuan-lite 免费
+    env_key: HUNYUAN_API_KEY
+
+  - match: ["ERNIE", "QIANFAN", "BAIDU_"]
+    name: 百度千帆
+    console: https://console.bce.baidu.com/qianfan
+    claim: null
+    claim_desc: ERNIE Speed/Lite 免费
+
+  - match: ["PERPLEXITY"]
+    name: Perplexity
+    console: https://www.perplexity.ai/settings/api
+    claim: null
+    claim_desc: Pro 订阅附赠 API 额度
+
+  - match: ["GITHUB_TOKEN"]
+    name: GitHub Models
+    console: https://github.com/marketplace/models
+    claim: https://github.com/marketplace/models
+    claim_desc: GitHub Token 直接用多家模型（免费限速）
+    env_key: GITHUB_TOKEN

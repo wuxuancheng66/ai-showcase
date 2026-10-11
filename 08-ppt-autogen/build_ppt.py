@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """班长竞选 PPT 生成器 — 吴宣澄 (2026)"""
 import os
-from PIL import Image
+import argparse
+from pathlib import Path
+from PIL import Image, ImageDraw
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
@@ -30,7 +32,9 @@ CW = SW - 2*MX               # 内容宽
 
 MAT = os.path.expanduser("~/Desktop/班长竞选素材")
 TMP = os.path.expanduser("~/Documents/dsh-workspace/tmp_ppt")
-os.makedirs(TMP, exist_ok=True)
+MASK = os.path.expanduser("~/Documents/dsh-workspace/masked")
+ASSETS = os.path.expanduser("~/Documents/dsh-workspace/assets")
+OUTPUT = os.path.expanduser("~/Desktop/班长竞选PPT.pptx")
 
 prs = Presentation()
 prs.slide_width  = Inches(SW)
@@ -319,7 +323,7 @@ def s_evidence_chat():
         [("个体协调 · 班群通知 ", 13, False, BODY), ("事事有回应", 13.5, True, TEAL),
          ("  ·  消息传达 ", 13, False, BODY), ("条条有传达", 13.5, True, NAVY),
          ("  ·  组织沟通 ", 13, False, BODY), ("不断线", 13.5, True, GOLD)])
-    MASK = os.path.expanduser("~/Documents/dsh-workspace/masked")
+    # MASK 由命令行配置，旧路径仍作为默认值。
     B = [os.path.join(MASK,"masked_120.jpg"), os.path.join(MASK,"masked_121.jpg"),
          os.path.join(MASK,"masked_123.jpg"), os.path.join(MASK,"masked_124.jpg"),
          os.path.join(MAT,"IMG_5603.jpg"), os.path.join(MAT,"IMG_5604.jpg"),
@@ -336,7 +340,7 @@ def s_evidence_chat():
 def s_skill1():
     s = new_slide()
     header(s, "02 · 资本", "技能 01 · Raft 搭建 Agent Team", accent=NAVY, tsize=30)
-    assets = os.path.expanduser("~/Documents/dsh-workspace/assets")
+    assets = ASSETS
     rw = 3.9
     L = CW - rw - 0.3
     tf = tb(s, MX, 2.4, L, 1.2)
@@ -368,7 +372,7 @@ def s_skill1():
 def s_skill2():
     s = new_slide()
     header(s, "02 · 资本", "技能 02 · 熟练驾驭各大 Agent 平台", accent=NAVY, tsize=30)
-    assets = os.path.expanduser("~/Documents/dsh-workspace/assets")
+    assets = ASSETS
     rw = 3.9
     L = CW - rw - 0.3
     tf = tb(s, MX, 2.4, L, 1.4)
@@ -418,7 +422,7 @@ def _flow_slide(flows, idx, slide_no):
                sub="把班长的日常工作，拆成十条 AI 工作流，随取随用，高效运转。")
     else:
         header(s, "02 · 资本", "班长十大工作流（续）", accent=NAVY, tsize=30)
-    assets = os.path.expanduser("~/Documents/dsh-workspace/assets")
+    assets = ASSETS
     if idx == 0:
         rw = 3.9
         L = CW - rw - 0.3
@@ -528,6 +532,12 @@ def s_end():
 
 # ============================================================
 def build():
+    global prs, BLANK
+    prs = Presentation()
+    prs.slide_width = Inches(SW)
+    prs.slide_height = Inches(SH)
+    BLANK = prs.slide_layouts[6]
+    os.makedirs(TMP, exist_ok=True)
     s_cover()
     s_toc()
     # 态度
@@ -548,9 +558,63 @@ def build():
     s_promise()
     s_end()
 
-    out = os.path.expanduser("~/Desktop/班长竞选PPT.pptx")
+    out = OUTPUT
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
     prs.save(out)
     print("SAVED:", out, "slides:", len(prs.slides._sldIdLst))
 
-if __name__ == "__main__":
+MATERIAL_NAMES = ["IMG_5582.jpg","IMG_5584.jpg","IMG_5586.jpg","IMG_5588.jpg","IMG_5590.jpg","IMG_5591.jpg","IMG_5593.jpg","IMG_5595.jpg","IMG_5597.jpg","IMG_5599.jpg","IMG_5601.jpg","IMG_5602.jpg","IMG_5603.jpg","IMG_5604.jpg","IMG_5605.jpg","IMG_5607.jpg","IMG_5608.jpg","IMG_5610.jpg","IMG_5611.jpg","IMG_5612.jpg"]
+MASKED_NAMES = ["masked_120.jpg","masked_121.jpg","masked_123.jpg","masked_124.jpg"]
+ASSET_NAMES = ["raft_card.png","dsh_card.png","codex_card.png"]
+
+
+def required_inputs():
+    return [Path(MAT)/n for n in MATERIAL_NAMES] + [Path(MASK)/n for n in MASKED_NAMES] + [Path(ASSETS)/n for n in ASSET_NAMES]
+
+
+def prepare_demo():
+    global MAT, MASK, ASSETS
+    root=Path(TMP)/"demo-inputs"
+    MAT=str(root/"materials");MASK=str(root/"masked");ASSETS=str(root/"assets")
+    for i,p in enumerate(required_inputs(),1):
+        p.parent.mkdir(parents=True,exist_ok=True)
+        image=Image.new("RGB",(600,800) if p.suffix==".jpg" else (900,600),"#22344a")
+        draw=ImageDraw.Draw(image)
+        draw.rectangle((30,30,image.width-30,image.height-30),outline="#c29a3b",width=4)
+        draw.text((55,80),"DEMO / IMAGE "+str(i),fill="#f8f6f1",font_size=28)
+        draw.text((55,130),"Generated placeholder - no private photos",fill="#c7cdd6",font_size=18)
+        image.save(p)
+
+
+def main():
+    global MAT, MASK, ASSETS, TMP, OUTPUT, FONT
+    parser=argparse.ArgumentParser(description="16页竞选演示模板生成器；可使用私人素材或无需素材的演示模式")
+    parser.add_argument("--materials",default=MAT,help="20张 IMG_*.jpg 素材目录，默认沿用原本本机位置")
+    parser.add_argument("--masked",default=MASK,help="4张已脱敏截图目录")
+    parser.add_argument("--assets",default=ASSETS,help="raft_card/dsh_card/codex_card 图片目录")
+    parser.add_argument("--work-dir",default=str(Path.cwd()/"build-assets"),help="图片处理工作目录")
+    parser.add_argument("--output",default=None,help="输出PPTX路径；演示默认当前目录demo.pptx，普通默认原Desktop位置")
+    parser.add_argument("--font",default=FONT,help="字体名称，应选目标设备已安装字体")
+    parser.add_argument("--demo",action="store_true",help="使用生成的占位图，不读取私人素材")
+    parser.add_argument("--check",action="store_true",help="只检查素材是否齐全，不生成PPT")
+    args=parser.parse_args()
+    MAT=str(Path(args.materials).expanduser());MASK=str(Path(args.masked).expanduser());ASSETS=str(Path(args.assets).expanduser())
+    TMP=str(Path(args.work_dir).expanduser());FONT=args.font
+    OUTPUT=str(Path(args.output).expanduser()) if args.output else (str(Path.cwd()/"demo.pptx") if args.demo else OUTPUT)
+    if args.demo and not args.check:
+        prepare_demo()
+    missing=[p.name for p in required_inputs() if not p.is_file()]
+    if args.check and args.demo:
+        print("演示模式会自动生成占位图，无需私人素材。")
+        return 0
+    if missing:
+        parser.error("缺少素材："+", ".join(missing)+"。可配置素材路径，或使用 --demo。")
+    if args.check:
+        print("素材齐全，共 "+str(len(required_inputs()))+" 个文件。")
+        return 0
     build()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

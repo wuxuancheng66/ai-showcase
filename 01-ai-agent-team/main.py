@@ -14,15 +14,44 @@ import logging
 import sys
 from typing import Optional, Tuple
 
-from dotenv import load_dotenv
-from rich.console import Console
-from rich.panel import Panel
-from rich.prompt import Prompt
-from rich.table import Table
-
-console = Console()
+console = None
 
 BANNER = "[bold cyan]AI Agent Team[/] · 多智能体协作流水线\n研究员 · 写手 · 审校员 · 代码助手 · 数据分析师"
+
+
+def _ask(message: str, choices: Optional[list] = None,
+         default: Optional[str] = None) -> str:
+    """交互式输入。
+
+    优先使用 prompt_toolkit：方向键移动光标、中文退格正常、
+    粘贴多行内容不会触发立即执行（粘贴期间回车仅插入文本）。
+    stdin 非 TTY（管道/测试）或库缺失时退回 rich Prompt。
+    """
+    if not sys.stdin.isatty():
+        return Prompt.ask(message, choices=choices, default=default)
+    prompt_text = message if not default else f"{message} [{default}]"
+    try:
+        from prompt_toolkit import prompt as pt_prompt
+        from prompt_toolkit.validation import Validator
+
+        validator = None
+        if choices:
+            allowed = {c.lower() for c in choices}
+            validator = Validator.from_callable(
+                lambda t: t.strip().lower() in allowed,
+                error_message=f"请输入 {'/'.join(choices)}",
+                move_cursor_to_end=True,
+            )
+        text = pt_prompt(f"{prompt_text} > ", validator=validator)
+    except Exception:
+        return Prompt.ask(message, choices=choices, default=default)
+
+    text = text.strip()
+    if not text and default:
+        return default
+    if choices:
+        text = text.upper() if text else (default or "")
+    return text
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,6 +62,7 @@ def parse_args() -> argparse.Namespace:
                         help="工作流输入（URL / PDF 路径 / 主题 / 需求描述）")
     parser.add_argument("--task", help="自定义任务描述（动态分解为流水线）")
     parser.add_argument("--config", default="agent_config.yaml", help="配置文件路径")
+    parser.add_argument("--check", action="store_true", help="离线检查依赖，不读取密钥、不调用模型")
     parser.add_argument("--verbose", action="store_true", help="输出 DEBUG 日志")
     return parser.parse_args()
 
@@ -57,13 +87,13 @@ def resolve_job(args: argparse.Namespace) -> Tuple[Optional[str], str]:
     table.add_row("C", "内容创作：选题 → 素材 → 初稿 → 终稿+配图建议+发布文案")
     table.add_row("T", "自定义任务：描述目标，规划器自动分解流水线")
     console.print(table)
-    choice = Prompt.ask("选择", choices=["A", "B", "C", "T"], default="T").upper()
+    choice = _ask("选择", choices=["A", "B", "C", "T"], default="T")
     if choice == "T":
-        task = Prompt.ask("请描述你的任务")
+        task = _ask("请描述你的任务")
         return None, task
-    user_input = Prompt.ask("请输入 " + {"A": "URL / PDF 路径 / 主题",
-                                         "B": "需求描述",
-                                         "C": "选题方向"}[choice])
+    user_input = _ask("请输入 " + {"A": "URL / PDF 路径 / 主题",
+                                   "B": "需求描述",
+                                   "C": "选题方向"}[choice])
     return choice, user_input
 
 
@@ -93,8 +123,26 @@ def print_summary(result: dict) -> None:
 
 
 def main() -> int:
-    load_dotenv()
     args = parse_args()
+    if args.check:
+        import importlib.util
+        import json
+        modules = ["dotenv", "rich", "yaml", "langchain_core", "langchain_openai", "langgraph", "httpx", "bs4", "pypdf"]
+        available = {name: importlib.util.find_spec(name) is not None for name in modules}
+        print(json.dumps({"dependencies": available, "ready": all(available.values())}, ensure_ascii=False, indent=2))
+        return 0 if all(available.values()) else 1
+    global console, Panel, Prompt, Table
+    try:
+        from dotenv import load_dotenv
+        from rich.console import Console
+        from rich.panel import Panel
+        from rich.prompt import Prompt
+        from rich.table import Table
+    except ImportError:
+        print("运行依赖不完整。请先查看 README 的安装说明；可用 --check 离线诊断。", file=sys.stderr)
+        return 1
+    console = Console()
+    load_dotenv()
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<script src="https://lf-cdn.coze.cn/obj/unpkg/coze-space/page-editor-general-web/0.1.0-alpha.274555/dist/umd/index.js"></script><script src="https://lf-cdn.coze.cn/obj/unpkg/coze-webapp/console-bridge/0.0.1-alpha.22488f/dist/index.js"></script><script src="https://lf-cdn.coze.cn/obj/unpkg/coze-webapp/history-bridge/0.0.1-alpha.10bbfe/dist/index.min.js"></script><head>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WordVault · 我的单词本</title>
@@ -101,13 +101,27 @@ header p{opacity:.9;font-size:14px}
   .detail-word{font-size:26px}
 }
 </style>
-</head>
+
+<style id="accessibility-refinement">
+:focus-visible{outline:3px solid #087ce5!important;outline-offset:4px}
+button,input,select,textarea{font:inherit}button,a,input,select,textarea{touch-action:manipulation}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}}
+@media(max-width:600px){table{display:block;max-width:100%;overflow-x:auto}input,select,textarea{font-size:16px!important}}
+</style>
+<style>
+header{background:#fff;color:var(--text);border-bottom:1px solid var(--border);border-radius:0;padding:28px 16px}
+header h1{font-size:25px;letter-spacing:-.5px}.storage-notice{color:#9a4b0a;background:#fff7ed;padding:10px;border-radius:10px;margin:12px auto 0;max-width:700px}
+.storage-notice:empty{display:none}.word-card:focus-visible{outline-offset:2px}.word-text{overflow-wrap:anywhere}.word-main{min-width:0}.word-meta{flex-shrink:0}
+.modal{max-height:85dvh;overflow:auto}.word-actions .btn,.star{min-height:38px}.actions{flex-wrap:wrap}
+@media(max-width:480px){.word-header{gap:8px}.word-text{font-size:20px}.word-meta{flex-direction:column;align-items:flex-end}.filters{display:grid;grid-template-columns:1fr 1fr}.filters select{min-width:0}.filters select:last-child{grid-column:1/-1}.stats{gap:6px}.stat .num{font-size:23px}.word-actions{flex-wrap:wrap}.word-card{padding:14px}.actions .btn{flex:1 1 44%}}
+</style></head>
 <body>
 <div id="app"></div>
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalContent"></div>
+  <div class="modal" id="modalContent" role="dialog" aria-modal="true" aria-label="编辑单词" tabindex="-1"></div>
 </div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden onchange="importDataFile(this)">
 
 <script>
 // 内嵌数据
@@ -116,17 +130,44 @@ const EMBEDDED_DATA = {"words":[{"id":162,"word":"succumb","phonetic":null,"mean
 // 本地存储（localStorage 持久化）
 const STORAGE_KEY = 'wordvault_data_v1';
 
-function loadData() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try { return JSON.parse(saved); } catch(e) {}
+let storageNotice = '';
+function initialData() {
+  return {words: EMBEDDED_DATA.words.map(w => ({...w})), details: JSON.parse(JSON.stringify(EMBEDDED_DATA.details)), nextId: Math.max(0,...EMBEDDED_DATA.words.map(w => w.id)) + 1};
+}
+function normalizeData(value) {
+  const source = Array.isArray(value) ? {words:value,details:{}} : value;
+  if (!source || !Array.isArray(source.words) || source.words.length > 20000) throw new Error('文件需要包含 words 数组（最多 20000 词）');
+  const used = new Set();
+  const words = source.words.map((w,i) => {
+    if (!w || typeof w.word !== 'string' || !w.word.trim() || typeof w.meaning !== 'string' || !w.meaning.trim()) throw new Error('第 '+(i+1)+' 项需要单词和释义');
+    let id = Number(w.id);
+    if (!Number.isSafeInteger(id) || id < 1 || id > 1000000000 || used.has(id)) id = i + 1;
+    while(used.has(id)) id++;
+    used.add(id);
+    const str = x => typeof x === 'string' ? x.slice(0,20000) : '';
+    return {...w, id, word:w.word.trim().slice(0,300), meaning:w.meaning.trim().slice(0,20000), phonetic:str(w.phonetic), example:str(w.example), category:str(w.category)||'daily', mastery:Math.min(3,Math.max(0,Math.trunc(Number(w.mastery)||0))), is_favorite:w.is_favorite===true, created_at:Number.isFinite(Date.parse(w.created_at))?w.created_at:new Date().toISOString()};
+  });
+  const details = source.details && typeof source.details === 'object' && !Array.isArray(source.details) ? source.details : {};
+  for(const item of Object.values(details)){
+    if(!item||typeof item!=='object'||Array.isArray(item))throw new Error('词条详情格式不正确');
+    for(const key of ['definitions','derivatives','collocations','examples'])if(item[key]!==undefined&&(!Array.isArray(item[key])||item[key].some(x=>!x||typeof x!=='object'||Array.isArray(x))))throw new Error('词条 '+key+' 需要对象数组');
+    if(item.related_words){if(typeof item.related_words!=='object'||Array.isArray(item.related_words))throw new Error('关联词格式不正确');for(const key of ['synonyms','antonyms','related'])if(item.related_words[key]!==undefined&&(!Array.isArray(item.related_words[key])||!item.related_words[key].every(x=>typeof x==='string')))throw new Error('关联词需要文字数组');}
   }
-  // 首次使用：用内嵌数据初始化
-  return {
-    words: EMBEDDED_DATA.words.map(w => ({...w})),
-    details: {...EMBEDDED_DATA.details},
-    nextId: Math.max(...EMBEDDED_DATA.words.map(w => w.id)) + 1
-  };
+  return {words, details, nextId:Math.max(0,...words.map(w=>w.id)) + 1};
+}
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return normalizeData(JSON.parse(saved));
+  } catch(e) { storageNotice = '浏览器中的记录暂时无法读取。原存储尚未覆盖；请先导出当前词库，或换用正常浏览器窗口。'; }
+  return initialData();
+}
+function escapeHTML(value) { return String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function displayData(value) {
+  if (typeof value === 'string') return escapeHTML(value);
+  if (Array.isArray(value)) return value.map(displayData);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).filter(([k])=>!['__proto__','constructor','prototype'].includes(k)).map(([k,v])=>[k,displayData(v)]));
+  return value;
 }
 
 let data = loadData();
@@ -138,7 +179,8 @@ let filterMastery = 'all';
 let filterFavorite = false;
 
 function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); storageNotice = ''; return true; }
+  catch(e) { storageNotice = '这次修改只保留在当前页面。浏览器存储不可用或空间不足，请点“导出备份”后再关闭页面。'; return false; }
 }
 
 const CATEGORIES = {GRE:'GRE',TOEFL:'TOEFL',CET4:'CET-4',CET6:'CET-6',IELTS:'IELTS',daily:'日常',academic:'学术',business:'商务'};
@@ -157,8 +199,9 @@ function getStats() {
 }
 
 function getFilteredWords() {
+  const query=searchTerm.trim().toLocaleLowerCase();
   return data.words.filter(w => {
-    if (searchTerm && !w.word.toLowerCase().includes(searchTerm.toLowerCase()) && !(w.meaning||'').includes(searchTerm)) return false;
+    if (query && !w.word.toLocaleLowerCase().includes(query) && !(w.meaning||'').toLocaleLowerCase().includes(query)) return false;
     if (filterCategory !== 'all' && w.category !== filterCategory) return false;
     if (filterMastery !== 'all' && w.mastery !== parseInt(filterMastery)) return false;
     if (filterFavorite && !w.is_favorite) return false;
@@ -168,13 +211,13 @@ function getFilteredWords() {
 
 function renderHome() {
   const stats = getStats();
-  const filtered = getFilteredWords();
+  const filtered = getFilteredWords().map(displayData);
   const masteryRate = stats.total ? Math.round(stats.mastered / stats.total * 100) : 0;
 
   document.getElementById('app').innerHTML = `
     <header>
       <h1>📚 WordVault</h1>
-      <p>我的英语单词本 · 共 ${stats.total} 词</p>
+      <p>我的英语单词本 · 共 ${stats.total} 词</p><p class="storage-notice" role="status">${escapeHTML(storageNotice)}</p>
     </header>
     <div class="container">
       <div class="stats">
@@ -187,18 +230,18 @@ function renderHome() {
       <div class="toolbar">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="搜索单词或释义..." value="${searchTerm}">
+          <input type="text" id="searchInput" aria-label="搜索单词或释义" placeholder="搜索单词或释义..." value="${escapeHTML(searchTerm)}">
         </div>
         <div class="filters">
-          <select id="filterCategory">
+          <select id="filterCategory" aria-label="分类筛选">
             <option value="all">全部分类</option>
             ${Object.entries(CATEGORIES).map(([k,v]) => `<option value="${k}" ${filterCategory===k?'selected':''}>${v}</option>`).join('')}
           </select>
-          <select id="filterMastery">
+          <select id="filterMastery" aria-label="掌握度筛选">
             <option value="all">全部掌握度</option>
             ${MASTERY_NAMES.map((n,i) => `<option value="${i}" ${filterMastery==String(i)?'selected':''}>${n}</option>`).join('')}
           </select>
-          <select id="filterFavorite">
+          <select id="filterFavorite" aria-label="收藏筛选">
             <option value="all">全部</option>
             <option value="fav" ${filterFavorite?'selected':''}>仅收藏</option>
           </select>
@@ -207,7 +250,7 @@ function renderHome() {
 
       <div class="actions">
         <button class="btn btn-primary" onclick="showAddModal()">＋ 添加单词</button>
-        <button class="btn btn-outline" onclick="resetData()">🔄 重置数据</button>
+        <button class="btn btn-outline" onclick="exportData()">导出备份</button><button class="btn btn-outline" onclick="document.getElementById('importFile').click()">导入词库</button><button class="btn btn-outline" onclick="resetData()">恢复初始词库</button>
       </div>
 
       <div class="word-list">
@@ -217,7 +260,7 @@ function renderHome() {
             <p>没有找到匹配的单词</p>
           </div>
         ` : filtered.map(w => `
-          <div class="word-card" onclick="showDetail(${w.id})">
+          <div class="word-card" tabindex="0" role="group" aria-label="${w.word}，${w.meaning}" onkeydown="if(event.target===this && (event.key==='Enter'||event.key===' ')){event.preventDefault();showDetail(${w.id})}" onclick="showDetail(${w.id})">
             <div class="word-header">
               <div class="word-main">
                 <div class="word-text">
@@ -227,7 +270,7 @@ function renderHome() {
                 <div class="word-meaning">${w.meaning}</div>
               </div>
               <div class="word-meta">
-                <button class="star ${w.is_favorite?'active':''}" onclick="event.stopPropagation();toggleFavorite(${w.id})">${w.is_favorite?'★':'☆'}</button>
+                <button aria-label="${w.is_favorite?'取消收藏':'收藏'} ${w.word}" aria-pressed="${w.is_favorite}" class="star ${w.is_favorite?'active':''}" onclick="event.stopPropagation();toggleFavorite(${w.id})">${w.is_favorite?'★':'☆'}</button>
                 <span class="badge badge-cat">${CATEGORIES[w.category]||w.category||'未分类'}</span>
               </div>
             </div>
@@ -238,7 +281,7 @@ function renderHome() {
                 ${MASTERY_NAMES[w.mastery]}
               </button>
               <button class="btn btn-edit" onclick="showEditModal(${w.id})">✏️ 编辑</button>
-              <button class="btn btn-delete" onclick="deleteWord(${w.id})">🗑️</button>
+              <button class="btn btn-delete" aria-label="删除 ${w.word}" onclick="deleteWord(${w.id})">🗑️</button>
             </div>
           </div>
         `).join('')}
@@ -246,19 +289,25 @@ function renderHome() {
     </div>
   `;
 
-  document.getElementById('searchInput').addEventListener('input', e => { searchTerm = e.target.value; renderHome(); });
+  const searchInput = document.getElementById('searchInput');
+  function updateSearch(e) {
+    if(e.isComposing) return;
+    const start=e.target.selectionStart,end=e.target.selectionEnd;
+    searchTerm=e.target.value; renderHome();
+    const next=document.getElementById('searchInput'); next.focus(); next.setSelectionRange(start,end);
+  }
+  searchInput.addEventListener('input',updateSearch);
+  searchInput.addEventListener('compositionend',updateSearch);
   document.getElementById('filterCategory').addEventListener('change', e => { filterCategory = e.target.value; renderHome(); });
   document.getElementById('filterMastery').addEventListener('change', e => { filterMastery = e.target.value; renderHome(); });
   document.getElementById('filterFavorite').addEventListener('change', e => { filterFavorite = e.target.value === 'fav'; renderHome(); });
-  // 保持搜索框焦点
-  const si = document.getElementById('searchInput');
-  if (searchTerm) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
+
 }
 
 function renderDetail() {
-  const word = data.words.find(w => w.id === currentDetailId);
+  const word = displayData(data.words.find(w => w.id === currentDetailId));
   if (!word) { renderHome(); return; }
-  const detail = data.details[word.id];
+  const detail = displayData(data.details[word.id]);
 
   let html = `
     <div class="detail-header">
@@ -269,7 +318,7 @@ function renderDetail() {
         ${detail?.phonetic_us ? ' · 美 '+detail.phonetic_us : ''}
       </div>
     </div>
-    <div class="container">
+    <div class="container"><p class="storage-notice" role="status">${escapeHTML(storageNotice)}</p>
   `;
 
   // 释义
@@ -281,7 +330,7 @@ function renderDetail() {
         <div class="def-item">
           ${d.pos ? `<span class="def-pos">${d.pos}</span>` : ''}
           <span class="def-text">${d.meaning}</span>
-          ${d.frequency ? `<span class="freq">${'★'.repeat(d.frequency)}</span>` : ''}
+          ${d.frequency ? `<span class="freq">${'★'.repeat(Math.min(5,Math.max(0,Number(d.frequency)||0)))}</span>` : ''}
         </div>
       `).join('')}
     </div>
@@ -336,7 +385,7 @@ function renderDetail() {
   if (examples.length) {
     html += `
       <div class="detail-section">
-        <h3>📚 权威例句 (${examples.length})</h3>
+        <h3>📚 学习例句 (${examples.length})</h3>
         ${examples.map(e => `
           <div class="example-item">
             <div class="example-en">${e.source ? `<span class="example-source">[${e.source}]</span>` : ''}${e.sentence}</div>
@@ -390,7 +439,7 @@ function showAddModal() {
 }
 
 function showEditModal(id) {
-  const w = data.words.find(x => x.id === id);
+  const w = displayData(data.words.find(x => x.id === id));
   if (!w) return;
   showModal(`
     <h2>编辑单词</h2>
@@ -408,11 +457,15 @@ function showEditModal(id) {
   `);
 }
 
+let modalPreviousFocus = null;
 function showModal(html) {
+  modalPreviousFocus = document.activeElement;
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('show');
+  document.getElementById('modalContent').querySelectorAll('.form-group').forEach(group=>{const label=group.querySelector('label'),input=group.querySelector('input,select,textarea');if(label&&input)label.htmlFor=input.id;});
+  document.getElementById('mWord')?.focus();
 }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); modalPreviousFocus?.focus(); }
 
 function addWord() {
   const word = document.getElementById('mWord').value.trim();
@@ -435,7 +488,9 @@ function addWord() {
 function updateWord(id) {
   const w = data.words.find(x => x.id === id);
   if (!w) return;
-  w.word = document.getElementById('mWord').value.trim();
+  const updatedWord=document.getElementById('mWord').value.trim(), updatedMeaning=document.getElementById('mMeaning').value.trim();
+  if(!updatedWord||!updatedMeaning){showToast('请填写单词和释义');return;}
+  w.word = updatedWord;
   w.phonetic = document.getElementById('mPhonetic').value.trim();
   w.meaning = document.getElementById('mMeaning').value.trim();
   w.example = document.getElementById('mExample').value.trim();
@@ -477,8 +532,8 @@ function toggleFavorite(id) {
 
 function resetData() {
   if (!confirm('重置将恢复为初始数据，你添加的单词会丢失。确定吗？')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  data = loadData();
+  data = initialData();
+  saveData();
   renderHome();
   showToast('已重置为初始数据');
 }
@@ -495,6 +550,36 @@ function showToast(msg) {
 // 点击遮罩关闭
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
+});
+
+
+function exportData() {
+  const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),...data},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='WordVault-'+new Date().toISOString().slice(0,10)+'.json';link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('备份已准备，请保留下载的 JSON 文件');
+}
+async function importDataFile(input) {
+  const file=input.files?.[0];if(!file)return;
+  try {
+    if(file.size>10*1024*1024)throw new Error('文件超过10MB');
+    const incoming=normalizeData(JSON.parse(await file.text()));
+    const known=new Set(data.words.map(w=>w.word.toLocaleLowerCase()));
+    const additions=[];const details={...data.details};let nextId=data.nextId;
+    for(const w of incoming.words){const key=w.word.toLocaleLowerCase();if(known.has(key))continue;known.add(key);const id=nextId++;additions.push({...w,id});if(incoming.details[w.id])details[id]=incoming.details[w.id];}
+    if(data.words.length+additions.length>20000)throw new Error('合并后超过20000词');
+    data={words:[...additions,...data.words],details,nextId};saveData();renderHome();showToast('已导入 '+additions.length+' 词；已有单词与学习记录保留');
+  } catch(e){showToast('无法导入：'+e.message);} finally{input.value='';}
+}
+document.addEventListener('keydown',e=>{
+  const overlay=document.getElementById('modalOverlay');if(!overlay.classList.contains('show'))return;
+  if(e.key==='Escape'){e.preventDefault();closeModal();}
+  if(e.key==='Tab'){
+    const nodes=[...document.getElementById('modalContent').querySelectorAll('input,select,textarea,button')];
+    const first=nodes[0],last=nodes[nodes.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  }
 });
 
 // 启动

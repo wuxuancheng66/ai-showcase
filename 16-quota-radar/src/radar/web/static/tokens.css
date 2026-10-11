@@ -1,0 +1,82 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R4 V5
+ * genre: atmospheric · macrostructure: Bento Grid / Workbench · theme: Midnight
+ * design-system: design.md · designed-as-app · nav: N1b · footer: Ft5
+ * contrast: pass (40–41) · mobile: pass (34, 49, 50–57) · honest: pass (46)
+ * chrome: pass (47) · tokens: pass (48) · icons: no icon library, text-first
+ */
+:root {
+  color-scheme: dark;
+
+  --color-paper: oklch(13.5% 0.028 258);
+  --color-paper-2: oklch(18% 0.032 255);
+  --color-paper-3: oklch(22.5% 0.035 251);
+  --color-ink: oklch(96% 0.012 88);
+  --color-ink-2: oklch(86% 0.018 84);
+  --color-muted: oklch(76% 0.026 78);
+  --color-rule: oklch(31% 0.036 252);
+  --color-rule-strong: oklch(42% 0.055 248);
+  --color-accent: oklch(76% 0.16 58);
+  --color-accent-soft: oklch(28% 0.065 50);
+  --color-accent-ink: oklch(18% 0.025 55);
+  --color-focus: oklch(89% 0.13 85);
+  --color-ok: oklch(79% 0.13 155);
+  --color-ok-soft: oklch(24% 0.055 155);
+  --color-warn: oklch(84% 0.15 78);
+  --color-warn-soft: oklch(28% 0.062 75);
+  --color-bad: oklch(73% 0.17 25);
+  --color-bad-soft: oklch(26% 0.062 25);
+  --color-info: oklch(80% 0.11 230);
+  --color-info-soft: oklch(24% 0.05 235);
+  --color-bloom-a: oklch(70% 0.18 48 / 0.16);
+  --color-bloom-b: oklch(58% 0.15 20 / 0.10);
+  --color-scrim: oklch(7% 0.025 258 / 0.82);
+  --color-surface-highlight: oklch(96% 0.02 80 / 0.07);
+  --color-accent-shadow: oklch(70% 0.16 55 / 0.20);
+
+  --font-display: "Avenir Next", "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: "PingFang SC", "Avenir Next", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Mono", "Roboto Mono", "Noto Sans Mono CJK SC", monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-display: clamp(2.25rem, 5vw + 1rem, 4.5rem);
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 320ms;
+
+  --shadow-whisper: 0 14px 34px oklch(6% 0.03 255 / 0.25);
+  --shadow-raised: 0 20px 56px oklch(6% 0.03 255 / 0.36);
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+}

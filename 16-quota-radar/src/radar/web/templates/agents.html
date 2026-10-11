@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Agent 板块 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">本机 Agent</p>
+    <h1>Agent 板块</h1>
+    <p class="lede">每个 Agent 的检测状态、额度预测、运行诊断和使用手册集中在一处。手册来源为 AI 知识库维护版。</p>
+  </div>
+</section>
+
+<div class="agent-grid">
+{% for c in cards %}
+<article class="agent-card">
+  <div class="agent-card__head">
+    <a class="agent-card__name" href="/agents/{{ c.id }}">{{ c.name }}</a>
+    <span class="status {% if c.detected %}status--ok{% else %}status--unknown{% endif %}">{{ '已检测' if c.detected else '未检测到' }}</span>
+  </div>
+  <div class="agent-card__meta">
+    <span>{{ '支持电脑操作' if c.computer_control else '工作区 / IDE Agent' }}</span>
+    <span>{{ '可装插件技能' if c.plugin_capable else '原生能力' }}</span>
+    <span>生态分 {{ c.ecosystem_score }}</span>
+    <span>手册 {{ c.manuals|length }} 份</span>
+  </div>
+  {% if c.metric %}
+  <div class="notice">
+    <span class="signal-item__meta">{{ c.metric.source }} · 可信度 {{ (c.metric.confidence * 100)|round|int }}%</span><br>
+    {% if c.metric.used_tokens is not none %}近 7 日 Token：<b>{{ '{:,}'.format(c.metric.used_tokens) }}</b>{% else %}Token：等待数据{% endif %}
+    {% if c.metric.balance_value is not none %}<br>余额：<b>{{ c.metric.balance_value }} {{ c.metric.balance_unit or '' }}</b>{% endif %}
+    <br><span class="small">{{ c.metric.detail }}</span>
+  </div>
+  {% endif %}
+  <div class="agent-card__actions">
+    <a class="button button--primary" href="/agents/{{ c.id }}">进入板块 →</a>
+    {% if c.detected and c.open_mode != 'manual' %}
+    <button class="button button--quiet" type="button" data-open-agent="{{ c.id }}">{{ '打开应用' if c.open_mode == 'app' else ('打开网关' if c.open_mode == 'gateway' else '复制启动命令') }}</button>
+    {% endif %}
+    <a class="button button--quiet" href="/manage">运行管理</a>
+  </div>
+</article>
+{% else %}
+<p class="empty">尚未发现本机 Agent，请先运行本机扫描。</p>
+{% endfor %}
+</div>
+{% endblock %}

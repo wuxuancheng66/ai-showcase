@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1328">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<title>{% block title %}QuotaRadar · AI 额度雷达{% endblock %}</title>
+<link rel="stylesheet" href="/static/style.css?v=20260917-2">
+<script src="/static/app.js?v=20260917-2" defer></script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="skip-link" href="#content">跳到主要内容</a>
+<header class="app-header">
+  <div class="nav-shell">
+    <a class="brand" href="/" aria-label="QuotaRadar 首页">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <span class="brand__name">额度雷达</span>
+        <span class="brand__sub">QuotaRadar</span>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">
+      <span class="sr-only">打开导航</span>
+      <span class="nav-toggle__lines" aria-hidden="true"></span>
+    </button>
+    <nav class="primary-nav" id="primary-nav" data-nav data-open="false" aria-label="主导航">
+      <div class="nav__group">
+        <span class="nav__label">选型</span>
+        <a class="nav__link" href="/">看板</a>
+        <a class="nav__link" href="/recommend">推荐</a>
+        <a class="nav__link" href="/free-rank">免费排行</a>
+        <a class="nav__link" href="/deploy">部署中心</a>
+      </div>
+      <div class="nav__group">
+        <span class="nav__label">运行</span>
+        <a class="nav__link" href="/manage">运行管理</a>
+        <a class="nav__link" href="/agents">本机助手</a>
+        <a class="nav__link" href="/daily">AI 日报</a>
+      </div>
+      <div class="nav__group">
+        <span class="nav__label">监控</span>
+        <a class="nav__link" href="/channels">渠道</a>
+        <a class="nav__link" href="/activities">活动</a>
+        <a class="nav__link" href="/changes">变更</a>
+        <a class="nav__link" href="/system">系统</a>
+      </div>
+      <div class="nav__actions">
+        <form method="post" action="/run/collect" class="nav-form" data-busy>
+          <button class="button button--primary" type="submit" data-busy-label="采集已启动…">立即采集</button>
+        </form>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-shell" id="content">
+{% block content %}{% endblock %}
+</main>
+<footer class="footer">
+  <div class="footer__inner">
+    <p class="footer__statement">价格会变，额度会变。让每次选择都有证据。</p>
+    <div class="footer__meta">
+      <span>QuotaRadar</span>
+      <span>自托管 · 本机数据</span>
+      <span>可用状态以最后验证时间为准</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

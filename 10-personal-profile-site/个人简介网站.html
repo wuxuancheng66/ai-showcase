@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>吴宣澄 · 个人作品集</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Noto+Serif+SC:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -593,7 +593,7 @@ footer{
   .boat-glow-2{width:160px;height:80px;}
 }
 </style>
-</head>
+<style>:focus-visible{outline:3px solid #8daffc;outline-offset:4px}.carousel-dot{border:0;padding:0;cursor:pointer}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1!important;transform:none!important}}</style></head>
 <body>
 
 <!-- ===== FIXED BACKGROUND ===== -->
@@ -704,8 +704,8 @@ footer{
       <div class="skill-card" data-index="2"><div class="icon">🐍</div><div class="name">基础 Python</div><div class="desc">编程基础 · 数据处理</div></div>
       <div class="skill-card" data-index="3"><div class="icon">✍️</div><div class="name">写作</div><div class="desc">文章撰写 · 内容创作</div></div>
     </div>
-    <button class="carousel-btn prev" id="carousel-prev">‹</button>
-    <button class="carousel-btn next" id="carousel-next">›</button>
+    <button aria-label="上一项技能" class="carousel-btn prev" id="carousel-prev">‹</button>
+    <button aria-label="下一项技能" class="carousel-btn next" id="carousel-next">›</button>
   </div>
   <div class="carousel-dots reveal reveal-delay-2" id="carousel-dots"></div>
 </section>
@@ -733,7 +733,7 @@ footer{
   window.addEventListener('scroll',()=>{
     const scrollY=window.scrollY;
     const maxScroll=document.documentElement.scrollHeight-window.innerHeight;
-    const progress=Math.min(1,scrollY/maxScroll);
+    const progress=Math.min(1,scrollY/Math.max(1,maxScroll));
     const translateY=-progress*20;
     const rotateX=3-progress*3;
     bgImage.style.transform='rotateX('+rotateX+'deg) scale(1.05) translateY('+translateY+'%)';
@@ -816,7 +816,7 @@ footer{
     });
 
     if(!isHovering){rotY+=speed;rotX+=speed*0.3;}
-    requestAnimationFrame(draw);
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(draw);
   }
 
   canvas.addEventListener('mousemove',e=>{
@@ -847,6 +847,7 @@ footer{
 // ============================================================
 (function(){
   const carousel=document.getElementById('skills-carousel');
+  carousel.tabIndex=0;carousel.setAttribute('aria-label','技能轮播，左右方向键切换');
   const cards=carousel.querySelectorAll('.skill-card');
   const prevBtn=document.getElementById('carousel-prev');
   const nextBtn=document.getElementById('carousel-next');
@@ -854,7 +855,8 @@ footer{
   let current=0,total=cards.length,isDragging=false,startX=0,delta=0;
 
   for(let i=0;i<total;i++){
-    const dot=document.createElement('div');
+    const dot=document.createElement('button');
+    dot.type='button';dot.setAttribute('aria-label','查看第 '+(i+1)+' 项技能');
     dot.className='carousel-dot'+(i===0?' active':'');
     dot.dataset.index=i;
     dot.addEventListener('click',()=>goTo(i));
@@ -890,12 +892,13 @@ footer{
   carousel.addEventListener('touchstart',e=>{touchStart=e.touches[0].clientX;},{passive:true});
   carousel.addEventListener('touchend',e=>{const diff=e.changedTouches[0].clientX-touchStart;if(Math.abs(diff)>50){if(diff<0)next();else prev();}},{passive:true});
 
-  document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev();if(e.key==='ArrowRight')next();});
+  carousel.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select'))return;if(e.key==='ArrowLeft'){e.preventDefault();prev();}if(e.key==='ArrowRight'){e.preventDefault();next();}});
   update();
 
-  let autoRotate=setInterval(()=>{if(!isDragging)next();},4000);
+  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let autoRotate=reducedMotion?null:setInterval(()=>{if(!isDragging&&!document.hidden&&!carousel.contains(document.activeElement))next();},4000);
   carousel.addEventListener('mouseenter',()=>clearInterval(autoRotate));
-  carousel.addEventListener('mouseleave',()=>{autoRotate=setInterval(()=>{if(!isDragging)next();},4000);});
+  carousel.addEventListener('mouseleave',()=>{clearInterval(autoRotate);if(!reducedMotion)autoRotate=setInterval(()=>{if(!isDragging&&!document.hidden&&!carousel.contains(document.activeElement))next();},4000);});
 })();
 
 // ============================================================

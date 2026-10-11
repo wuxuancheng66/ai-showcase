@@ -1,0 +1,92 @@
+# 能力分种子表（0–100，启发式综合公开基准的快照值，可随时手动修订）
+# 匹配规则：对模型 id/名称做小写包含匹配，最长关键词优先；
+# 未命中的模型走 family 修饰词规则（见文件尾），再未命中默认 50 分。
+# 这是评估输入之一而非真理，评分用途仅限相对性价比参考。
+
+scores:
+  # OpenAI
+  "gpt-5": 95
+  "gpt-5-mini": 86
+  "gpt-5-nano": 76
+  "gpt-4.1": 90
+  "gpt-4.1-mini": 80
+  "gpt-4o": 88
+  "gpt-4o-mini": 78
+  "o3": 93
+  "o4-mini": 88
+  # Anthropic
+  "claude-opus-4": 95
+  "claude-sonnet-4": 92
+  "claude-haiku-4": 80
+  "claude-3-7-sonnet": 89
+  "claude-3-5-haiku": 78
+  # Google
+  "gemini-2.5-pro": 93
+  "gemini-2.5-flash": 84
+  "gemini-2.0-flash": 78
+  # DeepSeek
+  "deepseek-reasoner": 90
+  "deepseek-r1": 90
+  "deepseek-chat": 85
+  "deepseek-v3": 85
+  # DeepSeek 蒸馏小模型：能力随尺寸显著低于满血 R1，精确种子优先于 r1 关键词
+  "deepseek-r1-distill-70b": 84
+  "deepseek-r1-distill-llama-70b": 84
+  "deepseek-r1-distill-32b": 78
+  "deepseek-r1-distill-qwen-32b": 78
+  "deepseek-r1-distill-14b": 70
+  "deepseek-r1-distill-qwen-14b": 70
+  "deepseek-r1-distill-8b": 62
+  "deepseek-r1-distill-llama-8b": 62
+  "deepseek-r1-distill-qwen-7b": 58
+  "deepseek-r1-distill-1.5b": 42
+  # R1-0528 蒸馏到 Qwen3-8B：比一代蒸馏强，但仍是小模型
+  "deepseek-r1-0528-qwen3-8b": 68
+  "qwen3-8b": 65
+  # Zhipu
+  "glm-4.5": 86
+  "glm-4-plus": 82
+  "glm-4.5-flash": 74
+  "glm-4-flash": 70
+  # Alibaba
+  "qwen3-235b": 89
+  "qwen-max": 87
+  "qwen-plus": 80
+  "qwen-turbo": 72
+  "qwen3-32b": 80
+  # Moonshot / xAI / Meta / Mistral
+  "kimi-k2": 87
+  "grok-4": 92
+  "grok-3-mini": 78
+  "grok-3": 88
+  "llama-4-maverick": 82
+  "llama-4-scout": 78
+  "llama-3.3-70b": 78
+  "mistral-large": 84
+  "mistral-medium": 78
+  "mistral-small": 72
+  "codestral": 79
+
+# 未命中种子表时，按模型名修饰词对家族基础分做加减（家族基础分默认 60）
+family_modifiers:
+  base: 60
+  mini: -10
+  nano: -18
+  flash: -10
+  lite: -14
+  small: -8
+  tiny: -20
+  turbo: -6
+  distill: -25
+  pro: +6
+  max: +8
+  large: +8
+  opus: +8
+  reasoner: +8
+  thinking: +8
+  r1: +8
+
+# 场景启发式：reasoning 标记提升 code 场景权重；coder/code 命名 → code 强项
+scenario_keywords:
+  reasoning: ["reasoner", "thinking", "r1", "o3", "o1"]
+  code: ["coder", "codestral", "code"]

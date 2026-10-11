@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}系统状态 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Operations</p>
+    <h1>系统状态</h1>
+    <p class="lede">数据库、采集新鲜度、调度任务和备份的实时证据。</p>
+  </div>
+  <div class="actions">
+    <form method="post" action="/system/backup" data-busy>
+      <button class="button button--primary" type="submit" data-busy-label="正在备份…">立即备份数据库</button>
+    </form>
+  </div>
+</section>
+
+<div class="status-rail" aria-label="系统状态摘要">
+  <span class="status-chip">
+    <span class="status-dot status-dot--{% if status.status == 'ok' %}ok{% elif status.status == 'degraded' %}warn{% else %}bad{% endif %}"></span>
+    总体：{{ status.status }}
+  </span>
+  <span class="status-chip">版本 {{ status.version }}</span>
+  <span class="status-chip">Schema v{{ status.schema_version }}</span>
+  <span class="status-chip">运行 {{ status.uptime_human }}</span>
+  <span class="status-chip">数据库 {{ status.database.size_human }}</span>
+</div>
+
+<section class="section">
+  <div class="section__head">
+    <div><h2>核心检查</h2><p>只展示可验证状态，不以颜色代替文字。</p></div>
+  </div>
+  <div class="metric-grid">
+    {% for name, check in status.checks.items() %}
+    <article class="metric-card">
+      <span class="metric-card__label">{{ name }}</span>
+      <strong class="metric-card__value">{{ check.status }}</strong>
+      <span class="metric-card__detail">
+        {% if name == 'database' %}完整性：{{ check.detail }}
+        {% elif name == 'collection' %}上次：{{ status.collection_age_human }}
+        {% elif 'count' in check %}数量：{{ check.count }}
+        {% endif %}
+      </span>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__head">
+    <div><h2>调度任务</h2><p>调度器 {% if status.scheduler.running %}运行中{% else %}未运行{% endif %}</p></div>
+  </div>
+  {% if status.jobs %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>任务</th><th>状态</th><th>完成时间</th><th>耗时</th><th>连续失败</th><th>最近错误</th></tr></thead>
+      <tbody>
+      {% for job in status.jobs %}
+        <tr>
+          <td data-label="任务">{{ job.job_name }}</td>
+          <td data-label="状态"><span class="status status--{{ job.status }}">{{ job.status }}</span></td>
+          <td data-label="完成时间">{{ job.last_finished_at or '—' }}</td>
+          <td data-label="耗时">{% if job.duration_ms is defined and job.duration_ms is not none %}{{ job.duration_ms }} ms{% else %}—{% endif %}</td>
+          <td data-label="连续失败">{{ job.consecutive_failures or 0 }}</td>
+          <td data-label="最近错误">{{ job.last_error or '—' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><strong>等待首个调度任务</strong><p>启动后任务状态会在此显示。</p></div>
+  {% endif %}
+</section>
+
+<section class="section split-grid">
+  <div>
+    <div class="section__head"><div><h2>数据源</h2><p>最近一轮采集结果</p></div></div>
+    {% if status.sources %}
+    <ul class="plain-list">
+      {% for name, state in status.sources.items() %}
+      <li><strong>{{ name }}</strong><span class="status status--{{ state }}">{{ state }}</span></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">尚无采集状态，首轮任务完成后自动出现。</p>
+    {% endif %}
+  </div>
+  <div>
+    <div class="section__head"><div><h2>最近备份</h2><p>SQLite 在线一致性快照</p></div></div>
+    {% if status.backups %}
+    <ul class="plain-list">
+      {% for backup in status.backups %}
+      <li><strong>{{ backup.name }}</strong><span>{{ backup.size_human }} · {{ backup.created_at }}</span></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state"><strong>还没有备份</strong><p>点击上方按钮创建第一份，或等待每日 03:30 自动备份。</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

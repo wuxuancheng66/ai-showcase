@@ -267,6 +267,13 @@ mark.hit{background:var(--c-hl); color:var(--c-text); border-radius:2px; padding
   main.content{padding-bottom:0;}
 }
 </style>
+
+<style id="accessibility-refinement">
+:focus-visible{outline:3px solid #087ce5!important;outline-offset:4px}
+button,input,select,textarea{font:inherit}button,a,input,select,textarea{touch-action:manipulation}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}}
+@media(max-width:600px){table{display:block;max-width:100%;overflow-x:auto}input,select,textarea{font-size:16px!important}}
+</style>
 </head>
 <body>
 <div class="topbar" id="topbar">
@@ -14975,8 +14982,9 @@ function closestHead(el){let n=el;
   return "";}
 
 /* ---------- 图层管理 ---------- */
-function openLayer(id){$$(".layer").forEach(l=>l.classList.remove("open"));$(id).classList.add("open");document.body.style.overflow="hidden";}
-function closeLayer(id){$(id).classList.remove("open");if(!$(".layer.open"))document.body.style.overflow="";}
+let layerPreviousFocus=null;
+function openLayer(id){if(!$(".layer.open"))layerPreviousFocus=document.activeElement;$$(".layer").forEach(l=>l.classList.remove("open"));const layer=$(id);layer.classList.add("open");layer.setAttribute("role","dialog");layer.setAttribute("aria-modal","true");layer.setAttribute("aria-label",id==="#search-layer"?"搜索知识点":"练习中心");layer.tabIndex=-1;document.body.style.overflow="hidden";setTimeout(()=>{if(!layer.classList.contains("open"))return;const first=id==="#search-layer"?layer.querySelector("input"):layer.querySelector("button,input,[tabindex='0']");(first||layer).focus();},0);}
+function closeLayer(id){$(id).classList.remove("open");if(!$(".layer.open")){document.body.style.overflow="";layerPreviousFocus?.focus();}}
 
 /* ---------- 练习中心 ---------- */
 const LAYER=$("#quiz-layer");
@@ -15484,6 +15492,9 @@ function importData(file){
 
 /* ---------- 事件绑定 ---------- */
 function bind(){
+  [$("#logo"),...$$("#practice-hub .ph-card")].filter(Boolean).forEach(el=>{el.tabIndex=0;el.setAttribute("role","button");el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click();}});});
+  const burger=$("#btn-burger");burger.setAttribute("aria-label","打开或关闭目录");burger.setAttribute("aria-controls","sidebar");
+
   $("#logo").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
   $("#btn-burger").addEventListener("click",()=>$("#sidebar").classList.toggle("open"));
   $("#btn-dark").addEventListener("click",()=>{settings.dark=!settings.dark;LS.set("scjl4.set",settings);applySettings();toast(settings.dark?"已切换夜间模式":"已切换日间模式");});
@@ -15499,6 +15510,8 @@ function bind(){
   $("#btn-import").addEventListener("click",()=>$("#file-import").click());
   $("#file-import").addEventListener("change",e=>{importData(e.target.files[0]);e.target.value="";});
   document.addEventListener("keydown",e=>{
+    const activeLayer=$(".layer.open");
+    if(e.key==="Tab"&&activeLayer){const nodes=[...activeLayer.querySelectorAll('button:not([disabled]),input:not([type="hidden"]),select,textarea,a[href],[tabindex="0"]')].filter(n=>n.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(!first){e.preventDefault();activeLayer.focus();}else if(e.shiftKey&&(document.activeElement===first||!activeLayer.contains(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&(document.activeElement===last||!activeLayer.contains(document.activeElement))){e.preventDefault();first.focus();}}
     if(e.key==="Escape"){$$(".layer.open").forEach(l=>closeLayer("#"+l.id));}
     if(e.key==="/"&&!e.target.matches("input,textarea")&&!$(".layer.open")){e.preventDefault();$("#btn-search").click();}
   });

@@ -1,0 +1,59 @@
+# 活动中心种子：可领额度的精确指引。核心认知——
+# 注册礼大多是「自动到账」，没有领取按钮是正常的，关键是知道去哪查看、什么时候过期。
+
+activities:
+  - id: zhipu-bigmodel
+    platform: 智谱 BigModel
+    title: 签到/活动中心（少数有手动领取入口的大平台）
+    url: https://bigmodel.cn/explore
+    kind: daily
+    note: "新用户注册自动送体验金；额外赠送去 bigmodel.cn/explore 签到/做任务手动领；查看到账：控制台→财务/资源包"
+
+  - id: siliconflow-hub
+    platform: 硅基流动
+    title: 注册礼 2000万 tokens（约 14 天有效，抓紧用）
+    url: https://cloud.siliconflow.cn/account/ak
+    kind: promo
+    note: "注册+实名后自动到账，无需点领取；查看到账：右上角头像→费用中心→资源包管理；邀请好友双方各得 2000 万"
+
+  - id: openrouter-credits
+    platform: OpenRouter
+    title: :free 模型每日免费调用（无需领取，直接用）
+    url: https://openrouter.ai/models?max_price=0
+    kind: promo
+    note: "免费模型直接调：未充值 50 次/天；充值 $10 后升 1000 次/天（含全部 :free 模型）"
+
+  - id: nvidia-nim-credits
+    platform: NVIDIA NIM
+    title: 注册送 1000 credits（自动到账）
+    url: https://build.nvidia.com/explore
+    kind: promo
+    note: "注册自动到账；查看：build.nvidia.com 右上角 Credits；用完等月度刷新或转付费"
+
+  - id: bailian-newuser
+    platform: 阿里云百炼
+    title: 新用户各模型免费额度（百万级 tokens/模型）
+    url: https://bailian.console.aliyun.com
+    kind: promo
+    note: "开通百炼服务后大多数模型额度自动到账；查看：控制台→模型广场各模型卡片『免费额度』；限时活动资源包在『费用中心→资源包』手动领"
+
+  - id: volc-ark-newuser
+    platform: 火山方舟（豆包）
+    title: 新用户每个模型赠送 tokens（需逐个开通）
+    url: https://console.volcengine.com/ark
+    kind: promo
+    note: "入口在『在线推理→模型广场』：每个模型点『开通』后赠送自动到账（这是最容易漏领的——每个模型要单独开）；查看：方舟控制台→资源管理"
+
+  - id: moonshot-newuser
+    platform: Kimi 开放平台（月之暗面）
+    title: 新用户赠送金额（自动到账）
+    url: https://platform.moonshot.cn
+    kind: promo
+    note: "注册自动到账；查看：控制台→费用中心→余额"
+
+  - id: tencent-hunyuan-voucher
+    platform: 腾讯云
+    title: 代金券/免费试用礼包（混元）
+    url: https://console.cloud.tencent.com/coupon
+    kind: promo
+    note: "代金券统一在 费用中心→代金券 查看；hunyuan-lite 模型本身免费，无需任何领取"

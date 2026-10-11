@@ -1,16 +1,16 @@
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-状态机编排-7768AE)
-![Tests](https://img.shields.io/badge/Tests-4%2F4%20通过-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-离线冒烟测试-blue)
 ![Lines](https://img.shields.io/badge/代码-2400%2B行-blue)
 ![License](https://img.shields.io/badge/License-MIT-informational)
 
-# AI Agent Team · 生产级多智能体协作系统
+# AI Agent Team · 多智能体协作实验
 
 五个专家角色（研究员 / 写手 / 审校员 / 代码助手 / 数据分析师）在总控调度器的指挥下
 接力完成复杂任务：任务分解 → 逐步执行 → 自动审校 → 不通过自动重做 → 产物落盘。
 
 技术栈：**LangChain（模型与消息）+ LangGraph（状态机编排）**。
-> 框架选型说明：原需求提到 LangChain + AutoGen 双框架；生产环境中同时引入两个
+> 框架选型说明：原需求提到 LangChain + AutoGen 双框架；同时引入两个
 > 编排内核会带来依赖冲突与行为不可预测性，因此采用同属 LangChain 生态、专为
 > "接力 + 回流"式流水线设计的 LangGraph 作为唯一编排内核，更安全稳定。
 
@@ -66,7 +66,7 @@ flowchart TD
 
 所有工具继承 `core/base.py::BaseTool`：输入为基本类型参数，
 输出统一为 `ToolResult(ok, text, meta)`，**失败不抛异常**（`ok=False` + 说明文本），
-保证流水线永不因工具故障中断。注册到 `ToolRegistry` 后按名字调用。
+尽量避免工具故障中断整条流水线。注册到 `ToolRegistry` 后按名字调用。
 
 ---
 
@@ -181,7 +181,7 @@ AGENT_REGISTRY["translator"] = TranslatorAgent
 ```
 
 之后即可在工作流步骤或自定义任务中使用 `"agent": "translator"`。
-（自定义工具同理：继承 `tools/base` 的 `BaseTool`，在 `tools/__init__.py` 注册。）
+（自定义工具同理：继承 `core/base.py` 的 `BaseTool`，在 `tools/__init__.py` 注册。）
 
 ## 5. Docker 部署（可选基础设施）
 
@@ -210,9 +210,9 @@ AGENT_REGISTRY["translator"] = TranslatorAgent
 
 ## 7. 安全与隐私设计
 
-* **密钥安全**：API Key 只存在于 `.env`（已被 `.gitignore` 排除），代码与日志零硬编码；
+* **密钥安全**：API Key 只存在于 `.env`（已被 `.gitignore` 排除），项目使用环境变量读取密钥；请勿在任务输入、代码或日志中填写真实密钥；
 * **文件沙箱**：文件工具只能读写项目目录内路径，`.env`、`*.key`、`id_rsa`、`.git`、`.ssh`
-  等敏感路径被黑名单拦截，密钥不可能被读进提示词外泄；
+  等敏感路径被黑名单拦截，降低误读敏感文件的风险；
 * **SSRF 防护**：`url_fetch` 拒绝 localhost / 内网段 / 云元数据地址；
 * **Token 预算**：`TOKEN_BUDGET` 超限立即熔断，防止失控消耗；
 * **遥测默认关闭**：`LANGCHAIN_TRACING_V2=false`，数据全部留在本机
@@ -233,3 +233,7 @@ LLM 审校输出无法解析时默认放行（fail-open），保证流水线永�
 
 **Q: 测试怎么跑？**
 `python -m pytest tests -q`——离线假模型冒烟测试，不需要任何 API Key。
+
+## 离线检查与运行边界
+
+`python main.py --help` 不需要模型密钥或第三方依赖。`python main.py --check` 只检查模块是否存在，不读取 `.env`、不联网、不调用模型。已有 `python -m pytest tests -q` 使用假模型，但需要先安装测试与运行依赖；测试徽章不代表当前机器已通过本次验证。真实任务会调用配置的模型服务，输出仍需人工核验。

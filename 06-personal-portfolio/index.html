@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com" onerror="document.documentElement.classList.add('no-tailwind')"></script>
   <script>
-    tailwind.config = {
+    if(window.tailwind) tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
@@ -273,7 +273,11 @@
       .section-number{font-size:4rem;top:-16px}
     }
   </style>
-</head>
+<style>
+:focus-visible{outline:3px solid #f08c66!important;outline-offset:4px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation:none!important;transition:none!important}.section-reveal{opacity:1!important;transform:none!important}#cursorDot,#cursorRing{display:none!important}body{cursor:auto!important}}
+.no-tailwind body{margin:0;background:#121316;color:#e6e6e9;font:16px/1.7 system-ui,sans-serif}.no-tailwind main{max-width:1000px;margin:auto;padding:30px 24px}.no-tailwind nav,.no-tailwind footer{padding:20px 24px}.no-tailwind a{color:#f08c66}.no-tailwind .hidden{display:none!important}.no-tailwind section{padding:35px 0}.no-tailwind svg{max-width:32px;max-height:32px}.no-tailwind .carousel-card{width:300px;background:#1e2024;border:1px solid #3a3a48;border-radius:16px}.no-tailwind .carousel-card img{width:100%}.no-tailwind input,.no-tailwind textarea,.no-tailwind button{font:inherit;padding:12px;background:#24262a;color:#eee;border:1px solid #555;border-radius:8px}.no-tailwind input,.no-tailwind textarea{display:block;width:90%;margin:12px 0}.no-tailwind .grid{display:grid;gap:20px}.no-tailwind .section-reveal{opacity:1;transform:none}.no-tailwind #heroContent{opacity:1;transform:none}.no-tailwind body{cursor:auto!important;overflow-x:hidden}.no-tailwind .carousel-track{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));align-items:stretch;gap:20px;min-height:0!important}.no-tailwind .carousel-card{position:static!important;transform:none!important;top:auto;left:auto;width:auto!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}.no-tailwind .carousel-card>div:last-child{padding:20px}.no-tailwind #carPrev,.no-tailwind #carNext,.no-tailwind #carDots{display:none}
+</style></head>
 <body class="font-sans text-slate-200 bg-dark-950 antialiased">
 
   <!-- ================================================================
@@ -324,7 +328,7 @@
           <li><a href="#projects" class="nav-link text-slate-300 hover:text-primary-400 transition-colors">项目</a></li>
           <li><a href="#contact"  class="nav-link text-slate-300 hover:text-primary-400 transition-colors">联系</a></li>
         </ul>
-        <button id="menuBtn" class="md:hidden text-slate-300 hover:text-primary-400 transition-colors p-2" aria-label="菜单">
+        <button aria-expanded="false" id="menuBtn" class="md:hidden text-slate-300 hover:text-primary-400 transition-colors p-2" aria-label="菜单">
           <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </nav>
@@ -397,7 +401,7 @@
               <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">📍</span> 所在地：中国</div>
               <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">🎓</span> 学历：本科在读</div>
               <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">💻</span> 方向：全栈开发</div>
-              <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">📧</span><!-- TODO: 替换邮箱 --><a href="mailto:wu.xuancheng@example.com" class="text-primary-400 hover:underline">wu.xuancheng@example.com</a></div>
+              <div class="flex items-center gap-3 text-sm text-slate-400"><span class="text-primary-400">📧</span><a href="https://github.com/wuxuancheng66" class="text-primary-400 hover:underline">GitHub · wuxuancheng66</a></div>
             </div>
             <div class="pt-2">
               <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">🌟 兴趣与爱好</h4>
@@ -501,8 +505,8 @@
           <p class="text-slate-500 mt-4 text-sm">🖱️ 点击左右箭头或拖拽切换 · 3D 轮播视角</p>
         </div>
         <div class="carousel-stage relative">
-          <button id="carPrev" class="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/[0.05] border border-white/15 text-white hover:bg-primary-500/20 hover:border-primary-500/40 transition-all duration-300 flex items-center justify-center text-xl btn-hover-scale">←</button>
-          <button id="carNext" class="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/[0.05] border border-white/15 text-white hover:bg-primary-500/20 hover:border-primary-500/40 transition-all duration-300 flex items-center justify-center text-xl btn-hover-scale">→</button>
+          <button aria-label="上一个项目" id="carPrev" class="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/[0.05] border border-white/15 text-white hover:bg-primary-500/20 hover:border-primary-500/40 transition-all duration-300 flex items-center justify-center text-xl btn-hover-scale">←</button>
+          <button aria-label="下一个项目" id="carNext" class="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/[0.05] border border-white/15 text-white hover:bg-primary-500/20 hover:border-primary-500/40 transition-all duration-300 flex items-center justify-center text-xl btn-hover-scale">→</button>
           <div id="carTrack" class="carousel-track flex items-center justify-center min-h-[420px] relative"></div>
           <div id="carDots" class="flex justify-center gap-3 mt-8"></div>
         </div>
@@ -526,9 +530,9 @@
           </div>
           <div><label for="subject" class="block text-sm font-semibold text-slate-300 mb-2">主题</label><input type="text" id="subject" name="subject" required placeholder="想聊点什么？" class="input-dark w-full px-4 py-3 rounded-xl text-sm"><p id="subjectError" class="text-red-400 text-xs mt-1 hidden">请输入主题</p></div>
           <div><label for="message" class="block text-sm font-semibold text-slate-300 mb-2">留言</label><textarea id="message" name="message" required rows="5" placeholder="写下你想说的话..." class="input-dark w-full px-4 py-3 rounded-xl text-sm resize-none"></textarea><p id="messageError" class="text-red-400 text-xs mt-1 hidden">请输入留言内容</p></div>
-          <button type="submit" class="btn-primary btn-hover-scale w-full text-white font-semibold py-3.5 rounded-xl text-base flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>发送消息</button>
-          <div id="formSuccess" class="hidden bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-xl p-4 text-center text-sm font-medium">✅ 消息已发送成功！感谢你的留言，我会尽快回复。</div>
-          <!-- TODO: 替换 fetch URL 为真实后端接口 -->
+          <button type="submit" class="btn-primary btn-hover-scale w-full text-white font-semibold py-3.5 rounded-xl text-base flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>保存联系草稿</button>
+          <div role="status" aria-live="polite" id="formSuccess" class="hidden bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-xl p-4 text-center text-sm font-medium">✅ 联系草稿已下载。请通过 GitHub 主页选择沟通方式；此页面不发送消息。</div>
+          <!-- 联系内容只下载到本机，不向服务器提交。 -->
         </form>
       </div>
     </section>
@@ -540,8 +544,8 @@
         <div class="flex items-center gap-6">
           <!-- TODO: 替换社交链接 -->
           <a href="https://github.com/wuxuancheng66" target="_blank" rel="noopener" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="GitHub"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-          <a href="mailto:wu.xuancheng@example.com" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="Email"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
-          <a href="#" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="Twitter/X"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="https://github.com/wuxuancheng66" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="GitHub 主页"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+          <a href="https://wuxuancheng66.github.io/ai-showcase/" class="text-slate-500 hover:text-primary-400 transition-colors btn-hover-scale inline-block" aria-label="项目展示首页"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
         </div>
       </div>
     </footer>
@@ -651,7 +655,7 @@
     // ---- Loop ----
     const clock = new THREE.Clock(); let starTimer = 0;
     function animate() {
-      requestAnimationFrame(animate);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), .1), t = clock.elapsedTime;
       mouse.x += (mouse.tx-mouse.x)*.04; mouse.y += (mouse.ty-mouse.y)*.04;
       torusKnot.rotation.x+=.0015; torusKnot.rotation.y+=.002;
@@ -701,7 +705,7 @@
 
       // ==================== 1. 自定义光标 ====================
       const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
-      if (dot && ring && !('ontouchstart' in window)) {
+      if (dot && ring && !('ontouchstart' in window) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         let mx = 0, my = 0, rx = 0, ry = 0;
         document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
         function follow() { rx += (mx - rx) * .15; ry += (my - ry) * .15; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(follow); }
@@ -770,6 +774,7 @@
       if (menuBtn && mobileMenu) {
         menuBtn.addEventListener('click', () => {
           const o = !mobileMenu.classList.contains('hidden'); mobileMenu.classList.toggle('hidden');
+          menuBtn.setAttribute('aria-expanded',String(!o));
           menuIcon.innerHTML = o ? '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>' : '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>';
         });
         document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => { mobileMenu.classList.add('hidden'); menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>'; }));
@@ -783,14 +788,8 @@
       const carTrack = document.getElementById('carTrack'), carDots = document.getElementById('carDots');
       const carPrev = document.getElementById('carPrev'), carNext = document.getElementById('carNext');
 
-      // TODO: 替换为你的真实项目数据
-      const projects = [
-        { title:'个人博客系统', desc:'基于 React + Markdown 的静态博客，支持标签分类、全文搜索与暗黑模式切换。', tags:['React','Markdown','CSS Modules'], img:'https://placehold.co/600x400/2a2025/E17055?text=Blog', preview:'#', source:'#' },
-        { title:'校园二手交易平台', desc:'Node.js + Express 构建的 RESTful API，MongoDB 存储，JWT 鉴权，支持图片上传与实时聊天。', tags:['Node.js','Express','MongoDB'], img:'https://placehold.co/600x400/2a2228/E17055?text=Market', preview:'#', source:'#' },
-        { title:'天气预报 PWA', desc:'调用 OpenWeather API，支持城市搜索、5 日预报、地理定位，可离线访问。', tags:['JavaScript','PWA','API'], img:'https://placehold.co/600x400/262220/E17055?text=Weather', preview:'#', source:'#' },
-        { title:'LeetCode 题解仓库', desc:'整理 200+ 道算法题解，包含详细注释与多种解法对比，持续更新中。', tags:['Python','Algorithms','Docs'], img:'https://placehold.co/600x400/252228/E17055?text=Algo', preview:'#', source:'#' },
-        { title:'ToDo 协作应用', desc:'Vue3 + Firebase 实时同步的团队待办工具，支持看板视图与任务分配。', tags:['Vue','Firebase','协作'], img:'https://placehold.co/600x400/2a2425/E17055?text=Todo', preview:'#', source:'#' },
-      ];
+      // 与展示集合中的真实产品入口对应。
+      const projects = [{"title": "WordVault 单词本", "desc": "在浏览器中整理词汇、筛选掌握度和收藏；支持 JSON 备份与合并导入。", "tags": ["JavaScript", "本地存储", "离线"], "img": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22600%22%20height%3D%22350%22%20viewBox%3D%220%200%20600%20350%22%3E%3Crect%20width%3D%22600%22%20height%3D%22350%22%20fill%3D%22%231e2024%22/%3E%3Ccircle%20cx%3D%22480%22%20cy%3D%2270%22%20r%3D%22150%22%20fill%3D%22%23E17055%22%20opacity%3D%22.12%22/%3E%3Cpath%20d%3D%22M48%20260H552%22%20stroke%3D%22%23E17055%22%20opacity%3D%22.5%22/%3E%3Ctext%20x%3D%2248%22%20y%3D%22190%22%20fill%3D%22%23f08c66%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22600%22%3EW%3C/text%3E%3Ctext%20x%3D%2248%22%20y%3D%22300%22%20fill%3D%22%239297a1%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2215%22%3EBUILT%20%C2%B7%20TESTED%20%C2%B7%20DOCUMENTED%3C/text%3E%3C/svg%3E", "preview": "https://wuxuancheng66.github.io/ai-showcase/11-wordvault/WordVault%E5%8D%95%E8%AF%8D%E6%9C%AC.html", "source": "https://github.com/wuxuancheng66/wordvault"}, {"title": "雅思学习空间", "desc": "按听说读写组织学习资料、错题和复盘模板，门户支持快速查找模块。", "tags": ["HTML", "知识组织", "学习工具"], "img": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22600%22%20height%3D%22350%22%20viewBox%3D%220%200%20600%20350%22%3E%3Crect%20width%3D%22600%22%20height%3D%22350%22%20fill%3D%22%231e2024%22/%3E%3Ccircle%20cx%3D%22480%22%20cy%3D%2270%22%20r%3D%22150%22%20fill%3D%22%23E17055%22%20opacity%3D%22.12%22/%3E%3Cpath%20d%3D%22M48%20260H552%22%20stroke%3D%22%23E17055%22%20opacity%3D%22.5%22/%3E%3Ctext%20x%3D%2248%22%20y%3D%22190%22%20fill%3D%22%23f08c66%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22600%22%3EIELTS%3C/text%3E%3Ctext%20x%3D%2248%22%20y%3D%22300%22%20fill%3D%22%239297a1%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2215%22%3EBUILT%20%C2%B7%20TESTED%20%C2%B7%20DOCUMENTED%3C/text%3E%3C/svg%3E", "preview": "https://wuxuancheng66.github.io/ai-showcase/03-ielts-hub/site/index.html", "source": "https://github.com/wuxuancheng66/ielts-hub"}, {"title": "军事理论学习工具", "desc": "章节知识、练习、模拟考试和错题收藏集中在一个离线页面。", "tags": ["JavaScript", "题库", "离线"], "img": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22600%22%20height%3D%22350%22%20viewBox%3D%220%200%20600%20350%22%3E%3Crect%20width%3D%22600%22%20height%3D%22350%22%20fill%3D%22%231e2024%22/%3E%3Ccircle%20cx%3D%22480%22%20cy%3D%2270%22%20r%3D%22150%22%20fill%3D%22%23E17055%22%20opacity%3D%22.12%22/%3E%3Cpath%20d%3D%22M48%20260H552%22%20stroke%3D%22%23E17055%22%20opacity%3D%22.5%22/%3E%3Ctext%20x%3D%2248%22%20y%3D%22190%22%20fill%3D%22%23f08c66%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22600%22%3ESTUDY%3C/text%3E%3Ctext%20x%3D%2248%22%20y%3D%22300%22%20fill%3D%22%239297a1%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2215%22%3EBUILT%20%C2%B7%20TESTED%20%C2%B7%20DOCUMENTED%3C/text%3E%3C/svg%3E", "preview": "https://wuxuancheng66.github.io/ai-showcase/04-military-hub/%E5%86%9B%E4%BA%8B%E7%90%86%E8%AE%BA%E5%A4%87%E8%80%83%E7%AC%94%E8%AE%B0%EF%BC%882026%E6%95%B4%E5%90%88%E7%89%88%C2%B7%E4%BA%A4%E4%BA%92%E5%A2%9E%E5%BC%BA%E7%89%88%EF%BC%89.html", "source": "https://github.com/wuxuancheng66/military-theory-notes"}, {"title": "AI Agent Team", "desc": "研究、写作、审校与代码角色协作的命令行实验；附架构与离线测试说明。", "tags": ["Python", "LangGraph", "CLI"], "img": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22600%22%20height%3D%22350%22%20viewBox%3D%220%200%20600%20350%22%3E%3Crect%20width%3D%22600%22%20height%3D%22350%22%20fill%3D%22%231e2024%22/%3E%3Ccircle%20cx%3D%22480%22%20cy%3D%2270%22%20r%3D%22150%22%20fill%3D%22%23E17055%22%20opacity%3D%22.12%22/%3E%3Cpath%20d%3D%22M48%20260H552%22%20stroke%3D%22%23E17055%22%20opacity%3D%22.5%22/%3E%3Ctext%20x%3D%2248%22%20y%3D%22190%22%20fill%3D%22%23f08c66%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22600%22%3EAGENT%3C/text%3E%3Ctext%20x%3D%2248%22%20y%3D%22300%22%20fill%3D%22%239297a1%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2215%22%3EBUILT%20%C2%B7%20TESTED%20%C2%B7%20DOCUMENTED%3C/text%3E%3C/svg%3E", "preview": "https://wuxuancheng66.github.io/ai-showcase/01-ai-agent-team/README.html", "source": "https://github.com/wuxuancheng66/ai-agent-team"}, {"title": "桌面番茄钟", "desc": "紧凑的专注计时小窗，支持工作与休息切换、快捷键和桌面提醒。", "tags": ["Python", "tkinter", "桌面工具"], "img": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22600%22%20height%3D%22350%22%20viewBox%3D%220%200%20600%20350%22%3E%3Crect%20width%3D%22600%22%20height%3D%22350%22%20fill%3D%22%231e2024%22/%3E%3Ccircle%20cx%3D%22480%22%20cy%3D%2270%22%20r%3D%22150%22%20fill%3D%22%23E17055%22%20opacity%3D%22.12%22/%3E%3Cpath%20d%3D%22M48%20260H552%22%20stroke%3D%22%23E17055%22%20opacity%3D%22.5%22/%3E%3Ctext%20x%3D%2248%22%20y%3D%22190%22%20fill%3D%22%23f08c66%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22600%22%3E25%3A00%3C/text%3E%3Ctext%20x%3D%2248%22%20y%3D%22300%22%20fill%3D%22%239297a1%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2215%22%3EBUILT%20%C2%B7%20TESTED%20%C2%B7%20DOCUMENTED%3C/text%3E%3C/svg%3E", "preview": "https://wuxuancheng66.github.io/ai-showcase/07-pomodoro-timer/README.html", "source": "https://github.com/wuxuancheng66/pomodoro-timer"}];
 
       const total = projects.length;
       const ANGLE_STEP = 50;       // 相邻卡片角距（度），±100° 被 backface 隐藏
@@ -827,6 +826,7 @@
 
           const dot = document.createElement('button');
           dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx===currentIdx?'bg-primary-500 scale-125':'bg-white/20 hover:bg-white/40'}`;
+          dot.setAttribute('aria-label','查看项目：'+proj.title);
           dot.addEventListener('click', () => { if (idx === currentIdx || isAnimating) return; currentIdx = idx; rotateRing(); });
           carDots.appendChild(dot);
         });
@@ -905,6 +905,7 @@
       function updateDots() {
         const dots = carDots.querySelectorAll('button');
         dots.forEach((dot, idx) => {
+          dot.setAttribute('aria-current',idx===currentIdx?'true':'false');
           dot.classList.toggle('bg-primary-500', idx===currentIdx);
           dot.classList.toggle('scale-125', idx===currentIdx);
           dot.classList.toggle('bg-white/20', idx!==currentIdx);
@@ -927,7 +928,7 @@
         });
 
         document.addEventListener('keydown', e => {
-          if (isAnimating) return;
+          if (isAnimating || !document.getElementById('projects').contains(document.activeElement) || e.target.matches('input,textarea,select')) return;
           if (e.key === 'ArrowLeft')  { currentIdx = (currentIdx - 1 + total) % total; rotateRing(); }
           if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % total; rotateRing(); }
         });
@@ -967,8 +968,10 @@
           if (!document.getElementById('subject').value.trim()) { showE('subject'); v = false; } else hideE('subject');
           if (!document.getElementById('message').value.trim()) { showE('message'); v = false; } else hideE('message');
           if (!v) return;
-          // TODO: fetch('https://your-api.com/contact', { method:'POST', body: new FormData(form) })
-          successMsg.classList.remove('hidden'); form.reset();
+          const draft={name:document.getElementById('name').value.trim(),email:em,subject:document.getElementById('subject').value.trim(),message:document.getElementById('message').value.trim()};
+          const url=URL.createObjectURL(new Blob([JSON.stringify(draft,null,2)],{type:'application/json'}));
+          const link=document.createElement('a');link.href=url;link.download='contact-draft.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+          successMsg.classList.remove('hidden');
           setTimeout(() => successMsg.classList.add('hidden'), 5000);
         });
         ['name','email','subject','message'].forEach(f => { const el = document.getElementById(f); if (el) el.addEventListener('input', () => hideE(f)); });
@@ -979,7 +982,7 @@
 
       console.log('✨ 吴宣澄 · 作品集 v4 — 全功能升级版');
       console.log('🎯 预加载 · 自定义光标 · 进度条 · 噪声纹理 · 区块编号 · 3D 轮播');
-      console.log('💡 搜索 "TODO" 快速定位占位内容');
+
     })();
   </script>
 

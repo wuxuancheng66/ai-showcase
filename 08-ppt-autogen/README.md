@@ -1,31 +1,21 @@
-# PPT 自动生成器 · python-pptx 构建流水线
+# PPT 自动生成器 · python-pptx 模板
 
-![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
-![Lib](https://img.shields.io/badge/python--pptx-%20-Python?logo=python&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-informational)
+用 Python、python-pptx 和 Pillow 生成 16 页可编辑演示文稿。此仓库保留原有竞选模板，并提供无需私人素材的演示模式；占位图清楚标记为 DEMO。
 
-**代码即幻灯片**：用 python-pptx + PIL 以纯代码批量生成分模块 PPT——版式、配色、图片裁切、
-中英混排全部程序化控制，一次编写、秒级重建整套演示文稿。
+## 运行
 
-> 实战产出：已用于生成真实课堂演示文件（作业数据出于隐私未随仓库分发，见下方"数据接口"）。
-
-## ✨ 亮点
-
-- **确定性排版**：相较手动拖拽，代码生成的版式 100% 一致、可版本管理；
-- **图片自动处理**：PIL 预处理（裁切/缩放）后嵌入，不再手动调图；
-- **原生 pptx 输出**：生成的文件可继续用 PowerPoint/WPS/Keynote 手工微调。
-
-## 🚀 使用
+环境需要 `python-pptx` 与 `Pillow`。核验依赖来源和版本后，在自己的 Python 环境中安装；本次优化未自动安装任何依赖。
 
 ```bash
-pip install python-pptx pillow
-python build_ppt.py
+python build_ppt.py --help
+python build_ppt.py --demo --output demo.pptx
+python build_ppt.py --materials ./data/materials --masked ./data/masked --assets ./data/assets --output ./presentation.pptx
 ```
 
-## 📁 数据接口
+`--check` 检查素材但不生成 PPT；`--demo --check` 确认演示模式不需要私人素材。`--work-dir` 设置图片处理目录，`--font` 设置设备已安装的字体。普通无参数运行沿用原本本机素材与输出位置；素材缺失时会明确报错并提示演示模式。
 
-脚本从 `data/` 目录读取图片与文本素材（本仓库未附带数据，目录结构见 `构建说明.md`）。
-接入你自己的素材后即可一键重建。
+## 素材结构
 
----
-作者：吴宣澄 · 2026-09
+完整文件名与使用说明见 [使用说明](usage.html)。私人照片、聊天截图和原作业数据不随仓库分发。`构建说明.md` 是早期误收录的军事理论产品说明，保留以便追溯；它不是本生成器的构建说明。
+
+作者：吴宣澄。输出为原生 PPTX，可在 PowerPoint、WPS 或 Keynote 中继续编辑。

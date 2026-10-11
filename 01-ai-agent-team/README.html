@@ -34,11 +34,11 @@ footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);color:v
 <body>
 <main>
 <a class="back" href="../index.html">← 返回项目展示</a>
-<p><img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&amp;logoColor=white"> <img alt="LangGraph" src="https://img.shields.io/badge/LangGraph-状态机编排-7768AE"> <img alt="Tests" src="https://img.shields.io/badge/Tests-4%2F4%20通过-brightgreen"> <img alt="Lines" src="https://img.shields.io/badge/代码-2400%2B行-blue"> <img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></p>
-<h1>AI Agent Team · 生产级多智能体协作系统</h1>
+<p><img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&amp;logoColor=white"> <img alt="LangGraph" src="https://img.shields.io/badge/LangGraph-状态机编排-7768AE"> <img alt="Tests" src="https://img.shields.io/badge/Tests-离线冒烟测试-blue"> <img alt="Lines" src="https://img.shields.io/badge/代码-2400%2B行-blue"> <img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></p>
+<h1>AI Agent Team · 多智能体协作实验</h1>
 <p>五个专家角色（研究员 / 写手 / 审校员 / 代码助手 / 数据分析师）在总控调度器的指挥下 接力完成复杂任务：任务分解 → 逐步执行 → 自动审校 → 不通过自动重做 → 产物落盘。</p>
 <p>技术栈：<strong>LangChain（模型与消息）+ LangGraph（状态机编排）</strong>。</p>
-<blockquote>框架选型说明：原需求提到 LangChain + AutoGen 双框架；生产环境中同时引入两个 编排内核会带来依赖冲突与行为不可预测性，因此采用同属 LangChain 生态、专为 "接力 + 回流"式流水线设计的 LangGraph 作为唯一编排内核，更安全稳定。</blockquote>
+<blockquote>框架选型说明：原需求提到 LangChain + AutoGen 双框架；同时引入两个 编排内核会带来依赖冲突与行为不可预测性，因此采用同属 LangChain 生态、专为 "接力 + 回流"式流水线设计的 LangGraph 作为唯一编排内核，更安全稳定。</blockquote>
 <hr>
 <h2>1. 系统架构</h2>
 <pre class="mermaid"><span class="cap">架构图 · Mermaid 源码（在 GitHub 上渲染为流程图）</span><code>flowchart TD
@@ -77,7 +77,7 @@ footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);color:v
 <h3>记忆（Memory）接口规范</h3>
 <table><thead><tr><th>层级</th><th>实现</th><th>说明</th></tr></thead><tbody><tr><td>短期记忆</td><td><code>core/state.py</code> AgentState</td><td>一次任务内所有节点共享（LangGraph 状态）</td></tr><tr><td>长期记忆</td><td><code>core/memory.py</code> SharedMemory</td><td>跨任务沉淀；<code>write/read/search/snapshot</code> 四个方法</td></tr><tr><td>后端</td><td>ChromaDB（配置 <code>CHROMA_HOST</code>）/ 本地 JSON（默认降级）</td><td>未装 chromadb 也能跑</td></tr></tbody></table>
 <h3>工具（Tools）接口规范</h3>
-<p>所有工具继承 <code>core/base.py::BaseTool</code>：输入为基本类型参数， 输出统一为 <code>ToolResult(ok, text, meta)</code>，<strong>失败不抛异常</strong>（<code>ok=False</code> + 说明文本）， 保证流水线永不因工具故障中断。注册到 <code>ToolRegistry</code> 后按名字调用。</p>
+<p>所有工具继承 <code>core/base.py::BaseTool</code>：输入为基本类型参数， 输出统一为 <code>ToolResult(ok, text, meta)</code>，<strong>失败不抛异常</strong>（<code>ok=False</code> + 说明文本）， 尽量避免工具故障中断整条流水线。注册到 <code>ToolRegistry</code> 后按名字调用。</p>
 <hr>
 <h2>2. 快速开始（3 条命令）</h2>
 <pre class=""><code>./startup.sh                  # 创建虚拟环境 + 安装依赖 + 生成 .env
@@ -151,8 +151,8 @@ AGENT_REGISTRY[&quot;translator&quot;] = TranslatorAgent</code></pre>
 <h2>6. 配置参考（agent_config.yaml / .env）</h2>
 <table><thead><tr><th>配置</th><th>位置</th><th>说明</th></tr></thead><tbody><tr><td>每角色 model / temperature / system_prompt</td><td><code>agent_config.yaml</code></td><td>独立调优；未指定 model 时用 <code>defaults.model</code></td></tr><tr><td><code>DEFAULT_MODEL</code></td><td><code>.env</code></td><td>覆盖 <code>defaults.model</code>，换模型最方便的入口</td></tr><tr><td><code>OPENAI_BASE_URL</code></td><td><code>.env</code></td><td>任意 OpenAI 兼容端点</td></tr><tr><td><code>TAVILY_API_KEY</code> / <code>SERPAPI_API_KEY</code></td><td><code>.env</code></td><td>联网搜索；都不配则降级为离线模式</td></tr><tr><td><code>TOKEN_BUDGET</code></td><td><code>.env</code></td><td>token 总预算，超出自动终止（默认 0 = 不限）</td></tr><tr><td><code>CHROMA_HOST</code> / <code>CHROMA_PORT</code></td><td><code>.env</code></td><td>向量记忆后端</td></tr><tr><td><code>max_retries</code> / <code>max_steps</code></td><td><code>agent_config.yaml</code></td><td>审校重试上限 / 步骤数上限</td></tr></tbody></table>
 <h2>7. 安全与隐私设计</h2>
-<ul><li><strong>密钥安全</strong>：API Key 只存在于 <code>.env</code>（已被 <code>.gitignore</code> 排除），代码与日志零硬编码；</li><li><strong>文件沙箱</strong>：文件工具只能读写项目目录内路径，<code>.env</code>、<code>*.key</code>、<code>id_rsa</code>、<code>.git</code>、<code>.ssh</code></li></ul>
-<p>  等敏感路径被黑名单拦截，密钥不可能被读进提示词外泄；</p>
+<ul><li><strong>密钥安全</strong>：API Key 只存在于 <code>.env</code>（已被 <code>.gitignore</code> 排除），项目使用环境变量读取密钥；请勿在任务输入、代码或日志中填写真实密钥；</li><li><strong>文件沙箱</strong>：文件工具只能读写项目目录内路径，<code>.env</code>、<code>*.key</code>、<code>id_rsa</code>、<code>.git</code>、<code>.ssh</code></li></ul>
+<p>  等敏感路径被黑名单拦截，降低误读敏感文件的风险；</p>
 <ul><li><strong>SSRF 防护</strong>：<code>url_fetch</code> 拒绝 localhost / 内网段 / 云元数据地址；</li><li><strong>Token 预算</strong>：<code>TOKEN_BUDGET</code> 超限立即熔断，防止失控消耗；</li><li><strong>遥测默认关闭</strong>：<code>LANGCHAIN_TRACING_V2=false</code>，数据全部留在本机</li></ul>
 <p>  （<code>outputs/</code> 与 <code>logs/</code>）；唯一外发请求是 LLM 推理与（配置后的）搜索 API。</p>
 <h2>8. 常见问题</h2>

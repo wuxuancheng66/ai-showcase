@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mansea · 本地手册检索</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <span class="logo">◍</span>
+      <div>
+        <h1>mansea</h1>
+        <p class="sub">本地手册全文检索 · 完全离线 · 零数据外发</p>
+      </div>
+    </div>
+    <div class="stats" id="stats">加载中…</div>
+  </header>
+
+  <div class="searchbox">
+    <input id="q" type="search" autocomplete="off" spellcheck="false"
+           placeholder="想干什么？例如：递归查找文件 / 压缩解压 / 查看端口占用 / 进程管理">
+    <kbd>/</kbd>
+  </div>
+  <div class="chips" id="chips"></div>
+  <p class="sub-links">
+    <a href="/cheatsheet.html">命令速查（人写的 118 条）→</a>
+    <span>离线单文件版需先建立本机语料，再运行 mansea.build_static 生成。</span>
+  </p>
+
+  <main>
+    <div id="meta" class="meta"></div>
+    <ol id="results" class="results"></ol>
+    <div id="empty" class="empty">
+      输入关键词开始检索。索引全部来自本机 <code>/usr/share/man</code>，不会联网。
+    </div>
+  </main>
+
+  <aside id="detail" class="detail" hidden>
+    <div class="detail-head">
+      <div>
+        <h2 id="d-title"></h2>
+        <span id="d-sub" class="d-sub"></span>
+      </div>
+      <button id="d-close" title="关闭 (Esc)">✕</button>
+    </div>
+    <pre id="d-body"></pre>
+  </aside>
+
+  <footer>
+    <span>mansea · 澈造的本地检索引擎</span>
+    <span id="src"></span>
+  </footer>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

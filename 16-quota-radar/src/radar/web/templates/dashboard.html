@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="page-hero__copy">
+    <p class="eyebrow">AI 额度优化中枢</p>
+    <h1 id="page-title">额度雷达</h1>
+    <p class="lede">模型价格、免费渠道、额度活动与消耗预测集中在一屏。先看信号，再决定把任务交给谁。</p>
+  </div>
+  <div class="status-rail" aria-label="数据状态">
+    <span class="status-chip"><span class="status-dot status-dot--ok"></span>服务在线</span>
+    <span class="status-chip"><span class="status-dot status-dot--info"></span>模型 {{ stats.models }} 个</span>
+    <span class="status-chip"><span class="status-dot {% if stats.channels_ok %}status-dot--ok{% else %}status-dot--warn{% endif %}"></span>可用渠道 {{ stats.channels_ok }} 个</span>
+    <span class="status-chip">上次采集：{{ stats.last_collect.value[:19] if stats.last_collect else '等待首轮采集' }}</span>
+    <span class="status-chip">自动监测：{{ monitor.monitored }} 个对象 · 近 7 日 {{ '{:,}'.format(monitor.token_used_7d) }} Token</span>
+  </div>
+</section>
+
+<section class="stats-grid" aria-label="核心指标">
+  <article class="stat-card stat-card--primary">
+    <span class="stat-card__value">{{ stats.models }}</span>
+    <span class="stat-card__label">已收录模型</span>
+    <span class="stat-card__note">覆盖价格、能力分与上下文长度</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-card__value">{{ stats.free }}</span>
+    <span class="stat-card__label">免费模型</span>
+    <span class="stat-card__note">仍在榜单中的零价模型</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-card__value">{{ stats.channels_ok }}</span>
+    <span class="stat-card__label">已验证渠道</span>
+    <span class="stat-card__note">最近一次探活返回正常</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-card__value">{{ stats.changes_today }}</span>
+    <span class="stat-card__label">24h 数据事件</span>
+    <span class="stat-card__note">包含首次导入、价格与免费状态变化</span>
+  </article>
+</section>
+
+<div class="dashboard-grid">
+  <div class="section-stack">
+    <section class="panel">
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">免费模型精选</h2>
+          <p class="panel__meta">按能力分排序 · {{ recs.free|length }} 条</p>
+        </div>
+        <a class="panel__link" href="/recommend?scenario=free">查看全部 →</a>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>模型</th><th>能力分</th><th>上下文</th></tr></thead>
+          <tbody>
+          {% for r in recs.free %}
+          <tr>
+            <td data-label="模型"><span class="model-name">{{ r.model_id }}</span><br><span class="model-id">{{ r.provider }}</span></td>
+            <td data-label="能力分"><span class="score">{{ '%.0f'|format(r.capability_score) }}</span></td>
+            <td data-label="上下文" class="number">{% if r.context_len %}{{ r.context_len // 1000 }}k{% else %}—{% endif %}</td>
+          </tr>
+          {% else %}<tr><td colspan="3" class="empty">等待首轮采集，榜单会自动出现。</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">日常对话性价比</h2>
+          <p class="panel__meta">混合价 = 75% 输入价 + 25% 输出价</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>模型</th><th>能力分</th><th>混合价</th><th>价值指数</th></tr></thead>
+          <tbody>
+          {% for r in recs.chat %}
+          <tr>
+            <td data-label="模型"><span class="model-name">{{ r.model_id }}</span></td>
+            <td data-label="能力分"><span class="score">{{ '%.0f'|format(r.capability_score) }}</span></td>
+            <td data-label="混合价" class="number">${{ r.blended_price }}</td>
+            <td data-label="价值指数" class="number">{{ r.value_index }}</td>
+          </tr>
+          {% else %}<tr><td colspan="4" class="empty">等待首轮采集，推荐会自动生成。</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">批量处理最低价</h2>
+          <p class="panel__meta">优先展示低混合价与基础能力分</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>模型</th><th>混合价</th><th>能力分</th></tr></thead>
+          <tbody>
+          {% for r in recs.bulk %}
+          <tr>
+            <td data-label="模型"><span class="model-name">{{ r.model_id }}</span></td>
+            <td data-label="混合价" class="number">${{ r.blended_price }}</td>
+            <td data-label="能力分"><span class="score">{{ '%.0f'|format(r.capability_score) }}</span></td>
+          </tr>
+          {% else %}<tr><td colspan="3" class="empty">等待首轮采集，价格榜会自动生成。</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-stack">
+    <section class="panel panel--accent">
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">本机平台发现</h2>
+          <p class="panel__meta">仅识别变量名与工具配置，不读取密钥内容</p>
+        </div>
+      </div>
+      <div class="platform-cloud">
+        {% for p in local_platforms %}
+        <span class="platform-pill"><span class="platform-pill__dot"></span><span class="platform-pill__label">{{ p }}</span></span>
+        {% else %}
+        <p class="hint">等待首轮扫描，启动后会自动运行。</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">待领取活动</h2>
+          <p class="panel__meta">共 {{ pending_count }} 项，显示 {{ pending|length }} 项</p>
+        </div>
+        <a class="panel__link" href="/activities">全部活动 →</a>
+      </div>
+      <ul class="signal-list">
+        {% for a in pending %}
+        <li class="signal-item">
+          <span class="signal-item__icon" aria-hidden="true">↗</span>
+          <span class="signal-item__body">
+            <span class="signal-item__title">{{ a.platform }}</span>
+            <a href="{{ a.url }}" target="_blank" rel="noopener">{{ a.title }}</a>
+            <span class="signal-item__meta">最近检查 {{ (a.last_seen or '—')[:19] }}</span>
+          </span>
+        </li>
+        {% else %}<li class="hint">当前没有待领取活动。</li>{% endfor %}
+      </ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">最近变更</h2>
+          <p class="panel__meta">只呈现数据源真实变化</p>
+        </div>
+        <a class="panel__link" href="/changes">完整日志 →</a>
+      </div>
+      <div class="change-list">
+        {% for c in recent_changes %}
+        <article class="change-item">
+          <span class="badge b-{{ c.kind }}">{{ badge.get(c.kind, c.kind) }}</span>
+          <span class="change-item__summary">{{ c.summary }}</span>
+          <span class="signal-item__meta">{{ c.created_at[:19] }}</span>
+        </article>
+        {% else %}<p class="hint">暂无变更，下一轮采集会自动检查。</p>{% endfor %}
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>主题构想收集器 · 筑工杯备赛</title>
+<meta name="description" content="粤港澳大学生公共治理数据分析大赛·五人主题构想实时收集板">
+<style>
+  :root{
+    --bg:#080d1f; --bg2:#0e1533;
+    --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.1);
+    --text:#eef1fb; --muted:#9aa5c6;
+    --blue:#4f8cff; --violet:#8b5cf6; --cyan:#22d3ee; --gold:#f5b93d; --green:#34d399; --pink:#f472b6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(800px 400px at 85% -5%, rgba(79,140,255,.18), transparent 60%),
+      radial-gradient(700px 400px at -10% 25%, rgba(139,92,246,.14), transparent 60%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+    color:var(--text); line-height:1.65; min-height:100vh;
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:110px;
+  }
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(8,13,31,.85); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border); padding:12px 16px 10px;
+  }
+  .top-row{display:flex;align-items:center;gap:10px}
+  .logo{font-size:16.5px;font-weight:800;letter-spacing:.5px;flex:1;min-width:0}
+  .logo .grad{background:linear-gradient(90deg,#7db4ff,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .logo small{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
+  .sync-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex:none}
+  .sync-dot.off{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+  .sync-dot.err{background:#f87171;box-shadow:0 0 8px #f87171}
+  .btn-refresh{
+    flex:none;border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);
+    font-size:12.5px;padding:6px 12px;border-radius:10px;cursor:pointer;
+  }
+  .btn-refresh:active{transform:scale(.95)}
+  .people{display:flex;gap:8px;margin-top:11px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .people::-webkit-scrollbar{display:none}
+  .person{
+    flex:none;display:flex;align-items:center;gap:7px;padding:6px 12px 6px 7px;border-radius:999px;
+    border:1px solid var(--border);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s;
+  }
+  .person .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff}
+  .person .nm{font-size:13px;color:var(--muted);white-space:nowrap}
+  .person .ct{font-size:11px;background:rgba(255,255,255,.1);padding:1px 7px;border-radius:999px;color:var(--muted)}
+  .person.sel{border-color:rgba(79,140,255,.6);background:rgba(79,140,255,.13)}
+  .person.sel .nm{color:#fff;font-weight:700}
+  main{max-width:860px;margin:0 auto;padding:14px 14px 0}
+  .empty{
+    text-align:center;color:var(--muted);padding:60px 20px;font-size:14px;
+    border:1px dashed var(--border);border-radius:18px;margin-top:10px;background:rgba(255,255,255,.02);
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+  @media (max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px 16px 13px;
+    position:relative;overflow:hidden;transition:.15s;
+  }
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pc,#4f8cff)}
+  .card .head{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;padding-left:4px}
+  .card h3{font-size:15.5px;flex:1;line-height:1.45;word-break:break-all}
+  .card .meta{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:2px 0 9px 4px;flex-wrap:wrap}
+  .card .who{color:var(--pc,#4f8cff);font-weight:700}
+  .fields{display:none;padding-left:4px}
+  .card.open .fields{display:block}
+  .f{margin-bottom:8px}
+  .f .k{font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:2px;font-weight:700}
+  .f .v{font-size:13.5px;color:#d5ddf3;white-space:pre-wrap;word-break:break-word}
+  .toggle{font-size:12px;color:var(--blue);cursor:pointer;padding:4px 0 0 4px;user-select:none}
+  .ops{display:flex;gap:8px;margin-top:9px;padding-left:4px}
+  .ops button{
+    border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--muted);
+    font-size:12px;padding:4px 12px;border-radius:8px;cursor:pointer;
+  }
+  .ops button.del{color:#f8a5a5;border-color:rgba(248,113,113,.3)}
+  .ops button:active{transform:scale(.94)}
+  /* 示例引导卡 */
+  .card.example{border:1px dashed rgba(245,185,61,.55);background:linear-gradient(180deg,rgba(245,185,61,.07),rgba(245,185,61,.02))}
+  .card.example::before{background:linear-gradient(180deg,var(--gold),#e8963c)}
+  .example-badge{
+    display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;letter-spacing:1px;
+    color:#1a1205;background:linear-gradient(92deg,#ffd982,var(--gold));padding:2px 9px;border-radius:999px;flex:none;
+  }
+  .example-fields{display:block;padding-left:4px}
+  .example-card-tag{font-size:11px;color:var(--gold);margin-top:10px;padding-left:4px;line-height:1.5}
+  .bottombar{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(8,13,31,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--border);padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    display:flex;gap:10px;
+  }
+  .bottombar button{flex:1;border:none;border-radius:13px;padding:13px 0;font-size:15px;font-weight:700;cursor:pointer}
+  .btn-new{background:linear-gradient(92deg,var(--blue),var(--violet));color:#fff;box-shadow:0 6px 18px rgba(79,140,255,.35)}
+  .btn-export{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border)}
+  .bottombar button:active{transform:scale(.97)}
+  .modal{
+    position:fixed;inset:0;z-index:100;background:rgba(4,7,17,.75);backdrop-filter:blur(6px);
+    display:none;align-items:flex-end;justify-content:center;
+  }
+  .modal.show{display:flex}
+  .sheet{
+    width:100%;max-width:720px;max-height:92vh;overflow-y:auto;
+    background:linear-gradient(180deg,#131b3f,#0d1330);
+    border-radius:22px 22px 0 0;border:1px solid var(--border);border-bottom:none;
+    padding:18px 18px calc(20px + env(safe-area-inset-bottom));
+  }
+  @media (min-width:720px){.modal{align-items:center}.sheet{border-radius:22px;border-bottom:1px solid var(--border)}}
+  .sheet h3{font-size:17px;margin-bottom:4px}
+  .sheet .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .fg{margin-bottom:13px}
+  .fg label{display:block;font-size:12.5px;font-weight:700;color:#cdd8f5;margin-bottom:5px}
+  .fg label small{color:var(--muted);font-weight:400}
+  .fg textarea,.fg input{
+    width:100%;background:rgba(255,255,255,.055);border:1px solid var(--border);border-radius:12px;
+    color:var(--text);font-size:14.5px;padding:11px 13px;font-family:inherit;outline:none;resize:vertical;
+  }
+  .fg textarea:focus,.fg input:focus{border-color:rgba(79,140,255,.6)}
+  .fg textarea{min-height:74px}
+  .sheet-actions{display:flex;gap:10px;margin-top:6px}
+  .sheet-actions button{flex:1;border:none;border-radius:13px;padding:13px 0;font-size:15px;font-weight:700;cursor:pointer}
+  .sa-save{background:linear-gradient(92deg,var(--blue),var(--violet));color:#fff}
+  .sa-cancel{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border)}
+  .toast{
+    position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);z-index:200;
+    background:rgba(20,28,60,.95);border:1px solid var(--border);color:#fff;font-size:13.5px;
+    padding:10px 20px;border-radius:999px;opacity:0;transition:.3s;pointer-events:none;max-width:86vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.ok{border-color:rgba(52,211,153,.5)}
+  .toast.err{border-color:rgba(248,113,113,.5)}
+  .export-box{width:100%;height:56vh;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;color:#d5ddf3;font-size:12.5px;padding:12px;font-family:inherit;outline:none;white-space:pre-wrap}
+  :focus-visible{outline:3px solid #93c5fd;outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top-row">
+    <div class="logo">
+      <span class="grad">📊 主题构想收集器</span>
+      <small>筑工杯备赛 · 构想、讨论与版本记录</small>
+    </div>
+    <span class="sync-dot" id="syncDot" title="同步状态"></span>
+    <button class="btn-refresh" onclick="loadData(true)">刷新</button>
+    <button class="btn-refresh" id="connectBtn" onclick="openConnect()">连接协作</button>
+  </div>
+  <div class="people" id="peopleBar"></div>
+</header>
+
+<main>
+  <p id="modeNote" style="max-width:1100px;margin:0 auto 18px;color:var(--muted);font-size:13px" role="status"></p>
+  <div class="grid" id="cardsGrid"></div>
+  <div class="empty" id="emptyTip" style="display:none">
+    还没有任何构想——点击下方「+ 新的构想」<br>写下第一个主题灵感 ✍️
+  </div>
+</main>
+
+<div class="bottombar">
+  <button class="btn-new" onclick="openForm()">＋ 新的构想</button>
+  <button class="btn-export" onclick="openExport()">📤 导出汇总</button>
+</div>
+
+<div class="modal" id="formModal">
+  <div class="sheet">
+    <h3 id="formTitle">新的主题构想</h3>
+    <div class="sub" id="formSub"></div>
+    <div class="fg"><label>主题名 <small>· 必填</small></label><input id="f-title" placeholder="例如：AI 客服替代政务热线的服务效能研究" maxlength="60"></div>
+    <div class="fg"><label>构想归属 <small>· 显示在卡片上，选错了可以在这里改正</small></label>
+      <select id="f-author" style="width:100%;background:rgba(255,255,255,.055);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14.5px;padding:11px 13px;font-family:inherit;outline:none"></select>
+    </div>
+    <div class="fg"><label>社会现象</label><textarea id="f-phen" placeholder="你观察到的真实现象、数据、新闻或身边案例……"></textarea></div>
+    <div class="fg"><label>研究前提</label><textarea id="f-premise" placeholder="该现象成立的前提条件、已有研究或政策背景……"></textarea></div>
+    <div class="fg"><label>研究思路</label><textarea id="f-method" placeholder="打算怎么做：数据来源、分析方法（文本分析/机器学习/空间分析等）……"></textarea></div>
+    <div class="fg"><label>研究案例</label><textarea id="f-case" placeholder="可以对标的城市、政策、平台或典型事件……"></textarea></div>
+    <div class="fg"><label>要解决的治理问题</label><textarea id="f-gov" placeholder="这个研究回应什么公共治理痛点？政策建议指向哪里？"></textarea></div>
+    <div class="sheet-actions">
+      <button class="sa-cancel" onclick="closeForm()">取消</button>
+      <button class="sa-save" id="saveBtn" onclick="saveCard()">保存到云端</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="exportModal">
+  <div class="sheet">
+    <h3>📤 全部构想汇总</h3>
+    <div class="sub">点击「复制全文」粘贴到群聊或文档 · <span id="exportCount"></span></div>
+    <textarea class="export-box" id="exportBox" readonly></textarea>
+    <div class="sheet-actions" style="margin-top:12px">
+      <button class="sa-cancel" onclick="closeExport()">关闭</button>
+      <button class="sa-save" onclick="copyExport()">复制全文</button>
+    </div>
+  </div>
+</div>
+
+<!-- 版本历史 -->
+<div class="modal" id="historyModal">
+  <div class="sheet">
+    <h3>🕓 版本历史</h3>
+    <div class="sub" id="historySub"></div>
+    <div id="historyList"></div>
+    <div class="sheet-actions" style="margin-top:14px">
+      <button class="sa-cancel" onclick="closeHistory()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 版本详情 -->
+<div class="modal" id="versionModal">
+  <div class="sheet">
+    <h3 id="versionTitle">历史版本</h3>
+    <div class="sub" id="versionSub"></div>
+    <div id="versionBody" style="max-height:46vh;overflow-y:auto"></div>
+    <div class="sheet-actions" style="margin-top:14px">
+      <button class="sa-cancel" onclick="document.getElementById('versionModal').classList.remove('show')">关闭</button>
+      <button class="sa-save" id="restoreBtn" onclick="restoreVersion()">↩️ 恢复此版本</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="connectModal" role="dialog" aria-modal="true" aria-labelledby="connectTitle">
+  <div class="sheet">
+    <h3 id="connectTitle">连接协作</h3>
+    <p class="sub">显示名用于标记编辑者。GitHub 访问令牌仅保存在本页内存中，关闭或刷新后清除；只发送到 api.github.com。使用只对目标数据仓库开放 Contents 读写权限的令牌，不要填入他人的令牌。</p>
+    <div class="fg"><label for="connectName">显示名</label><input id="connectName" maxlength="30" autocomplete="off" placeholder="你的称呼"></div>
+    <div class="fg"><label for="connectToken">GitHub 访问令牌</label><input id="connectToken" type="password" autocomplete="off" spellcheck="false" placeholder="仅需编辑云端时填写"></div>
+    <div class="sheet-actions"><button class="sa-cancel" onclick="closeConnect()">取消</button><button class="sa-cancel" onclick="disconnect()">断开连接</button><button class="sa-save" onclick="connectSession()">连接</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================= 配置 ================= */
+var CONFIG = {
+  github: { owner:"wuxuancheng66", repo:"gba-themes", branch:"main", token:"" }
+};
+var DEMO = true; // Public portfolio always uses isolated synthetic data.
+var PEOPLE = DEMO ? ["成员一", "成员二", "成员三"] : [];
+var identityKey = DEMO ? "gba-demo-me" : "me";
+var COLORS = {};
+
+var state = { me: localStorage.getItem(identityKey) || (DEMO ? "成员一" : ""), cards: [], sha: null, editingId: null, timer: null, openIds: {}, lastRenderedSha: null };
+
+/* 公开阅读不需要凭据；编辑凭据由用户主动输入，仅存在本页内存。 */
+var demoCards = [{id:"demo-access",title:"让社区服务更容易找到",phen:"居民需要在多个入口查找办事信息。",premise:"使用公开、匿名的服务目录进行研究。",method:"比较检索路径与完成任务所需的步骤。",case_:"示例社区服务目录",gov:"降低信息获取成本",author:"成员一",lastEditor:"成员一",createAt:"2026-10-01T00:00:00Z",updateAt:"2026-10-01T00:00:00Z",history:[]}];
+var demoRevision = 0;
+function apiHeaders(){
+  var h = {"Accept":"application/vnd.github+json"};
+  if (CONFIG.github.token) h.Authorization = "Bearer " + CONFIG.github.token;
+  return h;
+}
+function dataUrl(){
+  return "https://api.github.com/repos/" + CONFIG.github.owner + "/" + CONFIG.github.repo + "/contents/data.json";
+}
+function apiRead(){
+  if (DEMO) return Promise.resolve({json:{cards:JSON.parse(JSON.stringify(demoCards))},sha:"demo-"+demoRevision});
+  return fetch(dataUrl() + "?ref=" + CONFIG.github.branch + "&t=" + Date.now(), {headers:apiHeaders(),cache:"no-store"}).then(function(r){
+    if (r.status === 404) return {json:{cards:[]},sha:null};
+    if (!r.ok) throw new Error("读取失败 HTTP " + r.status);
+    return r.json().then(function(j){
+      var txt = decodeURIComponent(escape(atob((j.content || "").replace(/\n/g, ""))));
+      return {json:JSON.parse(txt || '{"cards":[]}'),sha:j.sha};
+    });
+  });
+}
+function apiWrite(cards,sha){
+  if (DEMO) {demoCards=JSON.parse(JSON.stringify(cards));demoRevision++;return Promise.resolve({});}
+  if (!CONFIG.github.token) {openConnect();return Promise.reject(new Error("请先连接自己的 GitHub 账号后再保存"));}
+  var headers=apiHeaders();headers["Content-Type"]="application/json";
+  var body={message:"更新主题构想",content:btoa(unescape(encodeURIComponent(JSON.stringify({cards:cards},null,1)))),branch:CONFIG.github.branch};
+  if (sha) body.sha=sha;
+  return fetch(dataUrl(),{method:"PUT",headers:headers,body:JSON.stringify(body)}).then(function(r){
+    if (r.status===409) throw new Error("有其他成员刚刚更新了内容，请刷新后重试；当前输入已保留");
+    if (!r.ok) throw new Error("保存失败 HTTP "+r.status);
+    return r.json();
+  });
+}
+function openConnect(){
+  if (DEMO) {toast("演示内容只在本页生效，无需连接", "ok");return;}
+  document.getElementById("connectName").value=state.me;
+  document.getElementById("connectModal").classList.add("show");
+}
+function closeConnect(){
+  document.getElementById("connectToken").value="";
+  document.getElementById("connectModal").classList.remove("show");
+}
+function connectSession(){
+  var name=document.getElementById("connectName").value.trim();
+  if (!name) {toast("请填写显示名", "err");return;}
+  state.me=name;localStorage.setItem(identityKey,name);
+  CONFIG.github.token=document.getElementById("connectToken").value.trim();
+  if (!PEOPLE.includes(name)) PEOPLE.push(name);
+  closeConnect();renderPeople();updateMode();loadData(true);
+}
+function disconnect(){CONFIG.github.token="";closeConnect();updateMode();toast("已清除本页连接凭据", "ok");}
+function updateMode(){
+  document.getElementById("modeNote").textContent=DEMO ? "演示模式 · 使用虚构内容，修改仅在本页生效，刷新后重置。" : (CONFIG.github.token ? "编辑凭据已填写 · 权限以 GitHub 响应为准，刷新后清除。" : "公开阅读 · 编辑时请连接自己的 GitHub 账号。显示名不代表身份认证。 ");
+  document.getElementById("connectBtn").textContent=DEMO ? "演示模式" : (CONFIG.github.token ? "连接设置" : "连接协作");
+  document.getElementById("saveBtn").textContent=DEMO ? "保存演示" : "保存到云端";
+}
+
+/* ================= 数据加载 ================= */
+function setDot(cls){
+  var d = document.getElementById("syncDot");
+  d.className = "sync-dot" + (cls ? " " + cls : "");
+}
+
+function loadData(showToast){
+  setDot("off");
+  return apiRead().then(function(res){
+    state.cards = (res.json.cards || []).filter(function(card){
+      return card && typeof card.id === "string" && /^[A-Za-z0-9_-]{1,128}$/.test(card.id);
+    }).sort(function(a, b){ return (b.updateAt || "").localeCompare(a.updateAt || ""); });
+    var changed = state.sha !== res.sha;
+    state.sha = res.sha;
+    if (!DEMO) {
+      PEOPLE = Array.from(new Set([state.me].concat(state.cards.flatMap(function(c){return [c.author,c.lastEditor];})).filter(function(n){return typeof n === "string" && n.trim();})));
+    }
+    setDot("");
+    /* 数据有变化才重渲染，避免轮询把展开状态刷掉 */
+    if (changed || state.lastRenderedSha === null) {
+      render();
+      state.lastRenderedSha = res.sha;
+    }
+    if (showToast) toast("已同步 · 共 " + state.cards.length + " 条", "ok");
+  }).catch(function(e){
+    setDot("err");
+    if (showToast) toast("⚠️ " + e.message, "err");
+  });
+}
+
+function toggleCard(id){
+  if (state.openIds[id]) delete state.openIds[id];
+  else state.openIds[id] = 1;
+  var el = document.querySelector('.card[data-id="' + id + '"]');
+  if (el) el.classList.toggle("open");
+}
+
+function saveCard(){
+  if (!DEMO && (!CONFIG.github.token || !state.me)) {openConnect();toast("请先连接自己的账号并填写显示名", "err");return;}
+  var title = document.getElementById("f-title").value.trim();
+  if (!title) { toast("主题名必填", "err"); return; }
+  var me = state.me || "成员";
+  var now = new Date().toISOString();
+  var old = state.editingId ? findCard(state.editingId) : null;
+  var newAuthor = document.getElementById("f-author").value || (old ? old.author : me);
+  var card = {
+    id: state.editingId || (Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
+    title: title,
+    phen: document.getElementById("f-phen").value.trim(),
+    premise: document.getElementById("f-premise").value.trim(),
+    method: document.getElementById("f-method").value.trim(),
+    case_: document.getElementById("f-case").value.trim(),
+    gov: document.getElementById("f-gov").value.trim(),
+    author: newAuthor,
+    lastEditor: me,
+    createAt: old ? old.createAt : now,
+    updateAt: now
+  };
+  /* 版本历史：编辑时把旧版本存档（每卡保留最近 20 版） */
+  if (old && old.id) {
+    var history = (old.history || []).slice();
+    history.unshift({
+      savedAt: old.updateAt || now,
+      savedBy: old.lastEditor || old.author || me,
+      title: old.title, phen: old.phen, premise: old.premise,
+      method: old.method, case_: old.case_, gov: old.gov, author: old.author
+    });
+    card.history = history.slice(0, 20);
+    if (old.author !== newAuthor) card.authorFixedBy = me;
+  }
+  var btn = document.getElementById("saveBtn");
+  btn.disabled = true; btn.textContent = "保存中…";
+
+  apiRead().then(function(res){
+    var remote = (res.json.cards || []);
+    var remoteOld = remote.find(function(c){ return c.id === card.id; });
+    if (remoteOld && old && (remoteOld.updateAt || "") > (old.updateAt || "")) {
+      /* 远端比本地看到的新：先把远端版本也存进历史，避免覆盖丢改 */
+      var h2 = (card.history || []).slice();
+      h2.unshift({ savedAt: remoteOld.updateAt, savedBy: remoteOld.lastEditor || remoteOld.author, title: remoteOld.title, phen: remoteOld.phen, premise: remoteOld.premise, method: remoteOld.method, case_: remoteOld.case_, gov: remoteOld.gov, author: remoteOld.author });
+      card.history = h2.slice(0, 20);
+    }
+    var merged = remote.filter(function(c){ return c.id !== card.id; });
+    merged.push(card);
+    return apiWrite(merged, res.sha);
+  }).then(function(){
+    closeForm();
+    toast(DEMO ? "演示已保存，仅本页可见" : "已保存，其他成员将在同步后看到", "ok");
+    return loadData();
+  }).catch(function(e){
+    toast("⚠️ " + e.message + "（可稍后重试）", "err");
+  }).finally(function(){
+    btn.disabled = false; updateMode();
+  });
+}
+
+function delCard(id){
+  if (!DEMO && !CONFIG.github.token) {openConnect();toast("请先连接自己的账号", "err");return;}
+  var c = findCard(id);
+  if (!confirm("删除「" + c.title + "」？此操作不可恢复")) return;
+  apiRead().then(function(res){
+    var merged = (res.json.cards || []).filter(function(x){ return x.id !== id; });
+    return apiWrite(merged, res.sha);
+  }).then(function(){ toast("已删除", "ok"); return loadData(); })
+    .catch(function(e){ toast("⚠️ " + e.message, "err"); });
+}
+
+function findCard(id){
+  for (var i = 0; i < state.cards.length; i++) if (state.cards[i].id === id) return state.cards[i];
+  return {};
+}
+
+/* ================= 渲染 ================= */
+function renderPeople(){
+  var bar = document.getElementById("peopleBar");
+  bar.innerHTML = "";
+  PEOPLE.forEach(function(p){
+    var n = state.cards.filter(function(c){ return c.author === p; }).length;
+    var el = document.createElement("button");
+    el.type = "button";
+    el.setAttribute("aria-pressed", String(state.me === p));
+    el.style.cssText = "font:inherit;color:inherit;text-align:left";
+    el.className = "person" + (state.me === p ? " sel" : "");
+    el.innerHTML = '<div class="av" style="background:' + (COLORS[p] || "#4f8cff") + '">' + esc(p.slice(0, 1)) + '</div><div class="nm">' + esc(p) + '</div><div class="ct">' + n + '</div>';
+    el.onclick = function(){
+      state.me = p; localStorage.setItem(identityKey, p); renderPeople(); toast("当前身份：" + p, "ok");
+    };
+    bar.appendChild(el);
+  });
+}
+
+var FIELD_LABELS = [["phen","社会现象"],["premise","研究前提"],["method","研究思路"],["case_","研究案例"],["gov","要解决的治理问题"]];
+
+/* 示例引导卡：按历届获奖作品口径撰写，展示"好构想"的样子 */
+var EXAMPLE_CARD = {
+  title: "政务服务入口的可及性研究（虚构示例）",
+  phen: "居民可能需要在多个入口查找同一项服务。请用有出处的真实观察替换这段示例，不将示例当作研究结论。",
+  premise: "先核验当地服务目录、相关政策与已有研究，记录来源和日期。",
+  method: "使用公开服务目录，比较检索路径与完成任务所需步骤；涉及访谈时另行取得知情同意。",
+  case_: "选择有公开资料的城市或服务项目，说明选择依据。",
+  gov: "如何降低信息获取成本，并让不同群体更容易找到服务？"
+};
+
+function esc(s){ var d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; }
+
+function render(){
+  renderPeople();
+  var grid = document.getElementById("cardsGrid");
+  grid.innerHTML = "";
+  document.getElementById("emptyTip").style.display = "none";
+  /* 示例引导卡（始终置顶，不入云端数据） */
+  var ex = document.createElement("div");
+  ex.className = "card example";
+  ex.style.setProperty("--pc", "#f5b93d");
+  var exFields = FIELD_LABELS.map(function(f){
+    return '<div class="f"><div class="k">' + f[1] + '</div><div class="v">' + esc(EXAMPLE_CARD[f[0]]) + '</div></div>';
+  }).join("");
+  ex.innerHTML =
+    '<div class="head"><h3>' + esc(EXAMPLE_CARD.title) + '</h3><span class="example-badge">📌 示例</span></div>' +
+    '<div class="meta"><span class="who" style="color:var(--gold)">示范口径</span><span>·</span><span>参考历届获奖作品写法</span></div>' +
+    '<div class="example-fields">' + exFields + '</div>' +
+    '<div class="example-card-tag">💡 好构想的共性：真实数据感（有数字）· 方法具体可落地 · 有对标案例 · 政策出口清晰</div>' +
+    '<div class="ops"><button onclick="useExample()">📋 参考它写一张</button></div>';
+  grid.appendChild(ex);
+  if (!state.cards.length) {
+    var tip = document.getElementById("emptyTip");
+    tip.style.display = "block";
+    tip.innerHTML = "还没有人提交构想——点击下方「＋ 新的构想」<br>或点上方示例卡的「📋 参考它写一张」开始 ✍️";
+  }
+  state.cards.forEach(function(c){
+    var el = document.createElement("div");
+    el.className = "card" + (state.openIds[c.id] ? " open" : "");
+    el.setAttribute("data-id", c.id);
+    el.style.setProperty("--pc", COLORS[c.author] || "#4f8cff");
+    var fieldsHtml = FIELD_LABELS.map(function(f){
+      if (!c[f[0]]) return "";
+      return '<div class="f"><div class="k">' + f[1] + '</div><div class="v">' + esc(c[f[0]]) + '</div></div>';
+    }).join("");
+    var hasMore = fieldsHtml !== "";
+    el.innerHTML =
+      '<div class="head"><h3>' + esc(c.title) + '</h3></div>' +
+      '<div class="meta"><span class="who">' + esc(c.author) + '</span><span>·</span><span>' + fmtTime(c.updateAt) + '更新' +
+      (c.lastEditor && c.lastEditor !== c.author ? '（' + esc(c.lastEditor) + '改）' : '') + '</span></div>' +
+      '<div class="fields">' + fieldsHtml + '</div>' +
+      (hasMore ? '<div class="toggle" onclick="toggleCard(\'' + c.id + '\')">展开 / 收起 ▾</div>' : '') +
+      '<div class="ops"><button onclick="editCard(\'' + c.id + '\')">✏️ 编辑</button><button onclick="showHistory(\'' + c.id + '\')">🕓 历史' + ((c.history && c.history.length) ? '(' + c.history.length + ')' : '') + '</button><button class="del" onclick="delCard(\'' + c.id + '\')">🗑 删除</button></div>';
+    grid.appendChild(el);
+  });
+}
+
+function fmtTime(iso){
+  if (!iso) return "";
+  var d = new Date(iso);
+  return (d.getMonth() + 1) + "月" + d.getDate() + "日 " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+
+/* ================= 表单 ================= */
+function openForm(id){
+  state.editingId = id || null;
+  var c = id ? findCard(id) : {};
+  /* 作者下拉：5 人可选（改正归属用） */
+  var sel = document.getElementById("f-author");
+  sel.innerHTML = "";
+  PEOPLE.forEach(function(p){
+    var opt = document.createElement("option");
+    opt.value = p; opt.textContent = p;
+    sel.appendChild(opt);
+  });
+  var author = c.author || state.me || PEOPLE[0];
+  sel.value = PEOPLE.includes(author) ? author : PEOPLE[0];
+  document.getElementById("formTitle").textContent = id ? "编辑构想" : "新的主题构想";
+  document.getElementById("formSub").textContent = id ? "最后由 " + (c.lastEditor || c.author || "") + " 修改于 " + fmtTime(c.updateAt) + "（可继续优化，旧版本自动存档）" : "当前身份：" + (state.me || "未选择（保存前请设置显示名）");
+  document.getElementById("f-title").value = c.title || "";
+  document.getElementById("f-phen").value = c.phen || "";
+  document.getElementById("f-premise").value = c.premise || "";
+  document.getElementById("f-method").value = c.method || "";
+  document.getElementById("f-case").value = c.case_ || "";
+  document.getElementById("f-gov").value = c.gov || "";
+  document.getElementById("formModal").classList.add("show");
+}
+function editCard(id){ openForm(id); }
+
+/* ================= 版本历史 ================= */
+var historyCardId = null, restoreTarget = null;
+
+function showHistory(id){
+  var c = findCard(id);
+  historyCardId = id;
+  var list = c.history || [];
+  document.getElementById("historySub").textContent = "「" + c.title + "」共 " + list.length + " 个历史版本 · 当前版始终为最新";
+  var box = document.getElementById("historyList");
+  box.innerHTML = "";
+  if (!list.length) {
+    box.innerHTML = '<div style="color:var(--muted);font-size:13.5px;text-align:center;padding:26px 0">这张卡片还没有修改记录<br>每次编辑保存都会自动生成一个存档版本</div>';
+  }
+  list.forEach(function(v, i){
+    var el = document.createElement("div");
+    el.style.cssText = "display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:rgba(255,255,255,.035)";
+    el.innerHTML =
+      '<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(v.title) + '</div>' +
+      '<div style="font-size:11.5px;color:var(--muted)">' + fmtTime(v.savedAt) + ' · ' + esc(v.savedBy || "?") + ' 保存 · 归属 ' + esc(v.author || "?") + '</div></div>' +
+      '<button style="border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);font-size:12px;padding:5px 12px;border-radius:8px;cursor:pointer;flex:none" onclick="showVersion(' + i + ')">查看</button>';
+    box.appendChild(el);
+  });
+  document.getElementById("historyModal").classList.add("show");
+}
+function closeHistory(){ document.getElementById("historyModal").classList.remove("show"); }
+
+function showVersion(i){
+  var c = findCard(historyCardId);
+  var v = (c.history || [])[i];
+  if (!v) return;
+  restoreTarget = { id: historyCardId, version: v };
+  document.getElementById("versionTitle").textContent = v.title;
+  document.getElementById("versionSub").textContent = fmtTime(v.savedAt) + " 由 " + (v.savedBy || "?") + " 保存";
+  var body = document.getElementById("versionBody");
+  var html = "";
+  FIELD_LABELS.forEach(function(f){
+    if (!v[f[0]]) return;
+    html += '<div class="f"><div class="k">' + f[1] + '</div><div class="v">' + esc(v[f[0]]) + '</div></div>';
+  });
+  body.innerHTML = html + '<div style="font-size:11.5px;color:var(--muted);margin-top:6px">归属：' + esc(v.author || "?") + '</div>';
+  document.getElementById("historyModal").classList.remove("show");
+  document.getElementById("versionModal").classList.add("show");
+}
+
+function restoreVersion(){
+  if (!DEMO && !CONFIG.github.token) {openConnect();toast("请先连接自己的账号", "err");return;}
+  if (!restoreTarget) return;
+  var t = restoreTarget;
+  var me = state.me || "成员";
+  var now = new Date().toISOString();
+  var btn = document.getElementById("restoreBtn");
+  btn.disabled = true; btn.textContent = "恢复中…";
+  apiRead().then(function(res){
+    var remote = (res.json.cards || []);
+    var cur = remote.find(function(c){ return c.id === t.id; });
+    if (!cur) throw new Error("卡片已不存在");
+    var history = (cur.history || []).slice();
+    history.unshift({ savedAt: cur.updateAt, savedBy: cur.lastEditor || cur.author, title: cur.title, phen: cur.phen, premise: cur.premise, method: cur.method, case_: cur.case_, gov: cur.gov, author: cur.author });
+    cur.title = t.version.title; cur.phen = t.version.phen; cur.premise = t.version.premise;
+    cur.method = t.version.method; cur.case_ = t.version.case_; cur.gov = t.version.gov;
+    if (t.version.author) cur.author = t.version.author;
+    cur.lastEditor = me + "（恢复历史版）";
+    cur.updateAt = now;
+    cur.history = history.slice(0, 20);
+    return apiWrite(remote, res.sha);
+  }).then(function(){
+    document.getElementById("versionModal").classList.remove("show");
+    toast("✅ 已恢复到历史版本", "ok");
+    return loadData();
+  }).catch(function(e){ toast("⚠️ " + e.message, "err"); })
+  .finally(function(){ btn.disabled = false; btn.textContent = "↩️ 恢复此版本"; });
+}
+
+function useExample(){
+  state.editingId = null;
+  /* 构建归属下拉（与 openForm 一致），默认当前身份 */
+  var sel = document.getElementById("f-author");
+  sel.innerHTML = "";
+  PEOPLE.forEach(function(p){
+    var opt = document.createElement("option");
+    opt.value = p; opt.textContent = p;
+    sel.appendChild(opt);
+  });
+  var def = state.me || PEOPLE[0];
+  sel.value = PEOPLE.includes(def) ? def : PEOPLE[0];
+  document.getElementById("formTitle").textContent = "新的主题构想";
+  document.getElementById("formSub").textContent = "已带入示例内容供参考，改成你自己的选题吧（当前身份：" + (state.me || "未选择") + "）";
+  document.getElementById("f-title").value = "";
+  document.getElementById("f-phen").value = EXAMPLE_CARD.phen;
+  document.getElementById("f-premise").value = EXAMPLE_CARD.premise;
+  document.getElementById("f-method").value = EXAMPLE_CARD.method;
+  document.getElementById("f-case").value = EXAMPLE_CARD.case_;
+  document.getElementById("f-gov").value = EXAMPLE_CARD.gov;
+  document.getElementById("formModal").classList.add("show");
+  document.getElementById("f-title").focus();
+}
+function closeForm(){ document.getElementById("formModal").classList.remove("show"); }
+
+function openExport(){
+  var lines = [];
+  PEOPLE.forEach(function(p){
+    var mine = state.cards.filter(function(c){ return c.author === p; });
+    if (!mine.length) return;
+    lines.push("【" + p + "】(" + mine.length + "条)");
+    mine.forEach(function(c, i){
+      lines.push((i + 1) + ". " + c.title);
+      FIELD_LABELS.forEach(function(f){ if (c[f[0]]) lines.push("   " + f[1] + "：" + c[f[0]]); });
+    });
+    lines.push("");
+  });
+  document.getElementById("exportCount").textContent = "共 " + state.cards.length + " 条构想";
+  document.getElementById("exportBox").value = lines.join("\n") || "（暂无内容）";
+  document.getElementById("exportModal").classList.add("show");
+}
+function closeExport(){ document.getElementById("exportModal").classList.remove("show"); }
+function copyExport(){
+  var box = document.getElementById("exportBox");
+  box.select();
+  function fallback(){
+    box.focus();box.select();
+    try {if(document.execCommand("copy")){toast("已复制", "ok");return;}} catch(e) {}
+    toast("自动复制不可用，全文已选中，请手动复制", "err");
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(box.value).then(function(){toast("已复制", "ok");}).catch(fallback);
+  else fallback();
+}
+
+function toast(msg, cls){
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast show " + (cls || "");
+  clearTimeout(t._h); t._h = setTimeout(function(){ t.className = "toast " + (cls || ""); }, 2600);
+}
+
+/* ================= 启动 ================= */
+updateMode();
+loadData();
+if (!DEMO) state.timer = setInterval(function(){ if (document.visibilityState === "visible") loadData(); }, 10000);
+document.addEventListener("visibilitychange", function(){ if (!DEMO && !document.hidden) loadData(); });
+/* 弹窗支持键盘导航，并在关闭后返回原入口。 */
+var previousFocus=new WeakMap();
+document.querySelectorAll(".modal").forEach(function(modal){
+  modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label",modal.querySelector("h3").textContent);
+  modal.setAttribute("aria-hidden", "true");
+  new MutationObserver(function(){
+    var open=modal.classList.contains("show");modal.setAttribute("aria-hidden",String(!open));
+    if(open){previousFocus.set(modal,document.activeElement);var first=modal.querySelector("input,textarea,select,button");if(first)first.focus();}
+    else {var prev=previousFocus.get(modal);if(prev&&prev.isConnected)prev.focus();}
+  }).observe(modal,{attributes:true,attributeFilter:["class"]});
+});
+document.addEventListener("keydown",function(e){
+  var visible=Array.from(document.querySelectorAll(".modal.show"));var modal=visible[visible.length-1];if(!modal)return;
+  if(e.key==="Escape"){e.preventDefault();if(modal.id==="connectModal")closeConnect();else modal.classList.remove("show");}
+  if(e.key==="Tab"){
+    var focusable=Array.from(modal.querySelectorAll("button,input,textarea,select,a[href]")).filter(function(el){return !el.disabled;});
+    var first=focusable[0],last=focusable[focusable.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  }
+});
+document.querySelectorAll(".fg").forEach(function(group){var label=group.querySelector("label"),input=group.querySelector("input,textarea,select");if(label&&input)label.htmlFor=input.id;});
+</script>
+</body>
+</html>

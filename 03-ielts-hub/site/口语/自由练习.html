@@ -110,7 +110,7 @@ h2{font-size:22px;color:#16213e;border-left:5px solid #e94560;padding-left:12px;
   .record-item .rtopic{max-width:100%}
 }
 </style>
-</head>
+<style>:focus-visible{outline:3px solid #087ce5;outline-offset:4px}button,input,textarea{font:inherit}@media(max-width:600px){input,textarea{font-size:16px!important}.record-item{gap:8px;flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}</style></head>
 <body>
 
 <a href="../index.html" class="back-home">← 返回首页</a>
@@ -119,8 +119,8 @@ h2{font-size:22px;color:#16213e;border-left:5px solid #e94560;padding-left:12px;
 <div class="usage-tip">
   <strong>💡 使用流程：</strong>
   ① 点击「添加题目」输入多个题目 → ② 每个题目下录音/上传回答 →
-  ③ 每个题目有自己的「提交给AI评价」按钮，点击后录音文件下载到本地（自己回听），同时生成文字数据包（.json）
-  ④ 把文字数据包（.json）通过对话发给我 → ⑤ 我把评价码发给你，粘贴到下方「粘贴评价码」框，评分立刻显示！
+  ③ 每个题目有自己的「导出练习包」按钮，点击后录音文件下载到本地（自己回听），同时生成文字数据包（.json）
+  ④ 自行把文字包交给老师或 AI 服务获取评价 → ⑤ 将评价 JSON 粘贴到下方显示。此页面不会自动上传或评分。
 </div>
 
 <!-- ====== 多题目区块 ====== -->
@@ -136,7 +136,7 @@ h2{font-size:22px;color:#16213e;border-left:5px solid #e94560;padding-left:12px;
   <div id="evalEmpty" class="eval-empty">
     <div class="eval-icon">🤖</div>
     <p>还没有自由练习记录</p>
-    <p style="font-size:12px;color:#ddd;">添加题目 → 录音/打字 → 提交给我，我立刻给你评价！</p>
+    <p style="font-size:12px;color:#ddd;">添加题目 → 录音或打字 → 导出练习包 → 自行获取评价</p>
   </div>
   <div id="evalResult" class="eval-result">
     <div class="eval-header">
@@ -154,7 +154,7 @@ h2{font-size:22px;color:#16213e;border-left:5px solid #e94560;padding-left:12px;
 <!-- ====== 粘贴评价码 ====== -->
 <div class="section-card" style="border:2px solid #4a90d9;border-radius:12px;">
   <h2>🔑 粘贴评价码</h2>
-  <p style="font-size:13px;color:#666;margin-bottom:12px;">把我在对话中给出的评价码复制粘贴到下方，点击「显示评价」即可看到完整评分和反馈。</p>
+  <p style="font-size:13px;color:#666;margin-bottom:12px;">把获得的评价 JSON 复制粘贴到下方，点击「显示评价」即可看到完整评分和反馈。</p>
   <div style="display:flex;flex-direction:column;gap:10px;">
     <textarea id="evalCodeInput" placeholder="在此粘贴评价码..." style="width:100%;min-height:80px;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;font-family:monospace;resize:vertical;background:#fafafa;" onfocus="this.style.borderColor='#4a90d9';this.style.background='white'" onblur="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'"></textarea>
     <div class="block-submit" style="margin-top:0;">
@@ -195,9 +195,23 @@ h2{font-size:22px;color:#16213e;border-left:5px solid #e94560;padding-left:12px;
 </div>
 
 <script>
+function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function displayRecord(value){if(typeof value==='string')return escapeHTML(value);if(Array.isArray(value))return value.map(displayRecord);if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,displayRecord(v)]));return value;}
+function readStoredList(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[];}catch(e){setTimeout(()=>alert('本地记录暂时无法读取，原存储未覆盖。请先备份录音与练习包。'),0);return [];}}
+function storeList(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){alert('浏览器存储空间不足或不可用。这次记录仅保留在当前页面，请下载录音/练习包后再关闭。');return false;}}
+function createAudioRecorder(stream){try{const type=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(t=>MediaRecorder.isTypeSupported(t));return type?new MediaRecorder(stream,{mimeType:type}):new MediaRecorder(stream);}catch(e){stream.getTracks().forEach(t=>t.stop());throw e;}}
+function audioExtension(type){return type.includes('mp4')?'m4a':type.includes('ogg')?'ogg':'webm';}
+function validateEvaluation(value){
+  const data={...value};
+  for(const key of ['fluency','lexical','grammar','pronunciation']){const n=Number(data[key]);if(!Number.isFinite(n)||n<0||n>9)throw new Error('雅思评分须在0至9之间');data[key]=n;}
+  for(const key of ['strengths','improvements']){if(!Array.isArray(data[key])||!data[key].every(x=>typeof x==='string'))throw new Error('评价需要亮点和改进建议数组');}
+  for(const key of ['question','date','comment','example'])data[key]=String(data[key]??'');
+  return data;
+}
+
 // ========== 全局变量 ==========
 let blockCounter = 0;
-let records = JSON.parse(localStorage.getItem('ieltsFreeRecords') || '[]');
+let records = readStoredList('ieltsFreeRecords');
 // 每个block的录音数据: { [blockId]: [{id, name, data, size, date}] }
 let blockAudio = {};
 
@@ -229,17 +243,17 @@ function addQuestionBlock() {
         <span class="rec-timer" id="bt_${id}">00:00</span>
         <span class="rec-status" id="bstatus_${id}">就绪</span>
       </div>
-      <div class="block-upload" id="bu_${id}" onclick="blockClickUpload(${id})" ondragover="e=>e.preventDefault();e.target.classList.add('dragover')" ondragleave="e=>e.target.classList.remove('dragover')" ondrop="blockDropUpload(event,${id})">
+      <div class="block-upload" id="bu_${id}" onclick="if(event.target.tagName!=='INPUT')blockClickUpload(${id})">
         <div class="up-icon">📁</div>
         <p>点击或拖拽上传录音文件（MP3/WAV/M4A）</p>
-        <input type="file" accept="audio/*" onchange="blockFileUpload(event,${id})">
+        <input type="file" accept="audio/*">
       </div>
       <div class="block-file-list" id="bfl_${id}"></div>
       <div class="block-submit">
         <button class="submit-btn" id="bSubmit_${id}" onclick="submitBlock(${id})" disabled>
-          <span>🤖</span> 提交给AI评价
+          <span>🤖</span> 导出练习包
         </button>
-        <span class="submit-hint">提交后录音本地保存 + 生成文字数据包，发文字包给我获评价</span>
+        <span class="submit-hint">下载录音与文字包；可自行交给老师或AI服务评价</span>
       </div>
     </div>
   `;
@@ -277,6 +291,7 @@ function deleteBlock(id) {
   const el = document.getElementById('block_' + id);
   if (el) {
     if (confirm('确定删除题目 #' + id + ' 及其所有录音？')) {
+      if(blockRecState[id])stopBlockRec(id);
       delete blockAudio[id];
       el.remove();
     }
@@ -286,18 +301,20 @@ function deleteBlock(id) {
 // ========== 区块录音 ==========
 const blockRecState = {};
 function startBlockRec(id) {
+  if(blockRecState[id])return;
+  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){alert('当前浏览器不支持录音。请在HTTPS或localhost打开，或直接上传音频文件。');return;}
   const q = document.getElementById('bq_' + id).value.trim();
   if (!q) { alert('请先输入题目！'); document.getElementById('bq_' + id).focus(); return; }
   navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true } }).then(stream => {
-    const mr = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    const mr = createAudioRecorder(stream);
     const chunks = [];
     blockRecState[id] = { mr, stream, chunks, seconds: 0, timer: null };
     mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
     mr.onstop = () => {
-      const blob = new Blob(chunks, { type: 'audio/webm' });
+      const blob = new Blob(chunks, { type: mr.mimeType || 'audio/webm' });
       const qShort = q.slice(0, 20);
-      const fileName = new Date().toISOString().slice(0,10) + '_' + qShort + '.webm';
-      addBlockAudio(id, fileName, blob);
+      const fileName = new Date().toISOString().slice(0,10) + '_' + qShort + '.' + audioExtension(blob.type);
+      if(document.getElementById('block_'+id))addBlockAudio(id, fileName, blob);
       stream.getTracks().forEach(t => t.stop());
     };
     mr.start();
@@ -381,7 +398,7 @@ function renderBlockFileList(id) {
   if (files.length === 0) { container.innerHTML = ''; return; }
   container.innerHTML = files.map(f => {
     const kb = (f.size / 1024).toFixed(1);
-    return '<div class="block-file-item"><div class="fi-info"><span>🎵</span><span class="fi-name">' + f.name + '</span><span class="fi-size">' + kb + 'KB</span></div><button class="fi-del" onclick="delBlockAudio(' + id + ',' + f.id + ')">删除</button></div>';
+    return '<div class="block-file-item"><div class="fi-info"><span>🎵</span><span class="fi-name">' + escapeHTML(f.name) + '</span><span class="fi-size">' + kb + 'KB</span></div><button class="fi-del" onclick="delBlockAudio(' + id + ',' + f.id + ')">删除</button></div>';
   }).join('');
 }
 
@@ -415,7 +432,7 @@ function submitBlock(id) {
   files.forEach((f, i) => {
     const aEl = document.createElement('a');
     aEl.href = f.data;
-    aEl.download = '录音_' + safeName + '_' + (i+1) + '_' + dateStr + '.webm';
+    aEl.download = '录音_' + safeName + '_' + (i+1) + '_' + dateStr + '.' + (f.name.split('.').pop() || 'webm');
     aEl.click();
   });
 
@@ -441,7 +458,7 @@ function submitBlock(id) {
   const audioMsg = files.length > 0
     ? '录音文件已下载到本地，你可以自己回听练习。\n\n'
     : '';
-  alert('✅ 提交成功！\n\n' + audioMsg + '把「文字_' + safeName + '_' + dateStr + '.json」文件发给我，\n我收到后立刻给出AI评价，评价码粘贴到页面即可显示！');
+  alert('✅ 练习包已导出！\n\n' + audioMsg + '把「文字_' + safeName + '_' + dateStr + '.json」文件交给你选择的老师或AI服务。\n此页面不会自动上传；获得符合格式的评价JSON后可粘贴显示。');
 }
 
 // ========== 解析评价码 ==========
@@ -461,6 +478,7 @@ function parseEvaluationCode() {
 
 // ========== 评价展示 ==========
 function showEvaluation(data) {
+  data=validateEvaluation(data);
   document.getElementById('evalEmpty').style.display = 'none';
   document.getElementById('evalResult').classList.add('show');
   document.getElementById('evalQuestion').textContent = data.question;
@@ -473,13 +491,13 @@ function showEvaluation(data) {
     { label: '发音', value: data.pronunciation, desc: 'Pronunciation' }
   ];
   document.getElementById('scoreGrid').innerHTML = items.map(i =>
-    '<div class="score-item"><div class="score-label">' + i.label + '</div><div class="score-value">' + i.value.toFixed(1) + '</div><div class="score-stars" style="color:#ffb300;">' + '★'.repeat(Math.floor(i.value)) + '☆'.repeat(5-Math.floor(i.value)) + '</div><div class="score-band">' + i.desc + '</div></div>'
+    '<div class="score-item"><div class="score-label">' + i.label + '</div><div class="score-value">' + i.value.toFixed(1) + '</div><div class="score-stars" style="color:#ffb300;">' + '★'.repeat(Math.round(i.value/9*5)) + '☆'.repeat(5-Math.round(i.value/9*5)) + '</div><div class="score-band">' + i.desc + '</div></div>'
   ).join('');
 
   document.getElementById('evalComment').textContent = data.comment;
-  document.getElementById('evalStrengths').innerHTML = data.strengths.map(s => '<li>' + s + '</li>').join('');
-  document.getElementById('evalImprovements').innerHTML = data.improvements.map(s => '<li>' + s + '</li>').join('');
-  document.getElementById('evalExample').innerHTML = data.example.replace(/\n/g, '<br>');
+  document.getElementById('evalStrengths').innerHTML = data.strengths.map(s => '<li>' + escapeHTML(s) + '</li>').join('');
+  document.getElementById('evalImprovements').innerHTML = data.improvements.map(s => '<li>' + escapeHTML(s) + '</li>').join('');
+  document.getElementById('evalExample').innerHTML = escapeHTML(data.example).replace(/\n/g, '<br>');
   addRecord(data);
 }
 
@@ -490,14 +508,14 @@ function addRecord(data) {
     overall: data.overall || ((data.fluency + data.lexical + data.grammar + data.pronunciation) / 4).toFixed(1),
     comment: data.comment, strengths: data.strengths, improvements: data.improvements
   });
-  localStorage.setItem('ieltsFreeRecords', JSON.stringify(records));
+  storeList('ieltsFreeRecords', records);
   renderRecords();
 }
 
 function renderRecords() {
   const container = document.getElementById('recordList');
   if (records.length === 0) { container.innerHTML = '<div class="record-empty">暂无练习记录，开始你的第一次自由练习吧！</div>'; return; }
-  container.innerHTML = records.map((r, i) =>
+  container.innerHTML = records.map(displayRecord).map((r, i) =>
     '<div class="record-item" onclick="document.getElementById(\'rd' + i + '\').classList.toggle(\'show\')"><div class="rl"><span class="rdate">' + r.date + '</span><span class="rtopic">' + r.question + '</span></div><div class="rscore">' + r.overall + '</div></div><div class="record-detail" id="rd' + i + '"><strong>综合评价：</strong>' + r.comment + '<br><strong>亮点：</strong><ul>' + (r.strengths||[]).map(s => '<li>' + s + '</li>').join('') + '</ul><strong>改进建议：</strong><ul>' + (r.improvements||[]).map(s => '<li>' + s + '</li>').join('') + '</ul></div>'
   ).join('');
 }

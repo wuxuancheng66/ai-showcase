@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+{% block title %}部署中心 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">免费模型部署</p>
+    <h1>部署中心</h1>
+    <p class="lede">选择渠道和模型，先预览配置，再交由宿主执行器完成备份、dry-run、写入、验证和失败回滚。</p>
+  </div>
+  <div class="status-rail">
+    <span class="status-chip">真实消息验证通过才入册</span>
+    <span class="status-chip">只新增，不改删既有 provider</span>
+    <span class="status-chip">失败自动回滚</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">本机 Agent 检测</h2>
+      <p class="panel__meta">打开页面时实时探测</p>
+    </div>
+  </div>
+  <ul class="signal-list">
+    {% for a in agents %}
+    <li class="signal-item">
+      <span class="signal-item__icon {% if a.detected %}signal-item__icon--ok{% endif %}" aria-hidden="true"></span>
+      <span class="signal-item__body">
+        <span class="signal-item__title">{{ a.name }}</span>
+        <span>{% if a.detected %}已安装{% else %}未检测到{% endif %} · 生态分 {{ a.ecosystem_score }} · {{ '支持电脑操作' if a.computer_control else '工作区能力' }}{% if a.plugin_capable %} · 可扩展插件技能{% endif %}</span>
+        <span class="signal-item__meta">能力：{{ a.capabilities|join(' / ') }}</span>
+      </span>
+      <span class="agent-card__actions">
+        <a class="button button--quiet" href="/agents/{{ a.id }}">查看板块</a>
+        {% if a.detected and a.open_mode != 'manual' %}<button class="button button--quiet" type="button" data-open-agent="{{ a.id }}">打开 / 启动</button>{% endif %}
+      </span>
+    </li>
+    {% else %}<li class="hint">未找到 Agent 目录。</li>{% endfor %}
+  </ul>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">可部署的免费渠道</h2>
+      <p class="panel__meta">按综合分排序</p>
+    </div>
+    <span class="pill">{{ rows|length }} 个渠道</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>渠道</th><th>综合分</th><th>最强免费模型</th><th>推荐 Agent</th><th>部署方式</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td data-label="渠道"><span class="model-name">{{ r.name }}</span></td>
+        <td data-label="综合分"><span class="score">{{ r.score }}</span></td>
+        <td data-label="最强免费模型"><span class="model-name">{{ r.best_model }}</span><br><span class="model-id">{{ r.free_tier_desc or '—' }}</span></td>
+        <td data-label="推荐 Agent"><span class="model-name">{{ r.recommended_agent.name }}</span><br><span class="model-id">{{ '可自动部署' if r.auto_match else '建议人工确认' }} · {{ r.match_reason }}</span><br><a class="panel__link" href="/agents/{{ r.recommended_agent.id }}">打开 Agent 板块 →</a></td>
+        <td data-label="部署方式">{% if not r.deploy_ready %}暂不可用：{{ r.deploy_reason }}{% elif r.configured_in_agent %}已部署，复用现有配置{% elif r.status == 'ok' %}已验证可用，新增配置{% else %}可新增配置，部署后需真实验证{% endif %}</td>
+        <td data-label="操作">
+          <div class="actions">
+          {% if r.deploy_ready and r.auto_match %}<button class="button button--primary" type="button" data-deploy-channel="{{ r.id }}" data-deploy-name="{{ r.name }}" data-deploy-agent="{{ r.recommended_agent.id }}" data-deploy-agent-name="{{ r.recommended_agent.name }}" data-deploy-agent-detected="true">直接部署</button>
+          {% elif r.deploy_ready %}<button class="button button--quiet" type="button" disabled title="{{ r.match_reason }}">先安装 OpenClaw</button>{% endif %}
+          {% if task_agents %}<button class="button button--quiet" type="button" data-agent-task-channel="{{ r.id }}" data-agent-task-name="{{ r.name }}" data-agent-task-model="{{ r.best_model }}">交给 Agent 接管</button>{% endif %}
+          {% if not r.deploy_ready and not task_agents %}<button class="button button--quiet" type="button" disabled title="{{ r.deploy_reason }}">暂不可用</button>{% endif %}
+          </div>
+        </td>
+      </tr>
+      {% else %}<tr><td colspan="6" class="empty">暂无可部署渠道。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">已配置模型</h2>
+      <p class="panel__meta">只有验证通过的部署才出现在这里</p>
+    </div>
+    <span class="pill">{{ configured|length }} 个</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>模型</th><th>Agent</th><th>来源渠道</th><th>设为默认</th><th>验证时间</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for c in configured %}
+      <tr>
+        <td data-label="模型"><span class="model-name">{{ c.provider }}/{{ c.model_id }}</span></td>
+        <td data-label="Agent">{{ c.agent }}</td>
+        <td data-label="来源渠道">{{ c.channel_id or '—' }}</td>
+        <td data-label="设为默认">{{ '是' if c.set_default else '否' }}</td>
+        <td data-label="验证时间" class="number">{{ (c.verified_at or '')[:19] }}</td>
+        <td data-label="操作"><a class="button button--quiet" href="{{ gateway_urls.get(c.agent) or 'http://localhost:18790' }}" target="_blank" rel="noopener">进入 Agent ↗</a></td>
+      </tr>
+      {% else %}<tr><td colspan="6" class="empty">还没有通过验证的部署。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<dialog class="dialog" id="agent-task-dialog" aria-labelledby="agent-task-title">
+  <div class="dialog__panel">
+    <div class="dialog__head">
+      <div>
+        <p class="eyebrow">Agent 接管</p>
+        <h2 id="agent-task-title">让电脑操作 Agent 配置这个渠道</h2>
+      </div>
+      <form method="dialog" class="dialog__close-form"><button class="dialog__close" type="submit" aria-label="关闭 Agent 接管窗口">×</button></form>
+    </div>
+    <div class="dialog__body">
+      <p class="notice notice--warn">Agent 会使用你电脑上已有的登录态完成配置。遇到密码、验证码、付款、订阅、条款确认或权限提升时会停止，不会绕过平台风控。</p>
+      <div class="field">
+        <label class="field__label" for="task-agent">选择接管 Agent</label>
+        <select class="input" id="task-agent">
+          {% for a in task_agents %}
+          <option value="{{ a.id }}" data-detected="{{ 'true' if a.detected else 'false' }}" data-install="{{ a.install_cmd or '' }}">{{ a.name }} · 生态分 {{ a.ecosystem_score }}</option>
+          {% endfor %}
+        </select>
+        <p class="field__help" id="task-agent-help"></p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="task-model">模型 ID</label>
+        <input class="input" id="task-model" autocomplete="off" spellcheck="false">
+      </div>
+      {% if allow_web_install %}<label class="checkbox" id="task-install-option" hidden><input type="checkbox" id="task-allow-install"> 未安装时允许自动安装所选 Agent</label>{% endif %}
+      <div id="task-progress" class="notice" role="status" aria-live="polite" hidden></div>
+    </div>
+    <div class="form-actions">
+      <button class="button button--primary" type="button" id="confirm-agent-task">开始安全接管</button>
+      <form method="dialog" class="dialog__close-form"><button class="button button--quiet" type="submit">取消</button></form>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="dialog" id="deploy-dialog" aria-labelledby="dialog-title">
+  <div class="dialog__panel">
+    <div class="dialog__head">
+      <div>
+        <p class="eyebrow">部署预览</p>
+        <h2 id="dialog-title">确认写入内容</h2>
+      </div>
+      <form method="dialog" class="dialog__close-form"><button class="dialog__close" type="submit" aria-label="关闭部署窗口">×</button></form>
+    </div>
+    <div class="dialog__body">
+      <p class="hint" id="dialog-info"></p>
+      <div class="field">
+        <label class="checkbox"><input type="checkbox" id="set-default"> 设为 Agent 默认模型</label>
+        {% if allow_web_install %}<label class="checkbox" id="install-option" hidden><input type="checkbox" id="allow-install"> 未安装 OpenClaw 时允许自动安装</label>{% endif %}
+      </div>
+      <div class="field">
+        <label class="field__label" for="model-id">模型 ID</label>
+        <input class="input" id="model-id" name="model-id" autocomplete="off" spellcheck="false" aria-describedby="model-help">
+        <p class="field__help" id="model-help">模型 ID 来自免费排行，可按官方标识调整。</p>
+      </div>
+      <pre class="code-preview" id="dialog-preview" aria-live="polite"></pre>
+      <div id="dialog-progress" class="notice" role="status" aria-live="polite" hidden></div>
+    </div>
+    <div class="form-actions">
+      <button class="button button--primary" type="button" id="confirm-deploy">确认部署</button>
+      <form method="dialog" class="dialog__close-form"><button class="button button--quiet" type="submit">取消</button></form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const dialog = document.getElementById('deploy-dialog');
+const dialogTitle = document.getElementById('dialog-title');
+const dialogInfo = document.getElementById('dialog-info');
+const dialogPreview = document.getElementById('dialog-preview');
+const dialogProgress = document.getElementById('dialog-progress');
+const modelInput = document.getElementById('model-id');
+modelInput.addEventListener('input', () => modelInput.removeAttribute('aria-invalid'));
+const defaultInput = document.getElementById('set-default');
+const allowWebInstall = {{ allow_web_install | tojson }};
+const installOption = document.getElementById('install-option');
+const installInput = document.getElementById('allow-install');
+const confirmButton = document.getElementById('confirm-deploy');
+let currentChannel = null;
+let currentAgent = null;
+let currentAgentName = '未指定';
+let pollTimer = null;
+
+function setProgress(message, kind = '') {
+  dialogProgress.hidden = false;
+  dialogProgress.className = 'notice' + (kind ? ' notice--' + kind : '');
+  dialogProgress.textContent = message;
+}
+
+async function fetchJson(url, options = {}, timeoutMs = 10000) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {...options, signal: controller.signal});
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || '请求失败（' + response.status + '）');
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('请求超时，请稍后重试。');
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
+document.querySelectorAll('[data-deploy-channel]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    currentChannel = button.dataset.deployChannel;
+    currentAgent = button.dataset.deployAgent;
+    currentAgentName = button.dataset.deployAgentName || currentAgent || '未指定';
+    dialogTitle.textContent = '部署预览：' + button.dataset.deployName;
+    dialogProgress.hidden = true;
+    modelInput.value = '';
+    modelInput.removeAttribute('aria-invalid');
+    if (installInput) installInput.checked = false;
+    if (installOption) installOption.hidden = true;
+    confirmButton.disabled = true;
+    confirmButton.textContent = '载入中…';
+    dialog.showModal();
+    try {
+      const rank = await fetchJson('/api/v1/free-rank');
+      const row = (rank.ranking || []).find((item) => item.id === currentChannel) || {};
+      const detected = button.dataset.deployAgentDetected === 'true';
+      if (installOption) installOption.hidden = detected || !allowWebInstall;
+      modelInput.value = row.best_model && row.best_model !== '—' ? row.best_model : '';
+      dialogInfo.textContent = `目标 Agent：${currentAgentName}（${detected ? '已检测到' : '未检测到，需要安装'}） · 渠道状态：${row.status || 'unknown'}`;
+      dialogPreview.textContent = `目标 Agent：${currentAgent}\n写入方式：${currentAgentName} 配置补丁（先 dry-run）\n写入内容：allowlist 白名单 + ${defaultInput.checked ? '默认模型' : '可选模型'}${row.configured_in_agent ? '\n说明：渠道已配置，复用现有 provider' : '\n说明：新增 openai-compatible provider，零成本'}`;
+      confirmButton.disabled = false;
+      confirmButton.textContent = '确认部署';
+      modelInput.focus();
+    } catch (error) {
+      setProgress(error.message, 'error');
+      confirmButton.textContent = '无法部署';
+    }
+  });
+});
+
+dialog.addEventListener('close', () => {
+  if (pollTimer) {
+    clearInterval(pollTimer);
+    pollTimer = null;
+  }
+});
+dialog.addEventListener('click', (event) => {
+  if (event.target === dialog) dialog.close();
+});
+
+defaultInput.addEventListener('change', () => {
+  dialogPreview.textContent = dialogPreview.textContent.replace(
+    defaultInput.checked ? '可选模型' : '默认模型',
+    defaultInput.checked ? '默认模型' : '可选模型'
+  );
+});
+
+const preselectedChannel = {{ selected_channel | tojson }};
+if (preselectedChannel) {
+  const preselectedButton = [...document.querySelectorAll('[data-deploy-channel]')]
+    .find((button) => button.dataset.deployChannel === preselectedChannel);
+  if (preselectedButton) preselectedButton.click();
+}
+
+confirmButton.addEventListener('click', async () => {
+  const modelId = modelInput.value.trim();
+  if (!modelId) {
+    setProgress('请填写模型 ID。', 'warn');
+    modelInput.setAttribute('aria-invalid', 'true');
+    modelInput.focus();
+    return;
+  }
+  confirmButton.disabled = true;
+  confirmButton.textContent = '入队中…';
+  setProgress('正在创建部署计划…');
+  try {
+    const data = await fetchJson('/api/v1/deploy', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({channel_id: currentChannel, model_id: modelId, agent: currentAgent, set_default: defaultInput.checked, allow_install: Boolean(installInput && installInput.checked)})
+    });
+    setProgress('已入队，宿主执行器每 15 秒轮询一次。');
+    confirmButton.textContent = '已入队';
+    pollTimer = setInterval(async () => {
+      try {
+        const state = await fetchJson('/api/v1/deploy/status/' + data.plan_id);
+        setProgress('状态：' + state.status + (state.result ? ' · ' + JSON.stringify(state.result).slice(0, 300) : ''));
+        if (state.status === 'done') {
+          clearInterval(pollTimer);
+          if (state.result && state.result.verified) {
+            setProgress('部署成功且验证通过，已加入已配置模型。', 'ok');
+            setTimeout(() => location.reload(), 1500);
+          } else {
+            setProgress('部署完成，但尚未通过真实消息验证。', 'warn');
+          }
+        } else if (state.status === 'failed') {
+          clearInterval(pollTimer);
+          setProgress('部署失败：' + (state.result && state.result.error || '未知错误'), 'error');
+        }
+      } catch (error) {
+        clearInterval(pollTimer);
+        setProgress(error.message, 'error');
+      }
+    }, 3000);
+  } catch (error) {
+    setProgress(error.message, 'error');
+    confirmButton.disabled = false;
+    confirmButton.textContent = '确认部署';
+  }
+});
+
+const taskDialog = document.getElementById('agent-task-dialog');
+const taskAgent = document.getElementById('task-agent');
+const taskAgentHelp = document.getElementById('task-agent-help');
+const taskModel = document.getElementById('task-model');
+const taskInstallOption = document.getElementById('task-install-option');
+const taskAllowInstall = document.getElementById('task-allow-install');
+const taskProgress = document.getElementById('task-progress');
+const confirmAgentTask = document.getElementById('confirm-agent-task');
+let taskChannel = null;
+let taskPoll = null;
+
+function setTaskStatus(message, kind = '') {
+  taskProgress.hidden = false;
+  taskProgress.className = 'notice' + (kind ? ' notice--' + kind : '');
+  taskProgress.textContent = message;
+}
+
+function updateTaskAgentInfo() {
+  const option = taskAgent.options[taskAgent.selectedIndex];
+  if (!option) return;
+  const detected = option.dataset.detected === 'true';
+  const install = option.dataset.install;
+  taskAgentHelp.textContent = detected
+    ? '已安装，可直接执行安全接管。'
+    : (allowWebInstall && install ? `未安装，可使用：${install}` : '未安装；Web 端自动安装已关闭，请先在终端手动安装。');
+  if (taskInstallOption) taskInstallOption.hidden = detected || !install || !allowWebInstall;
+  if (taskAllowInstall) taskAllowInstall.checked = false;
+}
+taskAgent.addEventListener('change', updateTaskAgentInfo);
+
+document.querySelectorAll('[data-agent-task-channel]').forEach((button) => {
+  button.addEventListener('click', () => {
+    taskChannel = button.dataset.agentTaskChannel;
+    document.getElementById('agent-task-title').textContent = 'Agent 接管：' + button.dataset.agentTaskName;
+    taskModel.value = button.dataset.agentTaskModel && button.dataset.agentTaskModel !== '—'
+      ? button.dataset.agentTaskModel : '';
+    taskProgress.hidden = true;
+    confirmAgentTask.disabled = false;
+    confirmAgentTask.textContent = '开始安全接管';
+    updateTaskAgentInfo();
+    taskDialog.showModal();
+    taskAgent.focus();
+  });
+});
+
+taskDialog.addEventListener('close', () => {
+  if (taskPoll) {
+    clearInterval(taskPoll);
+    taskPoll = null;
+  }
+});
+taskDialog.addEventListener('click', (event) => {
+  if (event.target === taskDialog) taskDialog.close();
+});
+
+confirmAgentTask.addEventListener('click', async () => {
+  const modelId = taskModel.value.trim();
+  if (!modelId) {
+    setTaskStatus('请填写模型 ID。', 'warn');
+    taskModel.focus();
+    return;
+  }
+  confirmAgentTask.disabled = true;
+  confirmAgentTask.textContent = '正在入队…';
+  setTaskStatus('正在创建 Agent 接管任务…');
+  try {
+    const data = await fetchJson('/api/v1/deploy/agent-task', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        agent_id: taskAgent.value,
+        channel_id: taskChannel,
+        model_id: modelId,
+        allow_install: Boolean(taskAllowInstall && taskAllowInstall.checked),
+      })
+    });
+    confirmAgentTask.textContent = '已交给 Agent';
+    setTaskStatus(data.message || '任务已入队。');
+    taskPoll = setInterval(async () => {
+      try {
+        const state = await fetchJson('/api/v1/deploy/status/' + data.plan_id);
+        setTaskStatus('状态：' + state.status + (state.result ? ' · ' + (state.result.detail || state.result.error || '') : ''));
+        if (state.status === 'done' || state.status === 'failed') {
+          clearInterval(taskPoll);
+          taskPoll = null;
+          setTaskStatus(
+            state.status === 'done'
+              ? (state.result?.detail || 'Agent 已完成接管任务，请检查其会话。')
+              : ('接管失败：' + (state.result?.error || '未知错误')),
+            state.status === 'done' ? 'ok' : 'error'
+          );
+        }
+      } catch (error) {
+        clearInterval(taskPoll);
+        setTaskStatus(error.message, 'error');
+      }
+    }, 5000);
+  } catch (error) {
+    confirmAgentTask.disabled = false;
+    confirmAgentTask.textContent = '开始安全接管';
+    setTaskStatus(error.message, 'error');
+  }
+});
+
+</script>
+{% endblock %}

@@ -12,6 +12,9 @@ Keys:   Space = Start/Pause   |   R = Reset   |   Right = Skip   |   1/2/3 = Swi
 import tkinter as tk
 import sys
 import subprocess
+import argparse
+import math
+import time
 from enum import Enum
 
 
@@ -56,22 +59,23 @@ class TimerState(Enum):
 # ---------------------------------------------------------------------------
 
 class PomodoroApp:
-    def __init__(self):
+    def __init__(self, work_minutes=25, short_break_minutes=5, long_break_minutes=15):
         self.root = tk.Tk()
-        self.root.title("Pomodoro")
+        self.root.title("专注计时")
         self.root.resizable(False, False)
         self.root.configure(bg=Theme.BG_DEEP)
 
         # ---- State ----
         self.state           = TimerState.WORK
-        self.work_sec        = 25 * 60
-        self.short_break_sec = 5 * 60
-        self.long_break_sec  = 15 * 60
+        self.work_sec        = round(work_minutes * 60)
+        self.short_break_sec = round(short_break_minutes * 60)
+        self.long_break_sec  = round(long_break_minutes * 60)
         self.duration        = self.work_sec
         self.remaining       = self.work_sec
         self.running         = False
         self.sessions_done   = 0
         self._after_id       = None
+        self._deadline       = None
 
         # ---- Platform ----
         self._mac = sys.platform == "darwin"
@@ -117,9 +121,9 @@ class PomodoroApp:
         # Mini mode tabs
         self._mode_btns = {}
         modes = [
-            ("Focus", TimerState.WORK,        Theme.TOMATO),
-            ("Break", TimerState.SHORT_BREAK, Theme.TEAL),
-            ("Long",  TimerState.LONG_BREAK,  Theme.PURPLE),
+            ("专注", TimerState.WORK,        Theme.TOMATO),
+            ("短休息", TimerState.SHORT_BREAK, Theme.TEAL),
+            ("长休息",  TimerState.LONG_BREAK,  Theme.PURPLE),
         ]
         tab_frame = tk.Frame(outer, bg=Theme.BG_DEEP)
         tab_frame.pack(pady=(8, 0), fill=tk.X)
@@ -150,7 +154,7 @@ class PomodoroApp:
         btn_row = tk.Frame(outer, bg=Theme.BG_DEEP)
         btn_row.pack(pady=(4, 0))
 
-        self.start_btn = self._pill("▶  Start", Theme.TOMATO, Theme.TOMATO_SOFT, self.toggle)
+        self.start_btn = self._pill("▶  开始", Theme.TOMATO, Theme.TOMATO_SOFT, self.toggle)
         self.start_btn.pack(side=tk.LEFT, padx=4)
 
         self.reset_btn = self._pill("↺", Theme.TEXT_MUTED, Theme.TEXT_SECONDARY, self.reset)
@@ -283,12 +287,18 @@ class PomodoroApp:
             self._start()
 
     def _start(self):
+        if self.running:
+            return
+        self._deadline = time.monotonic() + self.remaining
         self.running = True
         self._sync_start_btn()
         self._tick()
 
     def _pause(self):
+        if self.running and self._deadline is not None:
+            self.remaining = max(0, math.ceil(self._deadline - time.monotonic()))
         self.running = False
+        self._deadline = None
         if self._after_id is not None:
             self.root.after_cancel(self._after_id)
             self._after_id = None
@@ -305,14 +315,16 @@ class PomodoroApp:
         self._on_complete()
 
     def _tick(self):
+        self._after_id = None
         if not self.running:
             return
+        self.remaining = max(0, math.ceil(self._deadline - time.monotonic()))
+        self._draw()
         if self.remaining > 0:
-            self.remaining -= 1
-            self._draw()
-            self._after_id = self.root.after(1000, self._tick)
+            self._after_id = self.root.after(200, self._tick)
         else:
             self.running = False
+            self._deadline = None
             self._sync_start_btn()
             self._on_complete()
 
@@ -363,11 +375,11 @@ class PomodoroApp:
 
     def _sync_start_btn(self):
         if self.running:
-            self.start_btn.configure(text="⏸  Pause", bg=Theme.GOLD)
+            self.start_btn.configure(text="⏸  暂停", bg=Theme.GOLD)
             self.start_btn._bg = Theme.GOLD
             self.start_btn._hover_bg = Theme.GOLD
         else:
-            self.start_btn.configure(text="▶  Start", bg=Theme.TOMATO)
+            self.start_btn.configure(text="▶  开始", bg=Theme.TOMATO)
             self.start_btn._bg = Theme.TOMATO
             self.start_btn._hover_bg = Theme.TOMATO_SOFT
 
@@ -381,7 +393,7 @@ class PomodoroApp:
     def _update_counter(self):
         n = self.sessions_done
         self.counter_lbl.config(
-            text=f"{n} done" if n else ""
+            text=f"已完成 {n} 次" if n else ""
         )
 
     def _update_dots(self):
@@ -442,5 +454,30 @@ class PomodoroApp:
         self.root.mainloop()
 
 
+def positive_minutes(value):
+    number = float(value)
+    if not math.isfinite(number) or number < 1/60 or number > 1440:
+        raise argparse.ArgumentTypeError("时长须在 1 秒至 1440 分钟之间")
+    return number
+
+
+def main():
+    parser = argparse.ArgumentParser(description="桌面专注计时器：空格开始/暂停，R 重置，方向右键跳过，1/2/3 切换模式")
+    parser.add_argument("--work", type=positive_minutes, default=25, metavar="分钟", help="专注时长，默认25分钟")
+    parser.add_argument("--short-break", type=positive_minutes, default=5, metavar="分钟", help="短休息，默认5分钟")
+    parser.add_argument("--long-break", type=positive_minutes, default=15, metavar="分钟", help="长休息，默认15分钟")
+    parser.add_argument("--check", action="store_true", help="只检查 tkinter 运行库，不打开窗口")
+    args = parser.parse_args()
+    if args.check:
+        print(f"tkinter 可用，Tk {tk.TkVersion}；桌面窗口需在图形会话中启动")
+        return 0
+    try:
+        PomodoroApp(args.work, args.short_break, args.long_break).run()
+        return 0
+    except tk.TclError as exc:
+        print(f"无法创建桌面窗口：{exc}。请在带图形界面的 Python/Tk 环境运行。", file=sys.stderr)
+        return 1
+
+
 if __name__ == "__main__":
-    PomodoroApp().run()
+    raise SystemExit(main())

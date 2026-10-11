@@ -1,0 +1,48 @@
+# AI 日报新闻源（RSS）。grade：🔵 权威媒体 / 🟡 行业媒体；抓取失败自动跳过。
+
+sources:
+  - name: OpenAI 官方
+    url: https://openai.com/news/rss.xml
+    grade: "🟢"
+  - name: Google AI 官方博客
+    url: https://blog.google/technology/ai/rss/
+    grade: "🟢"
+  - name: Google DeepMind
+    url: https://deepmind.google/blog/rss.xml
+    grade: "🟢"
+  - name: NVIDIA 官方博客
+    url: https://blogs.nvidia.com/feed/
+    grade: "🟢"
+  - name: 欧盟数字战略
+    url: https://digital-strategy.ec.europa.eu/en/rss.xml
+    grade: "🟢"
+  - name: 机器之心
+    url: https://www.jiqizhixin.com/rss
+    grade: "🔵"
+  - name: 量子位
+    url: https://www.qbitai.com/feed
+    grade: "🟡"
+  - name: 36氪
+    url: https://36kr.com/feed
+    grade: "🟡"
+  - name: Solidot
+    url: https://www.solidot.org/index.rss
+    grade: "🟡"
+  - name: TechCrunch
+    url: https://techcrunch.com/feed/
+    grade: "🔵"
+  - name: Hacker News
+    url: https://hnrss.org/frontpage
+    grade: "🟡"
+  - name: CNBC 科技
+    url: https://www.cnbc.com/id/19854910/device/rss/rss.html
+    grade: "🔵"
+  - name: WIRED AI
+    url: https://www.wired.com/feed/tag/ai/latest/rss
+    grade: "🔵"
+  - name: MIT Technology Review
+    url: https://www.technologyreview.com/feed/
+    grade: "🔵"
+  - name: TechCrunch AI
+    url: https://techcrunch.com/category/artificial-intelligence/feed/
+    grade: "🟡"

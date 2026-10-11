@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}活动中心 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">活动领取</p>
+    <h1>活动中心</h1>
+    <p class="lede">系统监控活动页并提醒变化。你只需完成注册、实名或签到，再确认到账并标记完成。</p>
+  </div>
+  <div class="status-rail">
+    <span class="status-chip"><span class="status-dot status-dot--info"></span>监控活动页变化</span>
+    <span class="status-chip"><span class="status-dot status-dot--warn"></span>遇验证码自动转人工</span>
+    <span class="status-chip"><span class="status-dot status-dot--ok"></span>不绕过平台风控</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">待领取</h2>
+      <p class="panel__meta">按活动记录顺序排列</p>
+    </div>
+    <span class="pill">{{ pending|length }} 项</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>平台</th><th>活动</th><th>最近检查</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for a in pending %}
+      <tr>
+        <td data-label="平台"><span class="model-name">{{ a.platform }}</span></td>
+        <td data-label="活动">{{ a.title }}{% if a.note %}<br><span class="small">{{ a.note }}</span>{% endif %}</td>
+        <td data-label="最近检查" class="number">{{ (a.last_seen or '—')[:19] }}</td>
+        <td data-label="操作">
+          <div class="actions">
+            <a class="button button--primary" href="{{ a.url }}" target="_blank" rel="noopener">去领取 ↗</a>
+            <form method="post" action="/activities/{{ a.id | urlencode }}/done" class="inline-form" data-busy data-confirm="确认该活动已经领取并到账？">
+              <button class="button button--quiet" type="submit" data-busy-label="正在记录…">标记完成</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}<tr><td colspan="4" class="empty">全部处理完毕。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">最近已完成</h2>
+      <p class="panel__meta">保留最近 20 条处理记录</p>
+    </div>
+  </div>
+  <ul class="signal-list">
+    {% for a in done %}
+    <li class="signal-item">
+      <span class="signal-item__icon signal-item__icon--ok" aria-hidden="true"></span>
+      <span class="signal-item__body">
+        <span class="signal-item__title">{{ a.platform }}</span>
+        <span>{{ a.title }}</span>
+        <span class="signal-item__meta">{{ (a.done_at or '')[:19] }}</span>
+      </span>
+    </li>
+    {% else %}<li class="hint">暂无完成记录。</li>{% endfor %}
+  </ul>
+</section>
+{% endblock %}

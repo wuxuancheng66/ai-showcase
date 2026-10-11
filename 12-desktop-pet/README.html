@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 · desktop pet 桌面伙伴 · macOS 移植版</title>
+<style>
+  :root { --ink:#172033; --muted:#5b6572; --accent:#2563eb; --bg:#f7f8fa; --card:#ffffff; --line:#e4e8ee; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; padding: 40px 16px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  header { background: linear-gradient(135deg,#1e293b,#2563eb); color:#fff; border-radius: 16px; padding: 36px 32px; margin-bottom: 28px; }
+  header h1 { font-size: 26px; margin-bottom: 10px; }
+  header p { opacity: .92; font-size: 14px; }
+  header .tags { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  header .tag { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.25); padding: 3px 12px; border-radius: 999px; font-size: 12.5px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px; margin-bottom: 18px; }
+  h2 { font-size: 18px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  h2 .no { color: var(--accent); margin-right: 6px; }
+  p, li { font-size: 14.5px; color: #2a3444; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #f1f4f9; }
+  code { background: #eef2f7; border-radius: 5px; padding: 1.5px 6px; font-size: 13px; font-family: ui-monospace, Menlo, monospace; }
+  .note { background: #fffbe8; border: 1px solid #f2e3a2; border-radius: 10px; padding: 12px 16px; font-size: 13.5px; margin: 10px 0; }
+  .files { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .file { display: flex; justify-content: space-between; align-items: center; background: #f4f6fa; border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+  .file b { font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  .file span { color: var(--muted); font-size: 13px; }
+  .ai-badge { display: inline-block; background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; font-size: 12px; padding: 2px 10px; border-radius: 999px; margin-left: 8px; vertical-align: 2px; }
+  footer { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 24px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🐱 desktop pet 桌面伙伴 · macOS 移植版</h1>
+  <p>上游开源项目 xunguangzlj-cloud/desktop-pet-community v4.0.1-preview.1（MIT）· macOS arm64 移植构建 + 适配优化 · 2026-10-10</p>
+  <div class="tags">
+    <span class="tag">Electron 42</span><span class="tag">React + Vite</span><span class="tag">Apple Silicon</span><span class="tag">AI 对话</span><span class="tag">离线作品库 117 件</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">一</span>这是什么</h2>
+  <p>一款 Electron 桌面宠物应用：桌面上常驻一只可拖拽的 <b>Hoodie Cat（连帽衫猫）</b>，支持接入 AI 大模型对话、人设系统（Markdown / SKILL.md 蒸馏导入）、AI 编程工具工作联动、喝水/久坐/番茄钟等提醒插件，并内置共创平台离线快照（117 件桌宠作品 + 24 件插件可直接导入）。</p>
+  <p>上游官方只发布了 Windows x64 便携包；本版本补上了 <b>macOS Apple Silicon（arm64）</b> 构建。</p>
+</section>
+
+<section>
+  <h2><span class="no">二</span>安装与运行</h2>
+  <div class="files">
+    <div class="file"><b>desktop-pet-4.0.1-mac-arm64.dmg</b><span>868 MB · 标准安装包，双击挂载后拖入「应用程序」</span></div>
+    <div class="file"><b>desktop-pet-4.0.1-mac-arm64.zip</b><span>861 MB · 便携版，解压即用</span></div>
+  </div>
+  <ul>
+    <li>适用于 <b>macOS 13+ / Apple Silicon（M 系列芯片）</b></li>
+    <li>应用为 <b>ad-hoc 签名</b>（无开发者证书），首次打开若提示"无法验证"：右键应用 →「打开」，或在「系统设置 → 隐私与安全性」点「仍要打开」</li>
+    <li>体积说明：约 850 MB 是刻意内置的<b>离线作品库</b>（桌宠广场全量内容，离线可浏览可导入），应用本体约 100 MB</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">三</span>快速上手</h2>
+  <ol>
+    <li>启动后桌宠出现在屏幕右下角，菜单栏出现托盘图标</li>
+    <li><b>双击桌宠</b> → 呼出对话输入框</li>
+    <li>托盘菜单 / 右键桌宠 →「打开控制中心」→「宠物大脑」→ 添加 AI 服务（内置 DeepSeek / OpenAI / Anthropic / OpenRouter / Ollama / LM Studio 模板）</li>
+    <li>「人设个性」导入 Markdown 或 SKILL.md 人设包</li>
+    <li>「共创网站」浏览离线作品库，一键导入社区桌宠与插件</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">四</span>macOS 移植与优化内容</h2>
+  <p>上游代码本身具备跨平台抽象（macOS 窗口追踪 / Dock 显隐 / 权限降级策略均已预留），但从未在 macOS 上构建发布。本版本完成：</p>
+  <table>
+    <tr><th>项目</th><th>内容</th></tr>
+    <tr><td>✅ 首次 Mac 构建</td><td>pnpm monorepo 全量构建 + electron-builder dmg/zip（arm64）</td></tr>
+    <tr><td>✅ 全功能实测</td><td>启动/渲染/托盘/隐藏显示/控制中心 9 个页面/DeepSeek 真实对话闭环（615ms 响应）</td></tr>
+    <tr><td>✅ 修复</td><td><code>before-quit</code> 监听器超 10 上限的内存泄漏误报（<code>app.setMaxListeners(50)</code>）</td></tr>
+    <tr><td>✅ 瘦身</td><td>剔除 sharp(@img) 中 Linux/Windows 平台原生二进制（-67 MB 纯浪费体积）</td></tr>
+    <tr><td>✅ 回归验证</td><td>打包环境内 sharp 原生模块加载与图片编码测试通过</td></tr>
+  </table>
+  <p>保留上游设计、不做破坏性修改：<code>use-mock-keychain</code> 保留（避免 ad-hoc 应用反复弹钥匙串授权）；离线作品库全量保留（与 Windows 官方便携包对等）；共创网站 dev 线上/打包离线的双模式为上游既有逻辑。</p>
+</section>
+
+<section>
+  <h2><span class="no">五</span>已知限制（诚实声明）</h2>
+  <ul>
+    <li>语音对话功能未在 Mac 上深度验证（涉及麦克风权限与 TTS 服务接入）</li>
+    <li>屏幕活跃窗口追踪需要 macOS「屏幕录制」权限，未授权时应用自动降级，不采集任何内容</li>
+    <li>未做公证（notarization），首次打开需手动放行；分发他人建议补签名公证</li>
+    <li>x86_64 Intel Mac 不在本包支持范围</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">六</span>AI 参与声明<span class="ai-badge">AI 红线标注</span></h2>
+  <ul>
+    <li>本文件夹内的 macOS 构建、测试、优化与文档 <b>由 AI（ZCode, GLM 模型）完成</b>，上游应用的全部功能代码归 desktop-pet-community 贡献者所有（MIT）</li>
+    <li>构建环境：macOS 27 arm64 / Node 24.18 / pnpm 11.0.8 / Electron 42</li>
+    <li>构建源码与完整过程保留在本地工作区 <code>~/.zcode/workspace/default/desktop-pet-community/</code>（可追溯）；运行数据在 <code>~/Library/Application Support/desktop-pet/</code></li>
+  </ul>
+</section>
+
+<footer>吴宣澄 · AI 开发者项目展示合集 · 12-desktop-pet · 2026-10-10</footer>
+</div>
+</body>
+</html>

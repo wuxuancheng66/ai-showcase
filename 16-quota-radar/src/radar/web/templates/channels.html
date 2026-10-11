@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}免费额度渠道 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">渠道探活</p>
+    <h1>免费额度渠道</h1>
+    <p class="lede">注册礼通常自动到账，没有领取按钮是正常的。先确认渠道可用，再按活动中心指引找到到账位置。</p>
+  </div>
+  <div class="status-rail">
+    <span class="status-chip">自动探活周期由 QR_PROBE_INTERVAL_MIN 控制</span>
+    <span class="status-chip">未验证渠道明确显示 unknown</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">渠道状态</h2>
+      <p class="panel__meta">最后验证时间来自最近一次真实探活</p>
+    </div>
+    <span class="pill">{{ rows|length }} 个渠道</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>渠道</th><th>类型</th><th>状态</th><th>最后验证</th><th>免费说明</th><th>入口</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td data-label="渠道"><span class="model-name">{{ r.name }}</span><br><span class="model-id">{{ r.provider }}</span></td>
+        <td data-label="类型">{{ r.tier or '—' }}</td>
+        <td data-label="状态"><span class="status s-{{ r.status }}">{{ r.status }}</span></td>
+        <td data-label="最后验证" class="number">{{ (r.last_checked or '—')[:19] }}</td>
+        <td data-label="免费说明">{{ r.free_tier_desc or '—' }}{% if r.note %}<br><span class="small">{{ r.note }}</span>{% endif %}</td>
+        <td data-label="入口"><a class="button button--quiet" href="{{ r.url }}" target="_blank" rel="noopener">打开官网 ↗</a></td>
+      </tr>
+      {% else %}<tr><td colspan="6" class="empty">渠道配置尚未同步。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

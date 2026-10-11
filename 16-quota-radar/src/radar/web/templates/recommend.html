@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}场景化推荐 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">选择模型</p>
+    <h1>场景化推荐</h1>
+    <p class="lede">按实际任务选择，而不是只看单价。价值指数越高，单位成本对应的能力分越高。</p>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="推荐场景">
+  {% set names = {"chat": "日常对话", "code": "写代码", "longctx": "长上下文", "bulk": "批量处理", "free": "纯免费"} %}
+  {% for s in scenarios %}
+  <a class="tab {{ 'active' if s == scenario }}" href="/recommend?scenario={{ s }}" {% if s == scenario %}aria-current="page"{% endif %}>{{ names.get(s, s) }}</a>
+  {% endfor %}
+</nav>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">当前场景排名</h2>
+      <p class="panel__meta">混合价 = 75% 输入价 + 25% 输出价（USD / 1M tokens）</p>
+    </div>
+    <span class="pill">{{ rows|length }} 个候选</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>序号</th><th>模型</th><th>来源</th><th>能力分</th><th>输入价</th><th>输出价</th><th>混合价</th><th>价值指数</th><th>上下文</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td data-label="序号" class="number">{{ loop.index }}</td>
+        <td data-label="模型"><span class="model-name">{{ r.model_id }}</span><br><span class="model-id">{{ r.display_name or '' }}</span></td>
+        <td data-label="来源">{{ r.source }}</td>
+        <td data-label="能力分"><span class="score">{{ '%.0f'|format(r.capability_score) }}</span></td>
+        <td data-label="输入价" class="number">${{ r.input_price }}</td>
+        <td data-label="输出价" class="number">${{ r.output_price }}</td>
+        <td data-label="混合价" class="number"><strong>${{ r.blended_price }}</strong></td>
+        <td data-label="价值指数" class="number"><strong>{{ r.value_index }}</strong></td>
+        <td data-label="上下文" class="number">{% if r.context_len %}{{ r.context_len // 1000 }}k{% else %}—{% endif %}</td>
+      </tr>
+      {% else %}<tr><td colspan="9" class="empty">暂无数据，等待首轮采集。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

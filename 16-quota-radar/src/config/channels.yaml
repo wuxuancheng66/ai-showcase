@@ -1,0 +1,277 @@
+# 免费额度渠道注册表（种子）。status 一律从 unknown 起步，只有探活验证后才变为 ok/limited/error。
+# probe:
+#   type: openai_compatible → 用 OpenAI 兼容 /chat/completions 发最小请求（max_tokens=1）
+#   type: google_list       → Google Generative Language API 列模型（免费额度验证）
+#   type: none              → 仅页面监控/人工核验，不做自动探测
+# env_key 对应 .env 中的变量名；未配置 key → 永远显示"未验证"，绝不假装可用。
+#
+# ---- 免费渠道综合排行种子属性（free_rank）----
+# access_cn: 国内网络直连可达性 0-100（是否需要代理/速度）
+# limits: 限速宽松度 0-100（次数/频率越宽松越高）
+# stability_seed: 供应商成熟度 0-100（与探活状态相乘得最终稳定性）
+# models_offered: 该渠道免费可用的代表模型（id + 能力种子分，可手调）
+# configured_in_agent: 已部署进本机 agent（如 OpenClaw）——强上手加分
+
+channels:
+  - id: nvidia-nim
+    name: NVIDIA NIM 试用额度
+    provider: nvidia
+    tier: free
+    url: https://build.nvidia.com
+    kind: api
+    requires_key: true
+    env_key: NVIDIA_API_KEY
+    probe: { type: openai_compatible, base_url: "https://integrate.api.nvidia.com/v1", model: "meta/llama-3.3-70b-instruct" }
+    free_tier_desc: "注册送 1000 credits 试用各系列模型"
+    access_cn: 70
+    limits: 75
+    stability_seed: 90
+    configured_in_agent: true
+    models_offered:
+      - { id: "nemotron-3-ultra-550b-a55b", capability: 93 }
+      - { id: "moonshotai/kimi-k2.5", capability: 90 }
+      - { id: "z-ai/glm-5.1", capability: 88 }
+      - { id: "minimaxai/minimax-m2.7", capability: 87 }
+      - { id: "nemotron-3-super-120b-a12b", capability: 84 }
+
+  - id: openrouter-free
+    name: OpenRouter 免费模型（:free 后缀）
+    provider: openrouter
+    tier: free
+    url: https://openrouter.ai/models?max_price=0
+    kind: api
+    requires_key: true
+    env_key: OPENROUTER_API_KEY
+    probe: { type: openai_models, base_url: "https://openrouter.ai/api/v1" }
+    free_tier_desc: ":free 后缀模型免费调用，有每日/每分钟速率限制"
+    note: "免费模型名单动态变化，以采集器抓到的 :free 列表为准"
+    access_cn: 55
+    limits: 55
+    stability_seed: 85
+
+  - id: zhipu-flash
+    name: 智谱 GLM-4.5-Flash（免费模型）
+    provider: zhipu
+    tier: free
+    url: https://open.bigmodel.cn/modelcenter/square
+    kind: api
+    requires_key: true
+    env_key: ZHIPU_API_KEY
+    probe: { type: openai_compatible, base_url: "https://open.bigmodel.cn/api/paas/v4", model: "glm-4.5-flash" }
+    free_tier_desc: "GLM Flash 系列模型免费不限量（限速）"
+    access_cn: 98
+    limits: 70
+    stability_seed: 95
+    models_offered:
+      - { id: "glm-4.5-flash", capability: 74 }
+
+  - id: google-ai-studio
+    name: Google AI Studio（Gemini 免费层）
+    provider: google
+    tier: free
+    url: https://aistudio.google.com
+    kind: api
+    requires_key: true
+    env_key: GEMINI_API_KEY
+    probe: { type: google_list, base_url: "https://generativelanguage.googleapis.com" }
+    free_tier_desc: "Gemini 系列 API 免费层，按模型有 RPM/RPD 限制"
+    access_cn: 30
+    limits: 70
+    stability_seed: 95
+    models_offered:
+      - { id: "gemini-2.5-pro", capability: 93 }
+      - { id: "gemini-2.5-flash", capability: 84 }
+
+  - id: github-models
+    name: GitHub Models
+    provider: github
+    tier: free
+    url: https://github.com/marketplace/models
+    kind: api
+    requires_key: true
+    env_key: GITHUB_TOKEN
+    probe: { type: openai_compatible, base_url: "https://models.inference.ai.azure.com", model: "gpt-4o-mini" }
+    free_tier_desc: "GitHub Token 即可试用多家模型，按账号等级限速"
+    access_cn: 60
+    limits: 65
+    stability_seed: 90
+    models_offered:
+      - { id: "gpt-4o-mini", capability: 78 }
+
+  - id: groq
+    name: Groq 免费层
+    provider: groq
+    tier: free
+    url: https://console.groq.com
+    kind: api
+    requires_key: true
+    env_key: GROQ_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.groq.com/openai/v1", model: "llama-3.3-70b-versatile" }
+    free_tier_desc: "开源模型高速推理免费层，限速不限量级"
+    note: "速率限制动态调整"
+    access_cn: 45
+    limits: 75
+    stability_seed: 85
+    models_offered:
+      - { id: "llama-3.3-70b-versatile", capability: 78 }
+
+  - id: siliconflow-free
+    name: 硅基流动免费模型
+    provider: siliconflow
+    tier: free
+    url: https://cloud.siliconflow.cn/models
+    kind: api
+    requires_key: true
+    env_key: SILICONFLOW_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.siliconflow.cn/v1", model: "Qwen/Qwen2.5-7B-Instruct" }
+    free_tier_desc: "平台标记¥0 的小模型免费调用，注册送额度"
+    note: "免费模型清单以平台页面为准"
+    access_cn: 98
+    limits: 60
+    stability_seed: 90
+    models_offered:
+      - { id: "Qwen/Qwen2.5-7B-Instruct", capability: 55 }
+
+  - id: qwen-dashscope-free
+    name: 阿里云百炼（新用户免费额度）
+    provider: alibaba
+    tier: free
+    url: https://bailian.console.aliyun.com
+    kind: page
+    requires_key: true
+    env_key: ""
+    probe: { type: none }
+    free_tier_desc: "新用户各模型赠送百万级 tokens 试用额度（活动性质，以页面为准）"
+    access_cn: 98
+    limits: 75
+    stability_seed: 95
+    models_offered:
+      - { id: "qwen-max", capability: 87 }
+
+  - id: cerebras
+    name: Cerebras 免费层
+    provider: cerebras
+    tier: free
+    url: https://cloud.cerebras.ai
+    kind: api
+    requires_key: true
+    env_key: CEREBRAS_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.cerebras.ai/v1", model: "llama-3.3-70b" }
+    free_tier_desc: "超低延迟开源模型免费层"
+    access_cn: 50
+    limits: 70
+    stability_seed: 75
+    models_offered:
+      - { id: "llama-3.3-70b", capability: 78 }
+
+  - id: mistral-plateforme
+    name: Mistral La Plateforme 免费层
+    provider: mistral
+    tier: free
+    url: https://console.mistral.ai
+    kind: api
+    requires_key: true
+    env_key: MISTRAL_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.mistral.ai/v1", model: "mistral-small-latest" }
+    free_tier_desc: "免费实验层，需绑定手机，有速率限制"
+    access_cn: 55
+    limits: 65
+    stability_seed: 80
+    models_offered:
+      - { id: "mistral-small-latest", capability: 72 }
+
+  - id: cohere-trial
+    name: Cohere Trial Key
+    provider: cohere
+    tier: free
+    url: https://dashboard.cohere.com/api-keys
+    kind: api
+    requires_key: true
+    env_key: COHERE_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.cohere.ai/compatibility/v1", model: "command-r7b-12-2024" }
+    free_tier_desc: "Trial key 每月有限调用额度"
+    access_cn: 50
+    limits: 55
+    stability_seed: 80
+    models_offered:
+      - { id: "command-r7b-12-2024", capability: 62 }
+
+  - id: cloudflare-workers-ai
+    name: Cloudflare Workers AI 免费层
+    provider: cloudflare
+    tier: free
+    url: https://developers.cloudflare.com/workers-ai/platform/pricing/
+    kind: page
+    requires_key: true
+    env_key: ""
+    probe: { type: none }
+    free_tier_desc: "每日免费 Neurons 额度，十万余 tokens 级"
+    access_cn: 65
+    limits: 60
+    stability_seed: 90
+    models_offered:
+      - { id: "llama-3.1-8b", capability: 55 }
+
+  - id: sambanova
+    name: SambaNova Cloud 免费层
+    provider: sambanova
+    tier: free
+    url: https://cloud.sambanova.ai
+    kind: page
+    requires_key: true
+    env_key: ""
+    probe: { type: none }
+    free_tier_desc: "开源模型免费层（限时活动，以官网为准）"
+    access_cn: 45
+    limits: 60
+    stability_seed: 70
+    models_offered:
+      - { id: "llama-3.3-70b", capability: 78 }
+
+  - id: hunyuan-lite
+    name: 腾讯混元 lite（免费模型）
+    provider: tencent
+    tier: free
+    url: https://cloud.tencent.com/product/hunyuan
+    kind: api
+    requires_key: true
+    env_key: HUNYUAN_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.hunyuan.cloud.tencent.com/v1", model: "hunyuan-lite" }
+    free_tier_desc: "hunyuan-lite 模型免费，其余计费"
+    access_cn: 98
+    limits: 85
+    stability_seed: 95
+    models_offered:
+      - { id: "hunyuan-lite", capability: 45 }
+
+  - id: ernie-speed
+    name: 百度千帆 ERNIE Speed/Lite（免费模型）
+    provider: baidu
+    tier: free
+    url: https://cloud.baidu.com/product/wenxinworkshop
+    kind: page
+    requires_key: true
+    env_key: ""
+    probe: { type: none }
+    free_tier_desc: "ERNIE Speed/Lite 等轻量模型免费（以千帆页面为准）"
+    access_cn: 98
+    limits: 85
+    stability_seed: 95
+    models_offered:
+      - { id: "ernie-speed-128k", capability: 55 }
+
+  - id: deepseek
+    name: DeepSeek API（低价标杆，非免费）
+    provider: deepseek
+    tier: cheap
+    url: https://platform.deepseek.com
+    kind: api
+    requires_key: true
+    env_key: DEEPSEEK_API_KEY
+    probe: { type: openai_compatible, base_url: "https://api.deepseek.com/v1", model: "deepseek-chat" }
+    free_tier_desc: "无免费层，但长期是主流模型里的价格锚点"
+    access_cn: 98
+    limits: 70
+    stability_seed: 95
+    models_offered:
+      - { id: "deepseek-chat", capability: 85 }

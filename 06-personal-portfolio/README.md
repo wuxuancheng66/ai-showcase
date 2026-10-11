@@ -19,7 +19,7 @@
 - `index.html` — 正式版（Inter + Noto Sans SC 字体体系，橙红主题色 #E17055）；
 - `design-v2-early.html` — 早期设计变体（Noto Serif SC 衬线风格，深蓝主题），留存设计演进过程。
 
-> 本合集根目录的 [index.html](../index.html) 项目展示页，即为给这个作品集配套的"项目集"延伸。
+> 本合集根目录的 [index.html](https://wuxuancheng66.github.io/ai-showcase/) 项目展示页，即为给这个作品集配套的"项目集"延伸。
 
 ## 🚀 使用
 
@@ -27,3 +27,7 @@
 
 ---
 作者：吴宣澄 · 2026
+
+## 实际交互
+
+轮播展示 WordVault、雅思学习空间、军理学习工具、AI Agent Team 和番茄钟，预览指向已公开的 GitHub Pages 合集入口，独立发布此仓库时也能访问其他项目。联系表单只下载本地 JSON 草稿，不发送消息。装饰背景依赖 CDN 与 WebGL，内容浏览有降级样式；系统开启“减少动态效果”时停用背景持续动画。

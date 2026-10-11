@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ agent.name }} · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">Agent / {{ key }}</p>
+    <h1>{{ agent.name }}</h1>
+    <p class="lede">运行状态、额度预测、近期用量和本机使用手册。</p>
+  </div>
+  <div class="status-rail">
+    <span class="status-chip"><span class="status-dot {% if agent.detected %}status-dot--ok{% else %}status-dot--warn{% endif %}"></span>{{ '已检测' if agent.detected else '未检测到' }}</span>
+    <span class="status-chip">电脑操作：{{ '支持' if agent.computer_control else '工作区级' }}</span>
+    <span class="status-chip">生态分：{{ agent.ecosystem_score }}</span>
+  </div>
+</section>
+
+{% if agent.score_dims %}
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">生态评分卡（六维加权）</h2>
+      <p class="panel__meta">{{ agent.score_evidence }} · 评分卡：config/ecosystem_scores.yaml，可自行修订</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr>{% for k in agent.score_dims %}<th>{{ k }}</th>{% endfor %}</tr></thead>
+      <tbody><tr>{% for k, v in agent.score_dims.items() %}<td data-label="{{ k }}" class="number"><b>{{ v }}</b></td>{% endfor %}</tr></tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">运行管理</h2>
+      <p class="panel__meta">额度来自本机台账，不读取平台后台</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>状态</th><th>Token 监测</th><th>余额 / 预测</th><th>诊断</th></tr></thead>
+      <tbody>
+        <tr>
+          <td data-label="状态"><span class="status status--{{ entry.status if entry else 'detected' }}">{{ entry.status if entry else 'detected' }}</span></td>
+          <td data-label="Token 监测" class="number">
+            {% if metric and metric.used_tokens is not none %}近 7 日 {{ '{:,}'.format(metric.used_tokens) }}{% else %}暂无 Token 数据{% endif %}
+            {% if metric %}<br><span class="signal-item__meta">{{ metric.source }} · {{ metric.captured_at[:19] }}</span>{% endif %}
+          </td>
+          <td data-label="余额 / 预测">
+            {% if metric and metric.balance_value is not none %}{{ metric.balance_value }} {{ metric.balance_unit or '' }}{% else %}平台未提供余额{% endif %}
+            {% if metric and metric.days_left is not none %}<br>约 {{ metric.days_left }} 天{% endif %}
+          </td>
+          <td data-label="诊断">{{ metric.detail if metric and metric.detail else (entry.diagnosis if entry and entry.diagnosis else '等待自动监测') }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="actions actions--spaced">
+    <a class="button button--primary" href="/manage">前往运行管理</a>{% if agent.detected and agent.open_mode != 'manual' %}<button class="button button--quiet" type="button" data-open-agent="{{ key }}">打开 / 启动</button>{% endif %}
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">近期用量记录</h2>
+      <p class="panel__meta">正数为获得，负数为消耗</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>时间</th><th>Tokens</th><th>说明</th></tr></thead>
+      <tbody>
+      {% for u in usage %}
+      <tr>
+        <td data-label="时间" class="number">{{ u.recorded_at[:19] }}</td>
+        <td data-label="Tokens" class="number">{{ '+' if u.tokens > 0 else '' }}{{ u.tokens }}</td>
+        <td data-label="说明">{{ u.note or '—' }}</td>
+      </tr>
+      {% else %}<tr><td colspan="3" class="empty">暂无记录。记录用量后会出现燃尽预测。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">使用手册</h2>
+      <p class="panel__meta">来源：AI知识库 / {% for m in manual_files %}{{ m }}{% if not loop.last %} · {% endif %}{% endfor %}{% if not manual_files %}未找到已配置文件{% endif %}</p>
+    </div>
+  </div>
+  <article class="manual">{{ manual_html | safe }}</article>
+</section>
+{% endblock %}

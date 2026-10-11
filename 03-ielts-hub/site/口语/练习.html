@@ -416,7 +416,7 @@ h3 {
 }
 </style>
 
-</head>
+<style>:focus-visible{outline:3px solid #087ce5;outline-offset:4px}button,input,textarea{font:inherit}@media(max-width:600px){input,textarea{font-size:16px!important}.record-item{gap:8px;flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}</style></head>
 <body>
 
 <a href="../index.html" class="back-home">← 返回首页</a>
@@ -625,7 +625,7 @@ h3 {
     <div id="evalEmpty" class="eval-empty">
         <div class="eval-icon">🤖</div>
         <p>还没有练习记录</p>
-        <p style="font-size:12px;color:#ddd;">选一道题 → 录音 → 发给我，我立刻给你评价！</p>
+        <p style="font-size:12px;color:#ddd;">选一道题 → 录音并下载 → 自行获取评价 → 导入评价 JSON</p>
     </div>
     <div id="evalResult" class="eval-result">
         <div class="eval-header">
@@ -848,15 +848,30 @@ h3 {
 <a href="../月报/模板.html">📈 月报</a>
 </div>
 
+<section class="section-card" aria-labelledby="import-evaluation-title"><h2 id="import-evaluation-title">导入评价 JSON</h2><p>此页面不自动调用评分服务。评价需要 question、date、fluency、lexical、grammar、pronunciation、comment、strengths、improvements、example 字段，四项评分为 0～9，亮点和建议为文字数组。</p><label for="evalCodeInput">评价 JSON</label><textarea id="evalCodeInput" rows="5" style="width:100%;font:inherit" placeholder="粘贴你自行获得的评价 JSON"></textarea><button type="button" onclick="parseEvaluationCode()">显示评价</button></section>
 <script>
+function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function displayRecord(value){if(typeof value==='string')return escapeHTML(value);if(Array.isArray(value))return value.map(displayRecord);if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,displayRecord(v)]));return value;}
+function readStoredList(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[];}catch(e){setTimeout(()=>alert('本地记录暂时无法读取，原存储未覆盖。请先备份录音与练习包。'),0);return [];}}
+function storeList(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){alert('浏览器存储空间不足或不可用。这次记录仅保留在当前页面，请下载录音/练习包后再关闭。');return false;}}
+function createAudioRecorder(stream){try{const type=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(t=>MediaRecorder.isTypeSupported(t));return type?new MediaRecorder(stream,{mimeType:type}):new MediaRecorder(stream);}catch(e){stream.getTracks().forEach(t=>t.stop());throw e;}}
+function audioExtension(type){return type.includes('mp4')?'m4a':type.includes('ogg')?'ogg':'webm';}
+function validateEvaluation(value){
+  const data={...value};
+  for(const key of ['fluency','lexical','grammar','pronunciation']){const n=Number(data[key]);if(!Number.isFinite(n)||n<0||n>9)throw new Error('雅思评分须在0至9之间');data[key]=n;}
+  for(const key of ['strengths','improvements']){if(!Array.isArray(data[key])||!data[key].every(x=>typeof x==='string'))throw new Error('评价需要亮点和改进建议数组');}
+  for(const key of ['question','date','comment','example'])data[key]=String(data[key]??'');
+  return data;
+}
+
 // ========== 全局变量 ==========
 let mediaRecorder = null;
 let audioChunks = [];
 let recordingTimer = null;
 let seconds = 0;
 let isRecording = false;
-let audioFiles = JSON.parse(localStorage.getItem('ieltsSpeakingAudioFiles') || '[]');
-let records = JSON.parse(localStorage.getItem('ieltsSpeakingRecords') || '[]');
+let audioFiles = readStoredList('ieltsSpeakingAudioFiles');
+let records = readStoredList('ieltsSpeakingRecords');
 let currentQuestion = '';
 
 // ========== 题库 Tab 切换 ==========
@@ -864,11 +879,12 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    event.target.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(el=>{if(el.getAttribute('onclick')?.includes(tabId))el.classList.add('active');});
 }
 
 // ========== 选择题目 ==========
 function selectQuestion(el, part, question) {
+    if(isRecording){alert('请先停止当前录音，再切换题目。');return;}
     document.querySelectorAll('.q-item').forEach(q => q.classList.remove('selected'));
     el.classList.add('selected');
     currentQuestion = part + ' — ' + question;
@@ -881,9 +897,11 @@ async function startRecording() {
         alert('请先选择一道题目！');
         return;
     }
+    if(isRecording)return;
+    if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){alert('当前浏览器不支持录音。请在HTTPS或localhost打开，或直接上传音频文件。');return;}
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        mediaRecorder = createAudioRecorder(stream);
         audioChunks = [];
 
         mediaRecorder.ondataavailable = e => {
@@ -891,9 +909,9 @@ async function startRecording() {
         };
 
         mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
             const now = new Date();
-            const fileName = `${now.toISOString().slice(0,10)}_${currentQuestion.slice(0,20)}.webm`;
+            const fileName = `${now.toISOString().slice(0,10)}_${currentQuestion.slice(0,20)}.${audioExtension(audioBlob.type)}`;
             addAudioFile(fileName, audioBlob);
             stream.getTracks().forEach(t => t.stop());
         };
@@ -1023,7 +1041,7 @@ function addAudioFile(fileName, blob) {
             question: currentQuestion
         };
         audioFiles.push(fileData);
-        localStorage.setItem('ieltsSpeakingAudioFiles', JSON.stringify(audioFiles));
+        storeList('ieltsSpeakingAudioFiles', audioFiles);
         renderFileList();
         showSubmitTip(fileName);
     };
@@ -1043,7 +1061,7 @@ function renderFileList() {
             <div class="rec-file-item">
                 <div class="file-info">
                     <span>🎵</span>
-                    <span class="file-name">${f.name}</span>
+                    <span class="file-name">${escapeHTML(f.name)}</span>
                     <span class="file-size">${sizeKB}KB</span>
                     <span style="color:#999;font-size:11px;">${date}</span>
                 </div>
@@ -1068,16 +1086,18 @@ function downloadFile(id) {
 function deleteFile(id) {
     if (!confirm('确定删除此录音文件？')) return;
     audioFiles = audioFiles.filter(f => f.id !== id);
-    localStorage.setItem('ieltsSpeakingAudioFiles', JSON.stringify(audioFiles));
+    storeList('ieltsSpeakingAudioFiles', audioFiles);
     renderFileList();
 }
 
 function showSubmitTip(fileName) {
-    alert('📢 录音已保存！\n\n请把录音文件通过对话发给我（上传到项目文件），\n我收到后会立刻给出 AI 评价！\n\n💡 你也可以把说的内容打字发给我，我直接评价。');
+    alert('录音已加入当前列表。请点击下载保留本地副本；需要评价时，自行将录音或文字交给老师或AI服务。此页面不会自动上传。');
 }
 
+function parseEvaluationCode(){try{const raw=document.getElementById('evalCodeInput').value.trim();if(!raw){alert('请先粘贴评价JSON');return;}showEvaluation(JSON.parse(raw));document.getElementById('evalCodeInput').value='';}catch(e){alert('无法导入评价：'+e.message);}}
 // ========== 评价展示 ==========
 function showEvaluation(data) {
+  data=validateEvaluation(data);
     document.getElementById('evalEmpty').style.display = 'none';
     const result = document.getElementById('evalResult');
     result.classList.add('show');
@@ -1094,7 +1114,7 @@ function showEvaluation(data) {
         { label: '发音', value: data.pronunciation, desc: 'Pronunciation' }
     ];
     scoreGrid.innerHTML = scoreItems.map(item => {
-        const stars = '★'.repeat(Math.floor(item.value)) + '☆'.repeat(5 - Math.floor(item.value));
+        const filled=Math.round(item.value/9*5);const stars='★'.repeat(filled)+'☆'.repeat(5-filled);
         return `
             <div class="score-item">
                 <div class="score-label">${item.label}</div>
@@ -1106,9 +1126,9 @@ function showEvaluation(data) {
     }).join('');
 
     document.getElementById('evalComment').textContent = data.comment;
-    document.getElementById('evalStrengths').innerHTML = data.strengths.map(s => `<li>${s}</li>`).join('');
-    document.getElementById('evalImprovements').innerHTML = data.improvements.map(s => `<li>${s}</li>`).join('');
-    document.getElementById('evalExample').innerHTML = data.example.replace(/\n/g, '<br>');
+    document.getElementById('evalStrengths').innerHTML = data.strengths.map(s => `<li>${escapeHTML(s)}</li>`).join('');
+    document.getElementById('evalImprovements').innerHTML = data.improvements.map(s => `<li>${escapeHTML(s)}</li>`).join('');
+    document.getElementById('evalExample').innerHTML = escapeHTML(data.example).replace(/\n/g, '<br>');
 
     // 添加到记录
     addRecord(data);
@@ -1124,7 +1144,7 @@ function addRecord(data) {
         strengths: data.strengths,
         improvements: data.improvements
     });
-    localStorage.setItem('ieltsSpeakingRecords', JSON.stringify(records));
+    storeList('ieltsSpeakingRecords', records);
     renderRecords();
 }
 
@@ -1134,7 +1154,7 @@ function renderRecords() {
         container.innerHTML = '<div class="record-empty">暂无练习记录，开始你的第一次练习吧！</div>';
         return;
     }
-    container.innerHTML = records.map((r, idx) => `
+    container.innerHTML = records.map(displayRecord).map((r, idx) => `
         <div class="record-item" onclick="toggleRecordDetail(${idx})">
             <div class="record-left">
                 <span class="record-date">${r.date}</span>
@@ -1155,6 +1175,7 @@ function toggleRecordDetail(idx) {
     el.classList.toggle('show');
 }
 
+document.querySelectorAll('.q-item').forEach(el=>{el.tabIndex=0;el.setAttribute('role','button');el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click();}});});
 // ========== 页面加载时渲染 ==========
 renderFileList();
 renderRecords();

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}免费渠道排行 · QuotaRadar{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero__copy">
+    <p class="eyebrow">免费渠道</p>
+    <h1>综合排行</h1>
+    <p class="lede">不仅看“免费”，还看模型能力、国内可达、限速、稳定性和上手成本。榜单用于缩小选择范围，不替代真实探活。</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel__head">
+    <div>
+      <h2 class="panel__title">渠道评分</h2>
+      <p class="panel__meta">能力 35% · 可达 25% · 限速 20% · 稳定 10% · 上手 10%</p>
+    </div>
+    <span class="pill">{{ rows|length }} 个候选</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>排名</th><th>渠道 / 最强模型</th><th>综合分</th><th>探活</th><th>能力</th><th>可达</th><th>限速</th><th>稳定</th><th>上手</th><th>免费说明</th><th>亮点</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td data-label="排名" class="number">{{ loop.index }}</td>
+        <td data-label="渠道 / 最强模型"><span class="model-name">{{ r.name }}</span><br><span class="model-id">{{ r.best_model }}</span></td>
+        <td data-label="综合分"><span class="score">{{ r.score }}</span></td>
+        <td data-label="探活"><span class="status status--{{ r.status }}">{{ r.status }}</span></td>
+        <td data-label="能力" class="number">{{ r.breakdown.capability }}</td>
+        <td data-label="可达" class="number">{{ r.breakdown.access }}</td>
+        <td data-label="限速" class="number">{{ r.breakdown.limits }}</td>
+        <td data-label="稳定" class="number">{{ r.breakdown.stability }}</td>
+        <td data-label="上手" class="number">{{ r.breakdown.onboarding }}</td>
+        <td data-label="免费说明">{{ r.free_tier_desc or '—' }}</td>
+        <td data-label="亮点">{% for reason in r.reasons %}{{ reason }}{% if not loop.last %}<br>{% endif %}{% endfor %}</td>
+        <td data-label="操作">{% if r.deploy_ready %}<a class="button button--primary" href="/deploy?channel={{ r.id }}">部署</a>{% else %}<button class="button button--quiet" type="button" disabled title="{{ r.deploy_reason }}">暂不可用</button><br><span class="signal-item__meta">{{ r.deploy_reason }}</span>{% endif %}</td>
+      </tr>
+      {% else %}<tr><td colspan="12" class="empty">暂无可排序渠道。</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
