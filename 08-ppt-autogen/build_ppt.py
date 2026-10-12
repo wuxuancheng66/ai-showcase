@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""班长竞选 PPT 生成器 — 吴宣澄 (2026)"""
+"""可复用的16页竞选演示模板；人物信息和素材由使用者提供。"""
 import os
 import argparse
+from datetime import date
 from pathlib import Path
 from PIL import Image, ImageDraw
 from pptx import Presentation
@@ -30,11 +31,14 @@ SW, SH = 13.333, 7.5
 MX = 0.8                     # 左右边距
 CW = SW - 2*MX               # 内容宽
 
-MAT = os.path.expanduser("~/Desktop/班长竞选素材")
-TMP = os.path.expanduser("~/Documents/dsh-workspace/tmp_ppt")
-MASK = os.path.expanduser("~/Documents/dsh-workspace/masked")
-ASSETS = os.path.expanduser("~/Documents/dsh-workspace/assets")
-OUTPUT = os.path.expanduser("~/Desktop/班长竞选PPT.pptx")
+MAT = str(Path.cwd()/"materials")
+TMP = str(Path.cwd()/"build-assets")
+MASK = str(Path.cwd()/"masked")
+ASSETS = str(Path.cwd()/"assets")
+OUTPUT = str(Path.cwd()/"presentation.pptx")
+PRESENTER = "演示者"
+AFFILIATION = "填写所属单位"
+DECK_YEAR = str(date.today().year)
 
 prs = Presentation()
 prs.slide_width  = Inches(SW)
@@ -174,11 +178,11 @@ def s_cover():
     rect(s, MX, 5.05, 1.1, 0.05, GOLD)
     tf = tb(s, MX, 2.15, 7.5, 2.7)
     p = para(tf, True)
-    run(p, "2026 · 班级竞选", 14, True, GOLD, spc=150)
+    run(p, f"{DECK_YEAR} · 班级竞选模板", 14, True, GOLD, spc=150)
     p = para(tf); p.space_before = Pt(18)
     run(p, "竞选班长", 66, True, WHITE, spc=40)
     p = para(tf); p.space_before = Pt(14)
-    run(p, "吴宣澄 · 数字公共治理专业", 18, False, "C7CDD6")
+    run(p, f"{PRESENTER} · {AFFILIATION}", 18, False, "C7CDD6")
     tf = tb(s, MX, 5.4, 7.5, 0.8)
     p = para(tf, True)
     run(p, "态度 · 资本 · 承诺", 13, True, GOLD, spc=140)
@@ -305,9 +309,9 @@ def _evidence_header(s, eyebrow, title, stat_runs):
 def s_evidence_time():
     s = new_slide()
     _evidence_header(s, "01 · 态度 · 素材例证", "用时间证明投入",
-        [("军训期间连续记录 ", 13, False, BODY), ("19+ 天", 13.5, True, GOLD),
-         ("  ·  日均 ", 13, False, BODY), ("10h+", 13.5, True, INK),
-         (" 手机在线  ·  微信沟通 ", 13, False, BODY), ("6h+", 13.5, True, TEAL)])
+        [("示例版式 · 记录周期 ", 13, False, BODY), ("自行填写", 13.5, True, GOLD),
+         ("  ·  日均 ", 13, False, BODY), ("自行填写", 13.5, True, INK),
+         (" 手机在线  ·  微信沟通 ", 13, False, BODY), ("自行填写", 13.5, True, TEAL)])
     A = ["IMG_5582.jpg","IMG_5584.jpg","IMG_5586.jpg","IMG_5588.jpg","IMG_5590.jpg","IMG_5591.jpg",
          "IMG_5593.jpg","IMG_5595.jpg","IMG_5597.jpg","IMG_5599.jpg","IMG_5601.jpg","IMG_5602.jpg"]
     imgs = prep_images([os.path.join(MAT, f) for f in A], "time")
@@ -323,7 +327,7 @@ def s_evidence_chat():
         [("个体协调 · 班群通知 ", 13, False, BODY), ("事事有回应", 13.5, True, TEAL),
          ("  ·  消息传达 ", 13, False, BODY), ("条条有传达", 13.5, True, NAVY),
          ("  ·  组织沟通 ", 13, False, BODY), ("不断线", 13.5, True, GOLD)])
-    # MASK 由命令行配置，旧路径仍作为默认值。
+    # MASK 由命令行配置，默认当前目录masked。
     B = [os.path.join(MASK,"masked_120.jpg"), os.path.join(MASK,"masked_121.jpg"),
          os.path.join(MASK,"masked_123.jpg"), os.path.join(MASK,"masked_124.jpg"),
          os.path.join(MAT,"IMG_5603.jpg"), os.path.join(MAT,"IMG_5604.jpg"),
@@ -381,7 +385,7 @@ def s_skill2():
     p = para(tf); p.space_before = Pt(8)
     run(p, "DeepSeek Harness · Z Code · Kimi K3 · codexGPT · Hermes · OpenClaw", 13.5, True, NAVY)
     p = para(tf); p.space_before = Pt(8)
-    run(p, "熟练调用各大 AI 平台，处理班级事务的生产效率可达常人的数十倍。", 14, False, BODY)
+    run(p, "示例：按实际经历填写熟悉的工具、使用场景与可核验成果。", 14, False, BODY)
     platforms = ["DeepSeek Harness", "Z Code", "Kimi K3", "codexGPT", "Hermes", "OpenClaw"]
     cols = 2
     cw = (L - 0.3)/cols
@@ -527,7 +531,7 @@ def s_end():
     p = para(tf); p.space_before = Pt(16); p.alignment = PP_ALIGN.CENTER
     run(p, "请投我一票", 26, True, GOLD, spc=60)
     p = para(tf); p.space_before = Pt(18); p.alignment = PP_ALIGN.CENTER
-    run(p, "吴宣澄 · 数字公共治理专业 · 2026", 14, False, "C7CDD6")
+    run(p, f"{PRESENTER} · {AFFILIATION} · {DECK_YEAR}", 14, False, "C7CDD6")
     rect(s, SW/2-0.55, 5.4, 1.1, 0.05, GOLD)
 
 # ============================================================
@@ -587,17 +591,21 @@ def prepare_demo():
 
 
 def main():
-    global MAT, MASK, ASSETS, TMP, OUTPUT, FONT
+    global MAT, MASK, ASSETS, TMP, OUTPUT, FONT, PRESENTER, AFFILIATION, DECK_YEAR
     parser=argparse.ArgumentParser(description="16页竞选演示模板生成器；可使用私人素材或无需素材的演示模式")
-    parser.add_argument("--materials",default=MAT,help="20张 IMG_*.jpg 素材目录，默认沿用原本本机位置")
+    parser.add_argument("--materials",default=MAT,help="20张 IMG_*.jpg 素材目录，默认当前目录materials")
     parser.add_argument("--masked",default=MASK,help="4张已脱敏截图目录")
     parser.add_argument("--assets",default=ASSETS,help="raft_card/dsh_card/codex_card 图片目录")
     parser.add_argument("--work-dir",default=str(Path.cwd()/"build-assets"),help="图片处理工作目录")
-    parser.add_argument("--output",default=None,help="输出PPTX路径；演示默认当前目录demo.pptx，普通默认原Desktop位置")
+    parser.add_argument("--output",default=None,help="输出PPTX路径；演示默认当前目录demo.pptx，普通默认当前目录presentation.pptx")
     parser.add_argument("--font",default=FONT,help="字体名称，应选目标设备已安装字体")
     parser.add_argument("--demo",action="store_true",help="使用生成的占位图，不读取私人素材")
     parser.add_argument("--check",action="store_true",help="只检查素材是否齐全，不生成PPT")
+    parser.add_argument("--presenter",default=PRESENTER,help="演示者姓名或团队名")
+    parser.add_argument("--affiliation",default=AFFILIATION,help="单位、班级或团队说明")
+    parser.add_argument("--year",default=DECK_YEAR,help="封面年份标签")
     args=parser.parse_args()
+    PRESENTER=args.presenter;AFFILIATION=args.affiliation;DECK_YEAR=args.year
     MAT=str(Path(args.materials).expanduser());MASK=str(Path(args.masked).expanduser());ASSETS=str(Path(args.assets).expanduser())
     TMP=str(Path(args.work_dir).expanduser());FONT=args.font
     OUTPUT=str(Path(args.output).expanduser()) if args.output else (str(Path.cwd()/"demo.pptx") if args.demo else OUTPUT)

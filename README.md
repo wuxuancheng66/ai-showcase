@@ -18,7 +18,7 @@
 - [雅思学习站](https://wuxuancheng66.github.io/ai-showcase/03-ielts-hub/site/index.html)：听、说、读、写与复盘记录，各有清楚的位置。 [源码](https://github.com/wuxuancheng66/ielts-hub)
 - [军事理论学习站](https://wuxuancheng66.github.io/ai-showcase/04-military-hub/军事理论备考笔记（2026整合版·交互增强版）.html)：按知识点学习，用练习和错题记录检查掌握程度。 [源码](https://github.com/wuxuancheng66/military-theory-notes)
 - [番茄钟](https://wuxuancheng66.github.io/ai-showcase/07-pomodoro-timer/README.html)：开始一段专注时间，到点休息。 [源码](https://github.com/wuxuancheng66/pomodoro-timer)
-- [演示文稿生成器](https://wuxuancheng66.github.io/ai-showcase/08-ppt-autogen/README.html)：用脚本把结构化内容排成演示文稿。 [源码](https://github.com/wuxuancheng66/ppt-autogen)
+- [竞选演示模板生成器](https://wuxuancheng66.github.io/ai-showcase/08-ppt-autogen/README.html)：填入人物信息与素材，生成16页竞选演示模板。 [源码](https://github.com/wuxuancheng66/ppt-autogen)
 - [AI 日报](https://wuxuancheng66.github.io/ai-showcase/02-ai-daily-reports/index.html)：按日期归档行业动态，保留原始来源。 [源码](https://github.com/wuxuancheng66/ai-daily-reports)
 - [AI 工具中文手册](https://wuxuancheng66.github.io/ai-showcase/09-ai-handbooks/README.html)：把工具配置与使用方法整理成可查阅的指南。 [源码](https://github.com/wuxuancheng66/ai-handbooks)
 - [大学规划导航](https://wuxuancheng66.github.io/ai-showcase/18-study-planner/index.html)：课程、目标和行动计划的信息组织实践。
