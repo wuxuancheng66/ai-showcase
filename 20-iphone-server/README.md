@@ -1,14 +1,14 @@
 # iPhone Server
 
-这是旧版 Swift 手机自动化原型的技术案例。设备控制使用 WebDriverAgent 和 XCTest。已知结构包括本机只读查询、深链入口、操作结果观察与中断记录。[阅读案例](https://wuxuancheng66.github.io/ai-showcase/20-iphone-server/)
+An early Swift prototype for iPhone automation using WebDriverAgent and XCTest. It uses system APIs for simple read-only tasks, deep links for known destinations, and screen observations to verify what happened after an action. [Read the case study](https://wuxuancheng66.github.io/ai-showcase/20-iphone-server/)
 
-这里提供应用中使用的只读模块 `NativeDeviceQuery.swift`、现有回归断言和命令行测试入口。模块能识别明确的系统版本、电量、充电状态和低电量模式查询。碰到混合或歧义指令时让调用者进一步处理。iOS 端的读取使用 UIKit 与 Foundation，无需屏幕操作或模型调用。
+This directory contains the app's read-only module, `NativeDeviceQuery.swift`, and its classifier regression tests. It recognizes requests for the iOS version, battery level, charging state, and Low Power Mode. If a request mixes supported and unsupported tasks or is ambiguous, the module leaves it to the caller. The iOS read path uses UIKit and Foundation without screen interaction or a model call.
 
-macOS 上用 Swift 运行分类回归：
+Run the classifier tests on macOS:
 
 ```sh
 swiftc NativeDeviceQuery.swift NativeQueryClassifierTests.swift NativeQueryClassifierMain.swift -o /tmp/iphone-query-tests
 /tmp/iphone-query-tests
 ```
 
-UIKit 读取分支需要 iOS。CoreDevice 迁移与 MCP 接口尚未验证。此目录只分发上面的独立模块，不包含可安装 App 或设备连接配置。
+The UIKit read path requires iOS. CoreDevice support and an MCP interface are still unverified. The public source covers the standalone read-only module.
