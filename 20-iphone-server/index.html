@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iPhone Server · 吴宣澄</title>
+  <link rel="stylesheet" href="../assets/portfolio.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="home" href="../">← 项目</a>
+      <a href="https://github.com/wuxuancheng66/ai-showcase/tree/main/20-iphone-server">GitHub ↗</a>
+    </header>
+    <main class="case">
+      <h1>iPhone Server</h1>
+      <p class="lede">在 iPhone 上运行的 Swift 自动化原型。手机端负责接收任务，旧版通过 WebDriverAgent 和 XCTest 执行屏幕操作。</p>
+      <section>
+        <h2>有些任务可以直接完成</h2>
+        <p>查看电量、充电状态或系统版本时，应用可通过系统接口直接读取。能用已知深链打开的页面，也可以跳过找按钮这一步。公开的 Swift 模块展示了怎样判断一条请求能否完整走只读路径。</p>
+        <p class="links"><a href="https://github.com/wuxuancheng66/ai-showcase/tree/main/20-iphone-server">查看源码节选与测试 ↗</a></p>
+      </section>
+      <section>
+        <h2>点过之后还要核对</h2>
+        <p>工具执行后重新观察页面。页面目标不明确时会要求重新定位，已经开始的任务在应用退出后标为中断，恢复时先核对实际结果。发送等动作有代码层的确认逻辑，旧版对通用点击中敏感操作的识别仍有限。</p>
+      </section>
+      <section>
+        <h2>旧版的用法和限制</h2>
+        <p>原型依赖 WDA 会话、签名和设备上的开发者授权。当前公开的是技术案例和只读模块。CoreDevice 迁移和 MCP 接口属于待验证方向。</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
